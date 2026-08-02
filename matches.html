@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Manage Matches</title>
+
+<link rel="stylesheet" href="../css/matches.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- Header -->
+
+<header>
+
+<h2>
+
+<i class="fa-solid fa-trophy"></i>
+
+Manage Matches
+
+</h2>
+
+<a href="add-match.html" class="addBtn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Match
+
+</a>
+
+</header>
+
+<!-- Search -->
+
+<div class="topbar">
+
+<input
+type="text"
+id="searchMatch"
+placeholder="Search Team or League...">
+
+<select id="filterStatus">
+
+<option value="All">All Matches</option>
+<option value="Upcoming">Upcoming</option>
+<option value="Live">Live</option>
+<option value="Completed">Completed</option>
+
+</select>
+
+</div>
+
+<!-- Match List -->
+
+<div id="matchList">
+
+<!-- Dynamic Match Cards -->
+
+</div>
+
+<!-- Match Template -->
+
+<template id="matchTemplate">
+
+<div class="match-card">
+
+<div class="banner">
+
+<img class="bannerImg"
+src="../assets/default-banner.jpg">
+
+</div>
+
+<div class="match-body">
+
+<div class="league">
+
+🏆 <span class="leagueName"></span>
+
+</div>
+
+<div class="teams">
+
+<div class="team">
+
+<img class="teamALogo"
+src="../assets/default-team.png">
+
+<h3 class="teamA"></h3>
+
+</div>
+
+<div class="vs">
+
+VS
+
+</div>
+
+<div class="team">
+
+<img class="teamBLogo"
+src="../assets/default-team.png">
+
+<h3 class="teamB"></h3>
+
+</div>
+
+</div>
+
+<div class="details">
+
+<p>
+
+📍 <span class="venue"></span>
+
+</p>
+
+<p>
+
+🕒 <span class="time"></span>
+
+</p>
+
+<p>
+
+🏏 <span class="sport"></span>
+
+</p>
+
+</div>
+
+<div class="status">
+
+<span class="statusBadge">
+
+Upcoming
+
+</span>
+
+</div>
+
+<div class="actions">
+
+<button class="liveBtn">
+
+<i class="fa-solid fa-play"></i>
+
+Go Live
+
+</button>
+
+<button class="marketBtn">
+
+<i class="fa-solid fa-chart-line"></i>
+
+Markets
+
+</button>
+
+<button class="resultBtn">
+
+<i class="fa-solid fa-trophy"></i>
+
+Result
+
+</button>
+
+<button class="editBtn">
+
+<i class="fa-solid fa-pen"></i>
+
+Edit
+
+</button>
+
+<button class="deleteBtn">
+
+<i class="fa-solid fa-trash"></i>
+
+Delete
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</template>
+
+<script type="module"
+src="../js/firebase.js"></script>
+
+<script type="module"
+src="../js/matches.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Match</title>
+
+    <link rel="stylesheet" href="../css/add-match.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- Header -->
+
+    <header>
+
+        <h2>
+
+            <i class="fa-solid fa-trophy"></i>
+
+            Add New Match
+
+        </h2>
+
+    </header>
+
+    <!-- Container -->
+
+    <div class="container">
+
+        <!-- League -->
+
+        <label>League Name</label>
+
+        <input
+            type="text"
+            id="league"
+            placeholder="Asia Cup 2026">
+
+        <!-- Sport -->
+
+        <label>Sport</label>
+
+        <select id="sport">
+
+            <option value="Cricket">🏏 Cricket</option>
+
+            <option value="Football">⚽ Football</option>
+
+            <option value="Kabaddi">🤼 Kabaddi</option>
+
+        </select>
+
+        <!-- Teams -->
+
+        <label>Teams</label>
+
+        <div class="team-row">
+
+            <input
+                type="text"
+                id="teamA"
+                placeholder="Team A">
+
+            <input
+                type="text"
+                id="teamB"
+                placeholder="Team B">
+
+        </div>
+
+        <!-- Logos -->
+
+        <label>Team Logos</label>
+
+        <div class="team-row">
+
+            <input
+                type="text"
+                id="teamALogo"
+                placeholder="Team A Logo URL">
+
+            <input
+                type="text"
+                id="teamBLogo"
+                placeholder="Team B Logo URL">
+
+        </div>
+
+        <!-- Logo Preview -->
+
+        <div class="preview">
+
+            <div class="preview-box">
+
+                <img
+                    id="teamAImg"
+                    src="../assets/default-team.png"
+                    alt="Team A">
+
+                <p>Team A Logo</p>
+
+            </div>
+
+            <div class="preview-box">
+
+                <img
+                    id="teamBImg"
+                    src="../assets/default-team.png"
+                    alt="Team B">
+
+                <p>Team B Logo</p>
+
+            </div>
+
+        </div>
+
+        <!-- Venue -->
+
+        <label>Venue</label>
+
+        <input
+            type="text"
+            id="venue"
+            placeholder="Dubai International Stadium">
+
+        <!-- Match Time -->
+
+        <label>Match Time</label>
+
+        <input
+            type="datetime-local"
+            id="matchTime">
+
+        <!-- Status -->
+
+        <label>Status</label>
+
+        <select id="status">
+
+            <option value="Upcoming">Upcoming</option>
+
+            <option value="Live">Live</option>
+
+            <option value="Completed">Completed</option>
+
+        </select>
+
+        <!-- Match Image -->
+
+        <label>Match Banner (Optional)</label>
+
+        <input
+            type="text"
+            id="matchBanner"
+            placeholder="Banner Image URL">
+
+        <!-- Create Button -->
+
+        <button id="saveMatch">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Create Match
+
+        </button>
+
+        <!-- Success -->
+
+        <div
+            class="success"
+            id="successMsg">
+
+            ✅ Match Created Successfully
+
+        </div>
+
+    </div>
+
+    <script type="module" src="../js/firebase.js"></script>
+
+    <script type="module" src="../js/add-match.js"></script>
+
+</body>
+
+</html>

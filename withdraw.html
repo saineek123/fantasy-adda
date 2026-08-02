@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Withdraw</title>
+
+<link rel="stylesheet" href="css/withdraw.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<a href="wallet.html">
+
+<i class="fa fa-arrow-left"></i>
+
+</a>
+
+<h2>Withdraw Money</h2>
+
+</header>
+
+<div class="container">
+
+<div class="balance">
+
+<h3>Available Winning Balance</h3>
+
+<h1 id="winningBalance">₹0</h1>
+
+</div>
+
+<div class="form">
+
+<input
+type="number"
+id="amount"
+placeholder="Withdraw Amount">
+
+<input
+type="text"
+id="upi"
+placeholder="UPI ID">
+
+<button id="withdrawBtn">
+
+Submit Withdraw
+
+</button>
+
+</div>
+<div class="rules">
+
+<h4>Withdraw Rules</h4>
+
+<ul>
+
+<li>Minimum Withdraw ₹100</li>
+
+<li>Withdraw sirf Winning Wallet se hoga.</li>
+
+<li>Recharge Wallet withdraw nahi hoga.</li>
+
+<li>Bonus Wallet withdraw nahi hoga.</li>
+
+<li>Admin approval ke baad payment bheja jayega.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<script type="module"
+src="js/firebase.js"></script>
+
+<script type="module"
+src="js/withdraw.js"></script>
+
+</body>
+
+</html>

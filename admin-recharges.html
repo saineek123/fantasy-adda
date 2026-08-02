@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Admin Recharge Panel</title>
+
+<link rel="stylesheet"
+href="../css/admin-recharges.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<h2>Recharge Requests</h2>
+
+</header>
+
+<div class="container">
+
+<div class="summary">
+
+<div class="box">
+
+<h3 id="pendingCount">0</h3>
+
+<p>Pending</p>
+
+</div>
+
+<div class="box">
+
+<h3 id="approvedCount">0</h3>
+
+<p>Approved</p>
+
+</div>
+
+<div class="box">
+
+<h3 id="rejectedCount">0</h3>
+
+<p>Rejected</p>
+
+</div>
+
+</div>
+
+<div id="rechargeList">
+
+<!-- Recharge Requests Here -->
+
+</div>
+
+</div>
+
+<template id="rechargeTemplate">
+
+<div class="card">
+
+<div class="top">
+
+<div>
+
+<h3 class="userName">Loading...</h3>
+
+<p class="userEmail">user@email.com</p>
+
+</div>
+
+<span class="status pending">
+
+Pending
+
+</span>
+
+</div>
+
+<hr>
+
+<div class="info">
+
+<p>
+
+<strong>UID :</strong>
+
+<span class="uid"></span>
+
+</p>
+
+<p>
+
+<strong>Amount :</strong>
+
+₹<span class="amount"></span>
+
+</p>
+
+<p>
+
+<strong>Transaction ID :</strong>
+
+<span class="txn"></span>
+
+</p>
+
+<p>
+
+<strong>Date :</strong>
+
+<span class="date"></span>
+
+</p>
+
+</div>
+
+<div class="buttons">
+
+<button class="viewImage">
+
+<i class="fa fa-image"></i>
+
+View Screenshot
+
+</button>
+
+<button class="approve">
+
+<i class="fa fa-check"></i>
+
+Approve
+
+</button>
+
+<button class="reject">
+
+<i class="fa fa-xmark"></i>
+
+Reject
+
+</button>
+
+</div>
+
+</div>
+
+</template>
+
+<script type="module"
+src="../js/firebase.js"></script>
+
+<script type="module"
+src="../js/admin-recharges.js"></script>
+
+</body>
+
+</html>

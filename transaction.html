@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Transaction History</title>
+
+<link rel="stylesheet" href="css/transaction.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<a href="wallet.html">
+
+<i class="fa fa-arrow-left"></i>
+
+</a>
+
+<h2>Transaction History</h2>
+
+</header>
+
+<div class="container">
+
+<div class="filter">
+
+<select id="filter">
+
+<option value="all">All</option>
+
+<option value="Recharge">Recharge</option>
+
+<option value="Withdraw">Withdraw</option>
+
+<option value="Trade">Trade</option>
+
+<option value="Win">Win</option>
+
+<option value="Loss">Loss</option>
+
+</select>
+
+</div>
+
+<div id="transactionList">
+
+<!-- Transactions Here -->
+
+</div>
+
+</div>
+
+<template id="transactionTemplate">
+
+<div class="transaction-card">
+
+<div class="left">
+
+<div class="icon">
+
+<i class="fa fa-wallet"></i>
+
+</div>
+
+<div>
+
+<h3 class="type">
+
+Recharge
+
+</h3>
+
+<p class="date">
+
+12 Jul 2026
+
+</p>
+
+</div>
+
+</div>
+
+<div class="right">
+
+<h3 class="amount">
+
+₹0
+
+</h3>
+
+<span class="status">
+
+Success
+
+</span>
+
+</div>
+
+</div>
+
+</template>
+
+<script type="module"
+src="js/firebase.js"></script>
+
+<script type="module"
+src="js/transaction.js"></script>
+
+</body>
+
+</html>

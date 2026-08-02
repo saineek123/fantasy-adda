@@ -1,0 +1,192 @@
+/* =====================================
+   Fantasy Adda Transaction History
+===================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+}
+
+/* Header */
+
+header{
+    background:#B80000;
+    color:#fff;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 3px 10px rgba(0,0,0,.15);
+}
+
+header a{
+    color:#fff;
+    text-decoration:none;
+    font-size:22px;
+}
+
+header h2{
+    font-size:22px;
+}
+
+/* Container */
+
+.container{
+    width:95%;
+    max-width:700px;
+    margin:20px auto;
+}
+
+/* Filter */
+
+.filter{
+    margin-bottom:20px;
+}
+
+.filter select{
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    background:#fff;
+    font-size:16px;
+    outline:none;
+}
+
+/* Transaction Card */
+
+.transaction-card{
+    background:#fff;
+    border-radius:15px;
+    padding:18px;
+    margin-bottom:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.transaction-card:hover{
+    transform:translateY(-3px);
+}
+
+.left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+/* Icon */
+
+.icon{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background:#B80000;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:22px;
+}
+
+.type{
+    color:#222;
+    font-size:18px;
+}
+
+.date{
+    color:#777;
+    margin-top:5px;
+    font-size:14px;
+}
+
+/* Right */
+
+.right{
+    text-align:right;
+}
+
+.amount{
+    font-size:22px;
+    color:#B80000;
+}
+
+.status{
+    display:inline-block;
+    margin-top:8px;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+/* Status Colors */
+
+.success{
+    background:#D4EDDA;
+    color:#155724;
+}
+
+.pending{
+    background:#FFF3CD;
+    color:#856404;
+}
+
+.rejected{
+    background:#F8D7DA;
+    color:#721C24;
+}
+
+/* Amount Colors */
+
+.credit{
+    color:#28A745;
+}
+
+.debit{
+    color:#DC3545;
+}
+
+/* Empty */
+
+.empty{
+    background:#fff;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    color:#777;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+/* Responsive */
+
+@media(max-width:600px){
+
+.transaction-card{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.right{
+    width:100%;
+    text-align:left;
+}
+
+.amount{
+    font-size:20px;
+}
+
+header h2{
+    font-size:18px;
+}
+
+}

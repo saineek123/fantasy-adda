@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Payment</title>
+
+<link rel="stylesheet"
+href="css/payment.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<a href="add-money.html">
+
+<i class="fa fa-arrow-left"></i>
+
+</a>
+
+<h2>Complete Payment</h2>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Amount</h3>
+
+<h1 id="amount">₹0</h1>
+
+</div>
+
+<div class="card">
+
+<h3>Scan QR Code</h3>
+
+<img
+src="assets/qr.png"
+class="qr">
+
+<p>
+
+UPI ID
+
+</p>
+
+<h3>
+
+fantasyadda@upi
+
+</h3>
+
+</div>
+
+<div class="card">
+
+<input
+type="text"
+id="txn"
+placeholder="Transaction ID">
+
+<input
+type="file"
+id="image"
+accept="image/*">
+
+<button id="submitBtn">
+
+Submit Request
+
+</button>
+
+</div>
+
+</div>
+
+<script type="module"
+src="js/payment.js">
+
+</script>
+
+</body>
+
+</html>

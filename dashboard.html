@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Fantasy Adda Admin</title>
+
+<link rel="stylesheet" href="../css/admin-dashboard.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<div class="logo">
+
+<h2>Fantasy Adda</h2>
+
+<p>Admin Panel</p>
+
+</div>
+
+<ul>
+
+<li class="active">
+<a href="dashboard.html">
+<i class="fa fa-home"></i>
+Dashboard
+</a>
+</li>
+
+<li>
+<a href="users.html">
+<i class="fa fa-users"></i>
+Users
+</a>
+</li>
+
+<li>
+<a href="matches.html">
+<i class="fa fa-trophy"></i>
+Matches
+</a>
+</li>
+
+<li>
+<a href="recharges.html">
+<i class="fa fa-wallet"></i>
+Recharge
+</a>
+</li>
+
+<li>
+<a href="withdraws.html">
+<i class="fa fa-money-bill"></i>
+Withdraw
+</a>
+</li>
+
+<li>
+<a href="trades.html">
+<i class="fa fa-chart-line"></i>
+Trades
+</a>
+</li>
+
+<li>
+<a href="notifications.html">
+<i class="fa fa-bell"></i>
+Notifications
+</a>
+</li>
+
+<li>
+<a href="settings.html">
+<i class="fa fa-gear"></i>
+Settings
+</a>
+</li>
+
+<li>
+
+<button onclick="logout()">
+
+<i class="fa fa-right-from-bracket"></i>
+
+Logout
+
+</button>
+
+</li>
+
+</ul>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<div class="topbar">
+
+<h1>Dashboard</h1>
+
+<div class="admin">
+
+Administrator
+
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+<h3 id="users">0</h3>
+
+<p>Total Users</p>
+
+</div>
+
+<div class="card">
+
+<h3 id="recharge">₹0</h3>
+
+<p>Total Recharge</p>
+
+</div>
+
+<div class="card">
+
+<h3 id="withdraw">₹0</h3>
+
+<p>Total Withdraw</p>
+
+</div>
+
+<div class="card">
+
+<h3 id="trade">0</h3>
+
+<p>Total Trades</p>
+
+</div>
+
+<div class="card">
+
+<h3 id="pendingRecharge">0</h3>
+
+<p>Pending Recharge</p>
+
+</div>
+
+<div class="card">
+
+<h3 id="pendingWithdraw">0</h3>
+
+<p>Pending Withdraw</p>
+
+</div>
+
+<div class="card">
+
+<h3 id="matches">0</h3>
+
+<p>Live Matches</p>
+
+</div>
+
+<div class="card">
+
+<h3 id="profit">₹0</h3>
+
+<p>Platform Profit</p>
+
+</div>
+
+</div>
+
+<h2 style="margin-top:40px">
+
+Recent Activity
+
+</h2>
+
+<div id="activity">
+
+No Activity
+
+</div>
+
+</div>
+
+<script type="module"
+src="../js/firebase.js"></script>
+
+<script type="module"
+src="../js/admin-dashboard.js"></script>
+
+</body>
+
+</html>

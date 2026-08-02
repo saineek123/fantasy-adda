@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Match Markets</title>
+
+<link rel="stylesheet" href="../css/markets.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<h2>
+
+<i class="fa-solid fa-chart-line"></i>
+
+Manage Match Markets
+
+</h2>
+
+<a href="matches.html">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Back
+
+</a>
+
+</header>
+
+<div class="container">
+
+<div class="matchInfo">
+
+<h2 id="matchTitle">
+
+Loading Match...
+
+</h2>
+
+<p id="matchTime"></p>
+
+</div>
+
+<!-- Match Winner -->
+
+<div class="market-card">
+
+<h3>🏆 Match Winner</h3>
+
+<div class="row">
+
+<input
+type="text"
+id="teamAOdds"
+placeholder="Team A Odds">
+
+<input
+type="text"
+id="teamBOdds"
+placeholder="Team B Odds">
+
+</div>
+
+</div>
+
+<!-- Toss Winner -->
+
+<div class="market-card">
+
+<h3>🪙 Toss Winner</h3>
+
+<div class="row">
+
+<input
+type="text"
+id="tossAOdds"
+placeholder="Team A Odds">
+
+<input
+type="text"
+id="tossBOdds"
+placeholder="Team B Odds">
+
+</div>
+
+</div>
+
+<!-- Player Runs -->
+
+<div class="market-card">
+
+<h3>🏏 Player Runs</h3>
+
+<input
+type="text"
+id="playerRunsName"
+placeholder="Player Name">
+
+<div class="row">
+
+<input
+type="text"
+id="playerRunsLine"
+placeholder="Line (50.5)">
+
+<input
+type="text"
+id="playerRunsOdds"
+placeholder="Odds">
+
+</div>
+
+</div>
+
+<!-- Player Wickets -->
+
+<div class="market-card">
+
+<h3>🎯 Player Wickets</h3>
+
+<input
+type="text"
+id="playerWicketName"
+placeholder="Player Name">
+
+<div class="row">
+
+<input
+type="text"
+id="playerWicketLine"
+placeholder="Line (2.5)">
+
+<input
+type="text"
+id="playerWicketOdds"
+placeholder="Odds">
+
+</div>
+
+</div>
+
+<!-- Total Runs -->
+
+<div class="market-card">
+
+<h3>📊 Total Runs</h3>
+
+<div class="row">
+
+<input
+type="text"
+id="totalRunsLine"
+placeholder="Line">
+
+<input
+type="text"
+id="totalRunsOdds"
+placeholder="Odds">
+
+</div>
+
+</div>
+
+<!-- Total Sixes -->
+
+<div class="market-card">
+
+<h3>💥 Total Sixes</h3>
+
+<div class="row">
+
+<input
+type="text"
+id="totalSixesLine"
+placeholder="Line">
+
+<input
+type="text"
+id="totalSixesOdds"
+placeholder="Odds">
+
+</div>
+
+</div>
+
+<!-- Man Of Match -->
+
+<div class="market-card">
+
+<h3>⭐ Man Of The Match</h3>
+
+<input
+type="text"
+id="momPlayer"
+placeholder="Player Name">
+
+<input
+type="text"
+id="momOdds"
+placeholder="Odds">
+
+</div>
+
+<!-- Save -->
+
+<button id="saveMarkets">
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+Save Markets
+
+</button>
+
+</div>
+
+<script type="module"
+src="../js/firebase.js"></script>
+
+<script type="module"
+src="../js/markets.js"></script>
+
+</body>
+
+</html>

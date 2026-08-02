@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - Fantasy Adda</title>
+
+    <link rel="stylesheet" href="css/login.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="card">
+
+            <img src="assets/logo.png" class="logo" alt="Logo">
+
+            <h2>Create Account</h2>
+
+            <p>Join Fantasy Adda</p>
+
+            <form id="signupForm">
+
+                <div class="input-box">
+                    <i class="fa fa-user"></i>
+                    <input type="text" id="name" placeholder="Full Name" required>
+                </div>
+
+                <div class="input-box">
+                    <i class="fa fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-box">
+                    <i class="fa fa-mobile-alt"></i>
+                    <input type="tel" id="phone" placeholder="Mobile Number" maxlength="10" required>
+                </div>
+
+                <div class="input-box">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+
+                    <span id="togglePassword">
+                        <i class="fa fa-eye"></i>
+                    </span>
+                </div>
+
+                <div class="input-box">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+                    <span id="toggleConfirmPassword">
+                        <i class="fa fa-eye"></i>
+                    </span>
+                </div>
+
+                <div class="input-box">
+                    <i class="fa fa-gift"></i>
+                    <input type="text" id="referral" placeholder="Referral Code (Optional)">
+                </div>
+
+                <div class="remember">
+
+                    <label>
+
+                        <input type="checkbox" id="terms" required>
+
+                        I Agree Terms & Conditions
+
+                    </label>
+
+                </div>
+
+                <button type="submit">
+
+                    Create Account
+
+                </button>
+
+            </form>
+
+            <div class="or">
+
+                OR
+
+            </div>
+
+            <button class="google">
+
+                <i class="fab fa-google"></i>
+
+                Continue With Google
+
+            </button>
+
+            <div class="bottom">
+
+                Already have an account?
+
+                <a href="login.html">
+
+                    Login
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script type="module" src="js/firebase.js"></script>
+
+<script type="module" src="js/auth.js"></script>
+
+</body>
+
+</html>
