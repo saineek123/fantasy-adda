@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fantasy Adda</title>
+    <!-- Icons ke liye FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* ===== CSS STYLES ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #F0F2F5; color: #333; padding-bottom: 80px; }
+        
+        /* --- HEADER --- */
+        .app-header {
+            background-color: #B80000; /* Deep Red */
+            padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            color: #fff; position: sticky; top: 0; z-index: 10;
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-area i { font-size: 24px; }
+        .logo-area span { font-size: 20px; font-weight: bold; letter-spacing: 1px;}
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .balance-text { font-weight: bold; font-size: 14px; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 15px;}
+        .coin-icon { color: #ffd700; font-size: 18px; }
+        .notification-icon { font-size: 20px; }
+
+        /* --- LIVE CAROUSEL --- */
+        .live-bg-container {
+            background-color: #B80000;
+            padding: 10px 0 15px 15px;
+            position: relative;
+        }
+        .live-scroll-wrapper {
+            display: flex; overflow-x: auto; gap: 12px; padding-right: 15px;
+        }
+        .live-scroll-wrapper::-webkit-scrollbar { display: none; }
+        .live-card {
+            background: #fff; border-radius: 12px; padding: 12px 15px;
+            min-width: 200px; display: flex; align-items: center; gap: 10px; flex: 0 0 auto;
+        }
+        .team-col { display: flex; flex-direction: column; align-items: center; font-size: 12px; font-weight: bold; min-width: 40px;}
+        .team-icon { width: 28px; height: 28px; border-radius: 50%; margin-bottom: 3px; background: #eee;}
+        .v-divider { width: 1px; height: 30px; background: #eee; }
+        .live-info-col { display: flex; flex-direction: column; align-items: center; font-size: 10px; }
+        .live-badge { color: red; font-weight: bold; font-size: 12px; margin: 3px 0; }
+        .view-more-link { color: #fff; font-size: 12px; font-weight: bold; display: block; text-align: right; text-decoration: none; margin: 5px 15px 0 0;}
+
+        /* --- TELEGRAM BANNER --- */
+        .telegram-banner {
+            margin: 15px; background: linear-gradient(135deg, #0088cc, #006699);
+            border-radius: 12px; padding: 15px; display: flex; align-items: center; color: #fff;
+            cursor: pointer; transition: transform 0.2s;
+        }
+        .telegram-banner:active { transform: scale(0.98); }
+        .tg-circle {
+            background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 24px; margin-right: 15px;
+        }
+        .tg-text h4 { font-size: 16px; margin: 0; line-height: 1.2;}
+        .tg-btn {
+            margin-top: 5px; background: #fff; border: none; padding: 4px 15px;
+            border-radius: 20px; font-size: 12px; font-weight: bold; color: #333; cursor: pointer;
+        }
+
+        /* --- UPCOMING SECTION --- */
+        .section-title { font-size: 18px; font-weight: bold; margin: 20px 15px 10px 15px; }
+
+        /* --- MATCH CARD (Dynamic) --- */
+        .match-card {
+            background: #fff; margin: 0 15px 15px 15px; border-radius: 12px; padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.2s;
+        }
+        .match-card:active { transform: scale(0.98); background: #fafafa; }
+        
+        .card-header { display: flex; justify-content: space-between; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 10px; }
+        .league-name { color: #666; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+        .status-area { color: red; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+        
+        .card-body { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .team-info { display: flex; flex-direction: column; align-items: center; flex: 1; }
+        .team-logo { width: 35px; height: 35px; border-radius: 50%; margin-bottom: 4px; background: #ddd;}
+        .team-short { font-weight: bold; font-size: 14px; }
+        .team-full { font-size: 10px; color: #888; text-align: center; max-width: 70px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        
+        .timer-info { display: flex; flex-direction: column; align-items: center; flex: 1; }
+        .timer-red { color: red; font-weight: bold; font-size: 16px; }
+        .time-full { font-size: 10px; color: #888; }
+        
+        .card-footer { display: flex; justify-content: space-between; border-top: 1px solid #f0f0f0; padding-top: 8px; font-size: 12px; font-weight: bold; }
+        .prize-info { display: flex; align-items: center; gap: 5px; }
+        .prize-icon { background: #000; color: #fff; border-radius: 50%; width: 16px; height: 16px; display: flex; justify-content: center; align-items: center; font-size: 8px;}
+        .green-pred { color: #28a745; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #fff; height: 65px;
+            display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid #eee; z-index: 99;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #888; cursor: pointer; padding: 8px; flex: 1;}
+        .nav-item i { font-size: 22px; margin-bottom: 4px; }
+        .nav-item.active { color: #B80000; }
+        
+        .center-trophy { position: relative; top: -15px; background: #fff; border-radius: 50%; padding: 5px; border: 2px solid #eee; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center;}
+        .center-trophy img { width: 35px; height: 35px; }
+
+        /* --- LOADING --- */
+        .loader { text-align: center; color: #888; padding: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="app-header">
+        <div class="logo-area">
+            <i class="fas fa-shield-alt"></i>
+            <span>FANTASY ADDA</span>
+        </div>
+        <div class="header-right">
+            <span class="balance-text" id="userBalance">₹0.00</span>
+            <i class="fas fa-coins coin-icon"></i>
+            <i class="fas fa-bell notification-icon"></i>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-scroll">
+        
+        <!-- LIVE MATCHES CAROUSEL -->
+        <div class="live-bg-container">
+            <div class="live-scroll-wrapper" id="liveMatchesContainer">
+                <!-- Live matches yahan JS se aayenge -->
+                <div class="loader">Loading Live Matches...</div>
+            </div>
+            <a href="#" class="view-more-link">View More →</a>
+        </div>
+
+        <!-- TELEGRAM BANNER -->
+        <div class="telegram-banner" onclick="window.open('https://t.me/your_channel_link', '_blank')">
+            <div class="tg-circle"><i class="fab fa-telegram-plane"></i></div>
+            <div class="tg-text">
+                <h4>JOIN TELEGRAM</h4>
+                <h4>FOR UPDATES</h4>
+                <button class="tg-btn">Click to Join Channel</button>
+            </div>
+        </div>
+
+        <!-- UPCOMING MATCHES SECTION -->
+        <h3 class="section-title">Upcoming Matches</h3>
+        
+        <div id="matchContainer">
+            <div class="loader">Loading Upcoming Matches...</div>
+        </div>
+
+        <div style="height: 20px;"></div>
+    </div>
+
+    <!-- ===== BOTTOM NAVIGATION ===== -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="navigateTo('home')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('contest')">
+            <i class="fas fa-trophy"></i>
+            <a href="my-contests.html">My Content</a>
+            
+        </div>
+        <div class="nav-item center-trophy" onclick="navigateTo('create')">
+            <img src="https://cdn-icons-png.flaticon.com/512/3223/3223468.png" alt="Trophy">
+        </div>
+        <div class="nav-item" onclick="navigateTo('account')">
+            <i class="far fa-user"></i>
+            <a href="account.html">Account</a>
+            
+        </div>
+        <div class="nav-item" onclick="navigateTo('more')">
+            <i class="fas fa-ellipsis-h"></i>
+            <a href="more.html">More</a>
+          
+        </div>
+    </nav>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ==========================================
+        // 1. CONFIGURATION (APNI BACKEND API YAHAN DAALO)
+        // ==========================================
+        const API_BASE_URL = 'https://your-backend.com/api'; // Isko apne backend se replace karo
+        const TELEGRAM_LINK = 'https://t.me/your_channel_link';
+
+        // ==========================================
+        // 2. DUMMY DATA (Tab tak use karo jab tak backend ready na ho)
+        // ==========================================
+        const dummyMatches = [
+            {
+                id: 1, league: "The Hundred Womens", status: "Lineups out",
+                t1: "BP-W", t1_full: "Birmingham Phoenix (W)", t1_img: "https://i.pravatar.cc/150?img=1",
+                t2: "WF-W", t2_full: "Welsh Fire (W)", t2_img: "https://i.pravatar.cc/150?img=2",
+                match_time: "17:00:00", display_time: "05:00 PM", prize: "₹22,000", prediction: "Birmingham Phoenix (W)"
+            },
+            {
+                id: 2, league: "The Hundred Mens", status: "Upcoming",
+                t1: "BP", t1_full: "Birmingham Phoenix (M)", t1_img: "https://i.pravatar.cc/150?img=3",
+                t2: "WF", t2_full: "Welsh Fire (M)", t2_img: "https://i.pravatar.cc/150?img=4",
+                match_time: "19:00:00", display_time: "07:00 PM", prize: "₹22,000", prediction: "Birmingham Phoenix (M)"
+            },
+            {
+                id: 3, league: "The Hundred Womens", status: "Upcoming",
+                t1: "LS-W", t1_full: "London Spirit (W)", t1_img: "https://i.pravatar.cc/150?img=5",
+                t2: "SB-W", t2_full: "Southern Brave (W)", t2_img: "https://i.pravatar.cc/150?img=6",
+                match_time: "20:00:00", display_time: "08:00 PM", prize: "₹22,000", prediction: "London Spirit (W)"
+            }
+        ];
+
+        // ==========================================
+        // 3. MAIN FUNCTIONS
+        // ==========================================
+
+        // Timer Logic
+        function startCountdown(elementId, targetTimeStr) {
+            const timerElement = document.getElementById(elementId);
+            if(!timerElement) return;
+
+            // Aaj ki date ke sath target time set karo (HH:MM:SS)
+            const now = new Date();
+            const parts = targetTimeStr.split(':');
+            let target = new Date();
+            target.setHours(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2] || 0), 0);
+
+            // Agar time beet chuka hai toh agle din ka target lo (Live matches ke liye useful)
+            if(target < now) {
+                target.setDate(target.getDate() + 1);
+            }
+
+            const interval = setInterval(() => {
+                const current = new Date();
+                const diff = target - current;
+
+                if(diff <= 0) {
+                    clearInterval(interval);
+                    timerElement.innerHTML = `<span style="color:green;font-size:14px;">Match Live</span>`;
+                    return;
+                }
+
+                const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const m = Math.floor((diff / (1000 * 60)) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+
+                // Format: 01h : 24m : 15s
+                timerElement.innerHTML = `
+                    <span>${h.toString().padStart(2, '0')}h</span> : 
+                    <span>${m.toString().padStart(2, '0')}m</span> : 
+                    <span style="font-size:12px; color:#666;">${s.toString().padStart(2, '0')}s</span>
+                `;
+            }, 1000);
+        }
+
+        // Render Matches Function (HTML generate karna)
+        function renderMatches(matches) {
+            const container = document.getElementById('matchContainer');
+            container.innerHTML = '';
+
+            if(matches.length === 0) {
+                container.innerHTML = '<div class="loader">No matches available</div>';
+                return;
+            }
+
+            matches.forEach((match) => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                
+                // Important: Data attribute for click navigation
+                card.setAttribute('data-match-id', match.id);
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="league-name"><i class="fas fa-basketball-ball"></i> ${match.league}</span>
+                        <div class="status-area">${match.status} <i class="fas fa-tshirt"></i></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="team-info">
+                            <img src="${match.t1_img}" class="team-logo" onerror="this.src='https://via.placeholder.com/35/cccccc/000000?text=T1'" alt="${match.t1}">
+                            <span class="team-short">${match.t1}</span>
+                            <span class="team-full">${match.t1_full}</span>
+                        </div>
+                        <div class="timer-info">
+                            <div class="timer-red" id="timer_${match.id}">--h : --m</div>
+                            <span class="time-full">${match.display_time}</span>
+                        </div>
+                        <div class="team-info">
+                            <img src="${match.t2_img}" class="team-logo" onerror="this.src='https://via.placeholder.com/35/cccccc/000000?text=T2'" alt="${match.t2}">
+                            <span class="team-short">${match.t2}</span>
+                            <span class="team-full">${match.t2_full}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="prize-info">
+                            <div class="prize-icon">M</div>
+                            <span>ME0A ${match.prize}</span>
+                        </div>
+                        <span class="green-pred">${match.prediction}</span>
+                    </div>
+                `;
+
+                container.appendChild(card);
+
+                // Har card ka timer start karo (unique ID ke sath)
+                startCountdown(`timer_${match.id}`, match.match_time);
+
+                // Click event for navigation to Detail page
+                card.addEventListener('click', function() {
+                    const matchId = this.getAttribute('data-match-id');
+                    window.location.href = `match-detail.html?match_id=${matchId}`;
+                });
+            });
+        }
+
+        // Render Live Matches (Carousel)
+        function renderLiveMatches(matches) {
+            const container = document.getElementById('liveMatchesContainer');
+            container.innerHTML = '';
+
+            // Sirf live matches dikhao (Mock logic, backend se "status": "Live" aayega)
+            const liveMatches = matches.filter(m => m.status === "Lineups out" || m.status === "Live");
+            
+            if(liveMatches.length === 0) {
+                container.innerHTML = '<div style="color:#fff; padding:10px; font-size:14px;">No Live Matches Right Now</div>';
+                return;
+            }
+
+            liveMatches.forEach(match => {
+                const card = document.createElement('div');
+                card.className = 'live-card';
+                card.innerHTML = `
+                    <div class="team-col"><img src="${match.t1_img}" class="team-icon"><span>${match.t1}</span></div>
+                    <div class="v-divider"></div>
+                    <div class="team-col"><img src="${match.t2_img}" class="team-icon"><span>${match.t2}</span></div>
+                    <div class="live-info-col">
+                        <span class="time-small">${match.display_time}</span>
+                        <span class="live-badge">${match.status}</span>
+                        <span class="small-desc">1 Team - 1 Contest</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Update User Balance
+        function updateUserBalance() {
+            const balanceEl = document.getElementById('userBalance');
+            // Backend se fetch karo:
+            // fetch(`${API_BASE_URL}/get-balance`)
+            //     .then(res => res.json())
+            //     .then(data => { balanceEl.innerText = `₹${data.balance}`; });
+            
+            // Dummy:
+            balanceEl.innerText = `₹9.00`;
+        }
+
+        // Navigation Logic
+        function navigateTo(page) {
+            if(page === 'home') {
+                window.location.reload(); // Refresh home
+            } else if(page === 'contest') {
+                alert("My Contest page coming soon!");
+                // window.location.href = 'my-contests.html';
+            } else if(page === 'account') {
+                alert("Account page coming soon!");
+                // window.location.href = 'account.html';
+            } else if(page === 'create') {
+                alert("Select a match from Home to create a team!");
+            } else if(page === 'more') {
+                alert("More options coming soon!");
+            }
+        }
+
+        // ==========================================
+        // 4. FETCH DATA FROM BACKEND (OR USE DUMMY)
+        // ==========================================
+        async function loadAppData() {
+            try {
+                // REAL BACKEND:
+                // const response = await fetch(`${API_BASE_URL}/get-matches`);
+                // const data = await response.json();
+                // renderMatches(data.upcoming);
+                // renderLiveMatches(data.live);
+
+                // DUMMY DATA (Abhi ke liye):
+                setTimeout(() => {
+                    renderMatches(dummyMatches);
+                    renderLiveMatches(dummyMatches);
+                    updateUserBalance();
+                }, 500); // 0.5 sec delay for loader effect
+
+            } catch (error) {
+                console.error("Error loading data:", error);
+                document.getElementById('matchContainer').innerHTML = `<div class="loader" style="color:red;">Error loading matches. Check console.</div>`;
+            }
+        }
+
+        // ==========================================
+        // 5. START APP
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', loadAppData);
+    </script>
+</body>
+</html>
