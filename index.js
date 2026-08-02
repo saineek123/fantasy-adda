@@ -1,0 +1,262 @@
+// ======================================
+// Fantasy Adda - Home Page JS
+// ======================================
+
+import { auth, database } from "./firebase.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
+import {
+    ref,
+    onValue
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+
+// ============================
+// Elements
+// ============================
+
+const balanceBox =
+document.getElementById("balance");
+
+
+const liveMatches =
+document.getElementById("liveMatches");
+
+
+// ============================
+// User Check
+// ============================
+
+onAuthStateChanged(auth,(user)=>{
+
+
+    if(!user){
+
+        window.location.href="login.html";
+
+        return;
+
+    }
+
+
+    loadWallet(user.uid);
+
+});
+
+
+
+// ============================
+// Load Wallet Balance
+// ============================
+
+function loadWallet(uid){
+
+
+    const walletRef =
+    ref(database,"users/"+uid+"/wallet");
+
+
+    onValue(walletRef,(snapshot)=>{
+
+
+        if(snapshot.exists()){
+
+
+            const wallet =
+            snapshot.val();
+
+
+            balanceBox.innerText =
+            "₹"+(wallet.balance || 0);
+
+
+        }
+
+        else{
+
+
+            balanceBox.innerText =
+            "₹0";
+
+
+        }
+
+
+    });
+
+
+}
+
+
+
+
+// ============================
+// Load Live Matches
+// ============================
+
+const matchesRef =
+ref(database,"matches");
+
+
+
+onValue(matchesRef,(snapshot)=>{
+
+
+    liveMatches.innerHTML="";
+
+
+    if(!snapshot.exists()){
+
+
+        liveMatches.innerHTML=
+
+        `
+        <div class="empty">
+
+        No Live Matches
+
+        </div>
+        `;
+
+
+        return;
+
+    }
+
+
+
+    const matches =
+    snapshot.val();
+
+
+
+    Object.keys(matches).forEach(id=>{
+
+
+        const match =
+        matches[id];
+
+
+        // Only Live & Upcoming
+
+
+        if(
+            match.status==="Live" ||
+            match.status==="Upcoming"
+        ){
+
+
+
+            createMatchCard(
+                id,
+                match
+            );
+
+
+        }
+
+
+
+    });
+
+
+
+});
+
+
+
+
+
+// ============================
+// Create Match Card
+// ============================
+
+function createMatchCard(id,match){
+
+
+
+const card = document.createElement("div");
+
+
+card.className="match-card";
+
+
+
+card.innerHTML=`
+
+<div class="teams">
+
+
+<div class="team">
+
+<img src="${match.teamALogo || 'assets/default-team.png'}">
+
+<p>${match.teamA}</p>
+
+</div>
+
+
+<div class="vs">
+
+VS
+
+</div>
+
+
+
+<div class="team">
+
+<img src="${match.teamBLogo || 'assets/default-team.png'}">
+
+<p>${match.teamB}</p>
+
+</div>
+
+
+
+</div>
+
+
+<p style="text-align:center;margin-top:10px;color:#777">
+
+${match.league}
+
+</p>
+
+
+<button class="tradeBtn">
+
+Trade Now
+
+</button>
+
+
+`;
+
+
+
+
+// Trade Button
+
+
+card.querySelector(".tradeBtn")
+.addEventListener("click",()=>{
+
+
+window.location.href=
+"trade.html?id="+id;
+
+
+});
+
+
+
+liveMatches.appendChild(card);
+
+
+
+}
