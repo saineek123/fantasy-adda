@@ -1,262 +1,270 @@
-// ======================================
-// Fantasy Adda - Home Page JS
-// ======================================
+<!DOCTYPE html>
+<html lang="en">
 
-import { auth, database } from "./firebase.js";
+<head>
 
-import {
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+<meta charset="UTF-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-import {
-    ref,
-    onValue
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+<title>Fantasy Adda</title>
 
+<link rel="stylesheet" href="css/index.css">
 
-// ============================
-// Elements
-// ============================
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-const balanceBox =
-document.getElementById("balance");
+</head>
 
 
-const liveMatches =
-document.getElementById("liveMatches");
+<body>
 
 
-// ============================
-// User Check
-// ============================
+<!-- Header -->
 
-onAuthStateChanged(auth,(user)=>{
+<header>
 
+<div class="logo">
 
-    if(!user){
-
-        window.location.href="login.html";
-
-        return;
-
-    }
-
-
-    loadWallet(user.uid);
-
-});
-
-
-
-// ============================
-// Load Wallet Balance
-// ============================
-
-function loadWallet(uid){
-
-
-    const walletRef =
-    ref(database,"users/"+uid+"/wallet");
-
-
-    onValue(walletRef,(snapshot)=>{
-
-
-        if(snapshot.exists()){
-
-
-            const wallet =
-            snapshot.val();
-
-
-            balanceBox.innerText =
-            "₹"+(wallet.balance || 0);
-
-
-        }
-
-        else{
-
-
-            balanceBox.innerText =
-            "₹0";
-
-
-        }
-
-
-    });
-
-
-}
-
-
-
-
-// ============================
-// Load Live Matches
-// ============================
-
-const matchesRef =
-ref(database,"matches");
-
-
-
-onValue(matchesRef,(snapshot)=>{
-
-
-    liveMatches.innerHTML="";
-
-
-    if(!snapshot.exists()){
-
-
-        liveMatches.innerHTML=
-
-        `
-        <div class="empty">
-
-        No Live Matches
-
-        </div>
-        `;
-
-
-        return;
-
-    }
-
-
-
-    const matches =
-    snapshot.val();
-
-
-
-    Object.keys(matches).forEach(id=>{
-
-
-        const match =
-        matches[id];
-
-
-        // Only Live & Upcoming
-
-
-        if(
-            match.status==="Live" ||
-            match.status==="Upcoming"
-        ){
-
-
-
-            createMatchCard(
-                id,
-                match
-            );
-
-
-        }
-
-
-
-    });
-
-
-
-});
-
-
-
-
-
-// ============================
-// Create Match Card
-// ============================
-
-function createMatchCard(id,match){
-
-
-
-const card = document.createElement("div");
-
-
-card.className="match-card";
-
-
-
-card.innerHTML=`
-
-<div class="teams">
-
-
-<div class="team">
-
-<img src="${match.teamALogo || 'assets/default-team.png'}">
-
-<p>${match.teamA}</p>
+🏏 Fantasy Adda
 
 </div>
 
 
-<div class="vs">
+<div class="profile">
 
-VS
+<a href="profile.html">
 
-</div>
+<i class="fa-solid fa-user"></i>
 
-
-
-<div class="team">
-
-<img src="${match.teamBLogo || 'assets/default-team.png'}">
-
-<p>${match.teamB}</p>
+</a>
 
 </div>
 
 
+</header>
 
-</div>
 
 
-<p style="text-align:center;margin-top:10px;color:#777">
+<!-- Banner -->
 
-${match.league}
+<section class="banner">
+
+<h1>
+
+Trade Your Sports Knowledge
+
+</h1>
+
+
+<p>
+
+Predict • Trade • Win
 
 </p>
 
 
-<button class="tradeBtn">
+<a href="matches.html">
 
-Trade Now
+View Matches
 
-</button>
-
-
-`;
+</a>
 
 
-
-
-// Trade Button
-
-
-card.querySelector(".tradeBtn")
-.addEventListener("click",()=>{
-
-
-window.location.href=
-"trade.html?id="+id;
-
-
-});
+</section>
 
 
 
-liveMatches.appendChild(card);
+<!-- Wallet Card -->
+
+
+<section class="wallet-card">
+
+
+<h3>
+
+My Wallet
+
+</h3>
+
+
+<div class="wallet">
+
+
+<div>
+
+<p>Total Balance</p>
+
+<h2 id="balance">
+
+₹0
+
+</h2>
+
+</div>
+
+
+<a href="wallet.html">
+
+<i class="fa-solid fa-wallet"></i>
+
+</a>
+
+
+</div>
+
+
+</section>
 
 
 
-}
+
+
+<!-- Quick Menu -->
+
+
+<section class="menu">
+
+
+<a href="matches.html">
+
+<i class="fa-solid fa-trophy"></i>
+
+<span>
+
+Matches
+
+</span>
+
+</a>
+
+
+
+<a href="trade-history.html">
+
+<i class="fa-solid fa-chart-line"></i>
+
+<span>
+
+My Trades
+
+</span>
+
+</a>
+
+
+
+<a href="transaction.html">
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+<span>
+
+History
+
+</span>
+
+</a>
+
+
+
+<a href="wallet.html">
+
+<i class="fa-solid fa-money-bill"></i>
+
+<span>
+
+Wallet
+
+</span>
+
+</a>
+
+
+
+</section>
+
+
+
+
+
+<!-- Live Matches -->
+
+
+<section class="section">
+
+
+<h2>
+
+🔥 Live Matches
+
+</h2>
+
+
+<div id="liveMatches">
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- Bottom Navigation -->
+
+
+<nav>
+
+
+<a href="index.html">
+
+<i class="fa fa-home"></i>
+
+Home
+
+</a>
+
+
+<a href="matches.html">
+
+<i class="fa fa-trophy"></i>
+
+Matches
+
+</a>
+
+
+<a href="wallet.html">
+
+<i class="fa fa-wallet"></i>
+
+Wallet
+
+</a>
+
+
+<a href="profile.html">
+
+<i class="fa fa-user"></i>
+
+Profile
+
+</a>
+
+
+</nav>
+
+
+
+
+<script type="module" src="js/firebase.js"></script>
+
+<script type="module" src="js/index.js"></script>
+
+
+</body>
+
+</html>
