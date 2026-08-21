@@ -1,92 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Withdraw</title>
-
-<link rel="stylesheet" href="css/withdraw.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw - Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f5f6fa; padding-bottom: 80px; }
+        header { background: #B80000; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+        header h2 { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .back-btn { color: #fff; font-size: 22px; text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 20px; }
+        .balance-card { background: linear-gradient(135deg, #B80000, #ff4d4d); color: #fff; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(184,0,0,.3); }
+        .balance-card h3 { font-size: 14px; font-weight: 400; opacity: 0.9; }
+        .balance-card h1 { font-size: 32px; font-weight: 700; margin: 5px 0; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #333; }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; outline: none; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group select:focus { border-color: #B80000; }
+        .withdraw-btn { width: 100%; padding: 16px; background: #B80000; color: #fff; border: none; border-radius: 12px; font-size: 20px; font-weight: 700; cursor: pointer; transition: background 0.3s; }
+        .withdraw-btn:hover { background: #8b0000; }
+        .withdraw-btn:disabled { background: #999; cursor: not-allowed; }
+        .info-text { color: #777; font-size: 13px; text-align: center; margin-top: 10px; }
+        .toast { position: fixed; top: 20px; right: 20px; background: #333; color: #fff; padding: 15px 25px; border-radius: 12px; z-index: 1000; display: none; animation: slideIn 0.4s ease; max-width: 350px; }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #d40000; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -3px 10px rgba(0,0,0,.12); z-index: 100; }
+        nav a { text-decoration: none; color: #666; font-size: 12px; text-align: center; }
+        nav a.active { color: #B80000; }
+        nav i { display: block; font-size: 20px; margin-bottom: 5px; color: #666; }
+        nav a.active i { color: #B80000; }
+    </style>
 </head>
-
 <body>
+    <header>
+        <h2><i class="fa fa-money-bill-wave"></i> Withdraw</h2>
+        <a href="wallet.html" class="back-btn"><i class="fa fa-times"></i></a>
+    </header>
+    <div class="container">
+        <div class="balance-card">
+            <h3>Available Balance</h3>
+            <h1 id="balance">₹0</h1>
+        </div>
+        <div class="form-group">
+            <label>Amount (₹)</label>
+            <input type="number" id="amount" placeholder="Enter withdrawal amount" min="1">
+        </div>
+        <div class="form-group">
+            <label>UPI ID / Bank Account</label>
+            <input type="text" id="paymentDetails" placeholder="Enter UPI ID or Bank details">
+        </div>
+        <button class="withdraw-btn" id="withdrawBtn">Request Withdrawal</button>
+        <div class="info-text">Minimum withdrawal: ₹50 • Processing time: 24-48 hours</div>
+    </div>
+    <nav>
+        <a href="index.html"><i class="fa fa-home"></i>Home</a>
+        <a href="matches.html"><i class="fa fa-trophy"></i>Matches</a>
+        <a href="wallet.html" class="active"><i class="fa fa-wallet"></i>Wallet</a>
+        <a href="profile.html"><i class="fa fa-user"></i>Profile</a>
+    </nav>
+    <div class="toast" id="toast"><i class="fa fa-check-circle"></i><span id="toastMessage">Success!</span></div>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
 
-<header>
+        const balance = document.getElementById('balance');
+        const amount = document.getElementById('amount');
+        const paymentDetails = document.getElementById('paymentDetails');
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        let toastTimeout;
+        let currentUser = null;
+        let userBalance = 0;
 
-<a href="wallet.html">
+        function showToast(msg, type = 'success') {
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = msg;
+            toast.style.display = 'block';
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
 
-<i class="fa fa-arrow-left"></i>
+        auth.onAuthStateChanged((user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            currentUser = user;
+            loadBalance(user.uid);
+        });
 
-</a>
+        function loadBalance(uid) {
+            database.ref('users/' + uid + '/wallet/balance').on('value', (snapshot) => {
+                userBalance = snapshot.val() || 0;
+                balance.textContent = '₹' + userBalance;
+            });
+        }
 
-<h2>Withdraw Money</h2>
+        withdrawBtn.addEventListener('click', async function() {
+            const amt = parseInt(amount.value);
+            const details = paymentDetails.value.trim();
 
-</header>
+            if (!amt || amt < 50) { showToast('Minimum withdrawal is ₹50', 'error'); return; }
+            if (amt > userBalance) { showToast('Insufficient balance', 'error'); return; }
+            if (!details) { showToast('Please enter UPI ID or Bank details', 'error'); return; }
 
-<div class="container">
+            this.disabled = true;
+            this.textContent = 'Processing...';
 
-<div class="balance">
+            try {
+                const newBalance = userBalance - amt;
+                await database.ref('users/' + currentUser.uid + '/wallet/balance').set(newBalance);
 
-<h3>Available Winning Balance</h3>
+                await database.ref('withdrawals').push({
+                    userId: currentUser.uid,
+                    amount: amt,
+                    paymentDetails: details,
+                    status: 'pending',
+                    createdAt: Date.now()
+                });
 
-<h1 id="winningBalance">₹0</h1>
+                await database.ref('transactions').push({
+                    userId: currentUser.uid,
+                    type: 'debit',
+                    amount: amt,
+                    description: 'Withdrawal request',
+                    date: Date.now()
+                });
 
-</div>
+                showToast('Withdrawal request submitted! 🎉', 'success');
+                setTimeout(() => { window.location.href = 'wallet.html'; }, 1500);
 
-<div class="form">
-
-<input
-type="number"
-id="amount"
-placeholder="Withdraw Amount">
-
-<input
-type="text"
-id="upi"
-placeholder="UPI ID">
-
-<button id="withdrawBtn">
-
-Submit Withdraw
-
-</button>
-
-</div>
-<div class="rules">
-
-<h4>Withdraw Rules</h4>
-
-<ul>
-
-<li>Minimum Withdraw ₹100</li>
-
-<li>Withdraw sirf Winning Wallet se hoga.</li>
-
-<li>Recharge Wallet withdraw nahi hoga.</li>
-
-<li>Bonus Wallet withdraw nahi hoga.</li>
-
-<li>Admin approval ke baad payment bheja jayega.</li>
-
-</ul>
-
-</div>
-
-</div>
-
-<script type="module"
-src="js/firebase.js"></script>
-
-<script type="module"
-src="js/withdraw.js"></script>
-
+            } catch (error) {
+                showToast('Withdrawal failed. Please try again.', 'error');
+                console.error(error);
+            } finally {
+                this.disabled = false;
+                this.textContent = 'Request Withdrawal';
+            }
+        });
+    </script>
 </body>
-
 </html>
