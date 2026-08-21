@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade History - Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f5f6fa; padding-bottom: 80px; }
+        header { background: #B80000; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+        header h2 { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .back-btn { color: #fff; font-size: 22px; text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: #fff; padding: 8px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .tab { flex: 1; padding: 10px; text-align: center; border: none; border-radius: 8px; background: #f5f6fa; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .tab.active { background: #B80000; color: #fff; }
+        .tab:hover:not(.active) { background: #e8e8e8; }
+        .trade-item { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .trade-item .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .trade-item .header .teams { font-weight: 600; font-size: 16px; }
+        .trade-item .header .status { padding: 3px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .status.pending { background: #ffd700; color: #333; }
+        .status.win { background: #28a745; color: #fff; }
+        .status.loss { background: #d40000; color: #fff; }
+        .trade-item .details { display: flex; justify-content: space-between; color: #777; font-size: 13px; }
+        .trade-item .details .amount { font-weight: 700; font-size: 15px; }
+        .trade-item .details .amount.win { color: #28a745; }
+        .trade-item .details .amount.loss { color: #d40000; }
+        .empty { text-align: center; color: #999; padding: 40px 0; }
+        .empty i { font-size: 50px; color: #ddd; display: block; margin-bottom: 15px; }
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -3px 10px rgba(0,0,0,.12); z-index: 100; }
+        nav a { text-decoration: none; color: #666; font-size: 12px; text-align: center; }
+        nav a.active { color: #B80000; }
+        nav i { display: block; font-size: 20px; margin-bottom: 5px; color: #666; }
+        nav a.active i { color: #B80000; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2><i class="fa fa-chart-line"></i> My Trades</h2>
+        <a href="index.html" class="back-btn"><i class="fa fa-home"></i></a>
+    </header>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-tab="all">All</button>
+            <button class="tab" data-tab="pending">Pending</button>
+            <button class="tab" data-tab="win">Won</button>
+            <button class="tab" data-tab="loss">Lost</button>
+        </div>
+        <div id="tradesContainer"></div>
+    </div>
+    <nav>
+        <a href="index.html"><i class="fa fa-home"></i>Home</a>
+        <a href="matches.html"><i class="fa fa-trophy"></i>Matches</a>
+        <a href="wallet.html"><i class="fa fa-wallet"></i>Wallet</a>
+        <a href="profile.html"><i class="fa fa-user"></i>Profile</a>
+    </nav>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        const tradesContainer = document.getElementById('tradesContainer');
+        const tabs = document.querySelectorAll('.tab');
+        let currentTab = 'all';
+
+        auth.onAuthStateChanged((user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            loadTrades(user.uid);
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentTab = this.dataset.tab;
+                auth.onAuthStateChanged((user) => {
+                    if (user) loadTrades(user.uid);
+                });
+            });
+        });
+
+        function loadTrades(uid) {
+            database.ref('trades').orderByChild('userId').equalTo(uid).on('value', (snapshot) => {
+                tradesContainer.innerHTML = '';
+                if (!snapshot.exists()) {
+                    tradesContainer.innerHTML = `<div class="empty"><i class="fa fa-chart-line"></i>No trades yet</div>`;
+                    return;
+                }
+                const trades = snapshot.val();
+                let filtered = Object.values(trades);
+                if (currentTab !== 'all') {
+                    filtered = filtered.filter(t => t.status === currentTab);
+                }
+                if (filtered.length === 0) {
+                    tradesContainer.innerHTML = `<div class="empty"><i class="fa fa-search"></i>No ${currentTab} trades</div>`;
+                    return;
+                }
+                filtered.reverse().forEach(t => {
+                    const div = document.createElement('div');
+                    div.className = 'trade-item';
+                    const statusClass = t.status || 'pending';
+                    const isWin = statusClass === 'win';
+                    div.innerHTML = `
+                        <div class="header">
+                            <span class="teams">${t.teamA || 'Team A'} vs ${t.teamB || 'Team B'}</span>
+                            <span class="status ${statusClass}">${statusClass.toUpperCase()}</span>
+                        </div>
+                        <div class="details">
+                            <span>${t.selectedTeam || '—'} • Odds: ${t.odds || '1.95'}</span>
+                            <span class="amount ${isWin ? 'win' : statusClass === 'loss' ? 'loss' : ''}">
+                                ${isWin ? '+' : statusClass === 'loss' ? '-' : ''}₹${t.amount || 0}
+                            </span>
+                        </div>
+                    `;
+                    tradesContainer.appendChild(div);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
