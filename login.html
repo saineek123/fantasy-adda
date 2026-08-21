@@ -6,204 +6,38 @@
     <title>Fantasy Adda Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #8B0000, #d40000);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            width: 100%;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 400px;
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 35px 30px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.6s ease;
-        }
-
-        .logo {
-            width: 90px;
-            display: block;
-            margin: auto;
-            margin-bottom: 20px;
-        }
-
-        .card h2 {
-            text-align: center;
-            color: #b80000;
-            margin-bottom: 5px;
-        }
-
-        .card p {
-            text-align: center;
-            color: #666;
-            margin-bottom: 25px;
-        }
-
-        .input-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .input-box i {
-            position: absolute;
-            left: 15px;
-            top: 16px;
-            color: #888;
-        }
-
-        .input-box input {
-            width: 100%;
-            padding: 14px 45px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            outline: none;
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
-
-        .input-box input:focus {
-            border-color: #b80000;
-        }
-
-        #togglePassword {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            cursor: pointer;
-            color: #888;
-        }
-
-        #togglePassword:hover {
-            color: #b80000;
-        }
-
-        .remember {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .remember a {
-            color: #b80000;
-            text-decoration: none;
-        }
-
-        .remember a:hover {
-            text-decoration: underline;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: #b80000;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #8b0000;
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .or {
-            text-align: center;
-            margin: 20px 0;
-            font-weight: bold;
-            color: #666;
-        }
-
-        .google {
-            background: #fff;
-            color: #444;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .google:hover {
-            background: #f4f4f4;
-            border-color: #bbb;
-        }
-
-        .bottom {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .bottom a {
-            color: #b80000;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .bottom a:hover {
-            text-decoration: underline;
-        }
-
-        .error-msg {
-            color: #d40000;
-            font-size: 14px;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .success-msg {
-            color: #28a745;
-            font-size: 14px;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media(max-width: 450px) {
-            .card {
-                padding: 25px 20px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #8B0000, #d40000); height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { width: 100%; padding: 20px; display: flex; justify-content: center; align-items: center; }
+        .card { width: 100%; max-width: 400px; background: #ffffff; border-radius: 20px; padding: 35px 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: fadeIn 0.6s ease; }
+        .logo { width: 90px; display: block; margin: auto; margin-bottom: 20px; }
+        .card h2 { text-align: center; color: #b80000; margin-bottom: 5px; }
+        .card p { text-align: center; color: #666; margin-bottom: 25px; }
+        .input-box { position: relative; margin-bottom: 20px; }
+        .input-box i { position: absolute; left: 15px; top: 16px; color: #888; }
+        .input-box input { width: 100%; padding: 14px 45px; border: 1px solid #ddd; border-radius: 12px; outline: none; font-size: 15px; transition: border-color 0.3s; }
+        .input-box input:focus { border-color: #b80000; }
+        .toggle-password { position: absolute; right: 15px; top: 15px; cursor: pointer; color: #888; }
+        .toggle-password:hover { color: #b80000; }
+        .remember { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 20px; }
+        .remember a { color: #b80000; text-decoration: none; }
+        .remember a:hover { text-decoration: underline; }
+        button { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #b80000; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #8b0000; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .or { text-align: center; margin: 20px 0; font-weight: bold; color: #666; position: relative; }
+        .or::before, .or::after { content: ''; position: absolute; top: 50%; width: 30%; height: 1px; background: #ddd; }
+        .or::before { left: 0; }
+        .or::after { right: 0; }
+        .google { background: #fff; color: #444; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .google:hover { background: #f4f4f4; border-color: #bbb; }
+        .bottom { text-align: center; margin-top: 20px; color: #555; font-size: 14px; }
+        .bottom a { color: #b80000; text-decoration: none; font-weight: bold; }
+        .bottom a:hover { text-decoration: underline; }
+        .error-msg { color: #d40000; font-size: 14px; text-align: center; margin-top: 10px; display: none; background: #fff0f0; padding: 10px; border-radius: 8px; border: 1px solid #ffd6d6; }
+        .success-msg { color: #28a745; font-size: 14px; text-align: center; margin-top: 10px; display: none; background: #f0fff4; padding: 10px; border-radius: 8px; border: 1px solid #d4edda; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @media(max-width:450px) { .card { padding: 25px 20px; } }
     </style>
 </head>
 <body>
@@ -212,57 +46,32 @@
             <img src="assets/logo.png" alt="Fantasy Adda Logo" class="logo">
             <h2>Fantasy Adda</h2>
             <p>Welcome Back</p>
-
             <form id="loginForm">
                 <div class="input-box">
                     <i class="fa fa-envelope"></i>
-                    <input type="email" id="email" placeholder="Email Address" required>
+                    <input type="email" id="email" placeholder="Email Address" required autocomplete="email">
                 </div>
-
                 <div class="input-box">
                     <i class="fa fa-lock"></i>
-                    <input type="password" id="password" placeholder="Password" required>
-                    <span id="togglePassword">
-                        <i class="fa fa-eye"></i>
-                    </span>
+                    <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+                    <span class="toggle-password" id="togglePassword"><i class="fa fa-eye"></i></span>
                 </div>
-
                 <div class="remember">
-                    <label>
-                        <input type="checkbox" id="rememberMe">
-                        Remember Me
-                    </label>
+                    <label><input type="checkbox" id="rememberMe"> Remember Me</label>
                     <a href="forgot-password.html">Forgot Password?</a>
                 </div>
-
                 <button type="submit" id="loginBtn">Login</button>
-
                 <div id="errorMsg" class="error-msg"></div>
                 <div id="successMsg" class="success-msg"></div>
             </form>
-
             <div class="or">OR</div>
-
-            <button class="google" id="googleBtn">
-                <i class="fab fa-google"></i>
-                Continue With Google
-            </button>
-
-            <div class="bottom">
-                Don't have account?
-                <a href="signup.html">Create Account</a>
-            </div>
+            <button class="google" id="googleBtn"><i class="fab fa-google"></i> Continue With Google</button>
+            <div class="bottom">Don't have account? <a href="signup.html">Create Account</a></div>
         </div>
     </div>
-
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
-
     <script>
-        // ======================================
-        // Firebase Configuration
-        // ======================================
         const firebaseConfig = {
             apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
             authDomain: "fantasy-adda-e3b72.firebaseapp.com",
@@ -272,14 +81,8 @@
             appId: "1:882657286194:web:284e818359de2363f0442b",
             measurementId: "G-8HJX9NRL1B"
         };
-
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-
-        // ======================================
-        // DOM Elements
-        // ======================================
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const loginForm = document.getElementById('loginForm');
@@ -290,9 +93,6 @@
         const successMsg = document.getElementById('successMsg');
         const googleBtn = document.getElementById('googleBtn');
 
-        // ======================================
-        // Toggle Password Visibility
-        // ======================================
         togglePassword.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
@@ -300,154 +100,63 @@
             this.querySelector('i').classList.toggle('fa-eye-slash');
         });
 
-        // ======================================
-        // Show/Hide Messages
-        // ======================================
-        function showError(message) {
-            errorMsg.textContent = message;
-            errorMsg.style.display = 'block';
-            successMsg.style.display = 'none';
-        }
+        function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; successMsg.style.display = 'none'; }
+        function showSuccess(msg) { successMsg.textContent = msg; successMsg.style.display = 'block'; errorMsg.style.display = 'none'; }
+        function hideMessages() { errorMsg.style.display = 'none'; successMsg.style.display = 'none'; }
 
-        function showSuccess(message) {
-            successMsg.textContent = message;
-            successMsg.style.display = 'block';
-            errorMsg.style.display = 'none';
-        }
-
-        function hideMessages() {
-            errorMsg.style.display = 'none';
-            successMsg.style.display = 'none';
-        }
-
-        // ======================================
-        // Login with Email & Password
-        // ======================================
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
-
             const email = emailInput.value.trim();
             const password = passwordInput.value;
-
-            // Basic validation
-            if (!email || !password) {
-                showError('Please fill in all fields');
-                return;
-            }
-
+            if (!email || !password) { showError('Please fill in all fields'); return; }
             loginBtn.disabled = true;
             loginBtn.textContent = 'Logging in...';
-
             try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                await auth.signInWithEmailAndPassword(email, password);
                 showSuccess('Login successful! Redirecting...');
-
-                // Remember me functionality (store in localStorage)
-                if (rememberMe.checked) {
-                    localStorage.setItem('rememberedEmail', email);
-                } else {
-                    localStorage.removeItem('rememberedEmail');
-                }
-
-                // Redirect after short delay
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-
+                if (rememberMe.checked) { localStorage.setItem('rememberedEmail', email); }
+                else { localStorage.removeItem('rememberedEmail'); }
+                setTimeout(() => { window.location.href = 'index.html'; }, 1500);
             } catch (error) {
-                console.error('Login Error:', error);
-                let errorMessage = 'Login failed. Please try again.';
-
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        errorMessage = 'No account found with this email.';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Incorrect password.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Invalid email address.';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMessage = 'This account has been disabled.';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage = 'Too many attempts. Please try again later.';
-                        break;
-                }
-
-                showError(errorMessage);
+                let msg = 'Login failed. Please try again.';
+                if (error.code === 'auth/user-not-found') msg = 'No account found with this email.';
+                else if (error.code === 'auth/wrong-password') msg = 'Incorrect password.';
+                else if (error.code === 'auth/invalid-email') msg = 'Invalid email address.';
+                else if (error.code === 'auth/user-disabled') msg = 'This account has been disabled.';
+                else if (error.code === 'auth/too-many-requests') msg = 'Too many attempts. Please try again later.';
+                showError(msg);
             } finally {
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Login';
             }
         });
 
-        // ======================================
-        // Google Sign-In
-        // ======================================
         googleBtn.addEventListener('click', async () => {
             hideMessages();
             googleBtn.disabled = true;
             googleBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Connecting...';
-
             try {
                 const provider = new firebase.auth.GoogleAuthProvider();
-                const result = await auth.signInWithPopup(provider);
-
+                await auth.signInWithPopup(provider);
                 showSuccess('Google login successful! Redirecting...');
-
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-
+                setTimeout(() => { window.location.href = 'index.html'; }, 1500);
             } catch (error) {
-                console.error('Google Login Error:', error);
-                let errorMessage = 'Google login failed. Please try again.';
-
-                if (error.code === 'auth/popup-closed-by-user') {
-                    errorMessage = 'Sign-in popup was closed. Please try again.';
-                } else if (error.code === 'auth/popup-blocked') {
-                    errorMessage = 'Pop-up was blocked. Please allow pop-ups and try again.';
-                }
-
-                showError(errorMessage);
+                let msg = 'Google login failed. Please try again.';
+                if (error.code === 'auth/popup-closed-by-user') msg = 'Sign-in popup was closed. Please try again.';
+                else if (error.code === 'auth/popup-blocked') msg = 'Pop-up was blocked. Please allow pop-ups.';
+                showError(msg);
             } finally {
                 googleBtn.disabled = false;
                 googleBtn.innerHTML = '<i class="fab fa-google"></i> Continue With Google';
             }
         });
 
-        // ======================================
-        // Auto-fill Remembered Email
-        // ======================================
-        const rememberedEmail = localStorage.getItem('rememberedEmail');
-        if (rememberedEmail) {
-            emailInput.value = rememberedEmail;
-            rememberMe.checked = true;
-        }
+        const remembered = localStorage.getItem('rememberedEmail');
+        if (remembered) { emailInput.value = remembered; rememberMe.checked = true; }
 
-        // ======================================
-        // Check if user is already logged in
-        // ======================================
         auth.onAuthStateChanged((user) => {
-            if (user) {
-                // User is already logged in, redirect to home
-                window.location.href = 'index.html';
-            }
-        });
-
-        // ======================================
-        // Enter key support
-        // ======================================
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const active = document.activeElement;
-                if (active === emailInput || active === passwordInput) {
-                    loginForm.dispatchEvent(new Event('submit'));
-                }
-            }
+            if (user) { window.location.href = 'index.html'; }
         });
     </script>
 </body>
