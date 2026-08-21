@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade - Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f5f6fa; padding-bottom: 80px; }
+        header { background: #B80000; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+        header h2 { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .back-btn { color: #fff; font-size: 22px; text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 20px; }
+        .match-detail { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,.08); margin-bottom: 20px; text-align: center; }
+        .match-detail .teams { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 15px 0; }
+        .match-detail .team { text-align: center; }
+        .match-detail .team img { width: 70px; height: 70px; border-radius: 50%; object-fit: contain; }
+        .match-detail .team p { font-weight: 600; margin-top: 5px; }
+        .match-detail .vs { font-size: 20px; font-weight: bold; color: #B80000; }
+        .match-detail .info { color: #777; font-size: 14px; margin-top: 5px; }
+        .odds { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .odds button { padding: 20px; border: 2px solid #ddd; border-radius: 15px; background: #fff; cursor: pointer; transition: all 0.3s; font-size: 16px; font-weight: 600; }
+        .odds button:hover { border-color: #B80000; transform: translateY(-2px); }
+        .odds button.selected { border-color: #B80000; background: #fff0f0; }
+        .odds button .odd { display: block; font-size: 12px; color: #777; font-weight: 400; margin-top: 5px; }
+        .trade-form { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .trade-form label { display: block; font-weight: 600; margin-bottom: 5px; color: #333; }
+        .trade-form input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; outline: none; transition: border-color 0.3s; margin-bottom: 15px; }
+        .trade-form input:focus { border-color: #B80000; }
+        .trade-form .balance-info { color: #777; font-size: 13px; margin-bottom: 15px; }
+        .place-btn { width: 100%; padding: 14px; background: #B80000; color: #fff; border: none; border-radius: 10px; font-size: 18px; font-weight: 700; cursor: pointer; transition: background 0.3s; }
+        .place-btn:hover { background: #8b0000; }
+        .place-btn:disabled { background: #999; cursor: not-allowed; }
+        .toast { position: fixed; top: 20px; right: 20px; background: #333; color: #fff; padding: 15px 25px; border-radius: 12px; z-index: 1000; display: none; animation: slideIn 0.4s ease; max-width: 350px; }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #d40000; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h2><i class="fa fa-exchange-alt"></i> Trade</h2>
+        <a href="matches.html" class="back-btn"><i class="fa fa-times"></i></a>
+    </header>
+    <div class="container">
+        <div class="match-detail" id="matchDetail">
+            <div class="teams">
+                <div class="team"><img id="teamALogo" src="assets/default-team.png"><p id="teamAName">Team A</p></div>
+                <div class="vs">VS</div>
+                <div class="team"><img id="teamBLogo" src="assets/default-team.png"><p id="teamBName">Team B</p></div>
+            </div>
+            <div class="info" id="matchInfo">Loading match details...</div>
+        </div>
+        <div class="odds" id="oddsContainer">
+            <button data-team="teamA" class="odds-btn"><span id="teamAOddsLabel">Team A</span><span class="odd" id="teamAOdds">Odds: 1.95</span></button>
+            <button data-team="teamB" class="odds-btn"><span id="teamBOddsLabel">Team B</span><span class="odd" id="teamBOdds">Odds: 1.95</span></button>
+        </div>
+        <div class="trade-form">
+            <label>Amount (₹)</label>
+            <input type="number" id="amount" placeholder="Enter amount" min="1">
+            <div class="balance-info">Balance: <span id="userBalance">₹0</span></div>
+            <button class="place-btn" id="placeTradeBtn">Place Trade</button>
+        </div>
+    </div>
+    <div class="toast" id="toast"><i class="fa fa-check-circle"></i><span id="toastMessage">Success!</span></div>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const matchId = urlParams.get('id');
+
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        let toastTimeout;
+        let selectedTeam = null;
+        let matchData = null;
+        let userBalance = 0;
+        let currentUser = null;
+
+        function showToast(msg, type = 'success') {
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = msg;
+            toast.style.display = 'block';
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        auth.onAuthStateChanged((user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            currentUser = user;
+            loadMatch();
+            loadBalance(user.uid);
+        });
+
+        function loadBalance(uid) {
+            database.ref('users/' + uid + '/wallet').on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    userBalance = snapshot.val().balance || 0;
+                    document.getElementById('userBalance').textContent = '₹' + userBalance;
+                }
+            });
+        }
+
+        function loadMatch() {
+            if (!matchId) { showToast('Match not found', 'error'); return; }
+            database.ref('matches/' + matchId).on('value', (snapshot) => {
+                if (!snapshot.exists()) { showToast('Match not found', 'error'); return; }
+                matchData = snapshot.val();
+                document.getElementById('teamAName').textContent = matchData.teamA;
+                document.getElementById('teamBName').textContent = matchData.teamB;
+                document.getElementById('teamALogo').src = matchData.teamALogo || 'assets/default-team.png';
+                document.getElementById('teamBLogo').src = matchData.teamBLogo || 'assets/default-team.png';
+                document.getElementById('teamAOddsLabel').textContent = matchData.teamA;
+                document.getElementById('teamBOddsLabel').textContent = matchData.teamB;
+                document.getElementById('teamAOdds').textContent = 'Odds: ' + (matchData.oddsA || '1.95');
+                document.getElementById('teamBOdds').textContent = 'Odds: ' + (matchData.oddsB || '1.95');
+                document.getElementById('matchInfo').textContent = matchData.league + ' • ' + (matchData.status || 'Upcoming');
+            });
+        }
+
+        document.querySelectorAll('.odds-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.odds-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTeam = this.dataset.team;
+            });
+        });
+
+        document.getElementById('placeTradeBtn').addEventListener('click', async function() {
+            if (!selectedTeam) { showToast('Please select a team first', 'error'); return; }
+            const amount = parseInt(document.getElementById('amount').value);
+            if (!amount || amount < 1) { showToast('Please enter a valid amount', 'error'); return; }
+            if (amount > userBalance) { showToast('Insufficient balance', 'error'); return; }
+            if (!matchData || matchData.status !== 'Live' && matchData.status !== 'Upcoming') {
+                showToast('This match is not available for trading', 'error');
+                return;
+            }
+
+            this.disabled = true;
+            this.textContent = 'Processing...';
+
+            try {
+                const tradeRef = database.ref('trades').push();
+                const odds = selectedTeam === 'teamA' ? (matchData.oddsA || 1.95) : (matchData.oddsB || 1.95);
+                await tradeRef.set({
+                    userId: currentUser.uid,
+                    matchId: matchId,
+                    teamA: matchData.teamA,
+                    teamB: matchData.teamB,
+                    selectedTeam: selectedTeam === 'teamA' ? matchData.teamA : matchData.teamB,
+                    amount: amount,
+                    odds: odds,
+                    status: 'pending',
+                    createdAt: Date.now()
+                });
+
+                const newBalance = userBalance - amount;
+                await database.ref('users/' + currentUser.uid + '/wallet/balance').set(newBalance);
+
+                await database.ref('transactions').push({
+                    userId: currentUser.uid,
+                    type: 'debit',
+                    amount: amount,
+                    description: 'Trade placed on ' + (selectedTeam === 'teamA' ? matchData.teamA : matchData.teamB),
+                    date: Date.now()
+                });
+
+                showToast('Trade placed successfully! 🎉', 'success');
+                setTimeout(() => { window.location.href = 'trade-history.html'; }, 2000);
+
+            } catch (error) {
+                showToast('Failed to place trade. Try again.', 'error');
+                console.error(error);
+            } finally {
+                this.disabled = false;
+                this.textContent = 'Place Trade';
+            }
+        });
+    </script>
+</body>
+</html>
