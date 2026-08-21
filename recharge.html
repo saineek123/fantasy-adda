@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge - Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f5f6fa; padding-bottom: 80px; }
+        header { background: #B80000; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+        header h2 { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .back-btn { color: #fff; font-size: 22px; text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 20px; }
+        .balance-card { background: linear-gradient(135deg, #B80000, #ff4d4d); color: #fff; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(184,0,0,.3); }
+        .balance-card h3 { font-size: 14px; font-weight: 400; opacity: 0.9; }
+        .balance-card h1 { font-size: 32px; font-weight: 700; margin: 5px 0; }
+        .amount-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .amount-options button { padding: 15px; border: 2px solid #ddd; border-radius: 12px; background: #fff; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.3s; color: #333; }
+        .amount-options button:hover { border-color: #B80000; transform: translateY(-2px); }
+        .amount-options button.selected { border-color: #B80000; background: #fff0f0; color: #B80000; }
+        .custom-amount { margin-bottom: 20px; }
+        .custom-amount input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 12px; font-size: 18px; text-align: center; outline: none; transition: border-color 0.3s; }
+        .custom-amount input:focus { border-color: #B80000; }
+        .recharge-btn { width: 100%; padding: 16px; background: #B80000; color: #fff; border: none; border-radius: 12px; font-size: 20px; font-weight: 700; cursor: pointer; transition: background 0.3s; }
+        .recharge-btn:hover { background: #8b0000; }
+        .recharge-btn:disabled { background: #999; cursor: not-allowed; }
+        .toast { position: fixed; top: 20px; right: 20px; background: #333; color: #fff; padding: 15px 25px; border-radius: 12px; z-index: 1000; display: none; animation: slideIn 0.4s ease; max-width: 350px; }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #d40000; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -3px 10px rgba(0,0,0,.12); z-index: 100; }
+        nav a { text-decoration: none; color: #666; font-size: 12px; text-align: center; }
+        nav a.active { color: #B80000; }
+        nav i { display: block; font-size: 20px; margin-bottom: 5px; color: #666; }
+        nav a.active i { color: #B80000; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2><i class="fa fa-plus-circle"></i> Recharge</h2>
+        <a href="wallet.html" class="back-btn"><i class="fa fa-times"></i></a>
+    </header>
+    <div class="container">
+        <div class="balance-card">
+            <h3>Current Balance</h3>
+            <h1 id="balance">₹0</h1>
+        </div>
+        <div class="amount-options" id="amountOptions">
+            <button data-amount="100">₹100</button>
+            <button data-amount="200">₹200</button>
+            <button data-amount="500">₹500</button>
+            <button data-amount="1000">₹1,000</button>
+            <button data-amount="2000">₹2,000</button>
+            <button data-amount="5000">₹5,000</button>
+        </div>
+        <div class="custom-amount">
+            <input type="number" id="customAmount" placeholder="Enter custom amount" min="1">
+        </div>
+        <button class="recharge-btn" id="rechargeBtn">Proceed to Recharge</button>
+    </div>
+    <nav>
+        <a href="index.html"><i class="fa fa-home"></i>Home</a>
+        <a href="matches.html"><i class="fa fa-trophy"></i>Matches</a>
+        <a href="wallet.html" class="active"><i class="fa fa-wallet"></i>Wallet</a>
+        <a href="profile.html"><i class="fa fa-user"></i>Profile</a>
+    </nav>
+    <div class="toast" id="toast"><i class="fa fa-check-circle"></i><span id="toastMessage">Success!</span></div>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        const balance = document.getElementById('balance');
+        const amountOptions = document.querySelectorAll('.amount-options button');
+        const customAmount = document.getElementById('customAmount');
+        const rechargeBtn = document.getElementById('rechargeBtn');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        let toastTimeout;
+        let selectedAmount = null;
+        let currentUser = null;
+
+        function showToast(msg, type = 'success') {
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = msg;
+            toast.style.display = 'block';
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        auth.onAuthStateChanged((user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            currentUser = user;
+            loadBalance(user.uid);
+        });
+
+        function loadBalance(uid) {
+            database.ref('users/' + uid + '/wallet/balance').on('value', (snapshot) => {
+                balance.textContent = '₹' + (snapshot.val() || 0);
+            });
+        }
+
+        amountOptions.forEach(btn => {
+            btn.addEventListener('click', function() {
+                amountOptions.forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAmount = parseInt(this.dataset.amount);
+                customAmount.value = '';
+            });
+        });
+
+        customAmount.addEventListener('input', function() {
+            amountOptions.forEach(b => b.classList.remove('selected'));
+            if (this.value) {
+                selectedAmount = parseInt(this.value);
+            } else {
+                selectedAmount = null;
+            }
+        });
+
+        rechargeBtn.addEventListener('click', async function() {
+            if (!selectedAmount || selectedAmount < 1) {
+                showToast('Please select or enter an amount', 'error');
+                return;
+            }
+
+            this.disabled = true;
+            this.textContent = 'Processing...';
+
+            try {
+                const currentBalance = await database.ref('users/' + currentUser.uid + '/wallet/balance').once('value');
+                const newBalance = (currentBalance.val() || 0) + selectedAmount;
+
+                await database.ref('users/' + currentUser.uid + '/wallet/balance').set(newBalance);
+
+                await database.ref('transactions').push({
+                    userId: currentUser.uid,
+                    type: 'credit',
+                    amount: selectedAmount,
+                    description: 'Recharge via UPI/Card',
+                    date: Date.now()
+                });
+
+                showToast('Recharge successful! ₹' + selectedAmount + ' added 🎉', 'success');
+                setTimeout(() => { window.location.href = 'wallet.html'; }, 1500);
+
+            } catch (error) {
+                showToast('Recharge failed. Please try again.', 'error');
+                console.error(error);
+            } finally {
+                this.disabled = false;
+                this.textContent = 'Proceed to Recharge';
+            }
+        });
+    </script>
+</body>
+</html>
