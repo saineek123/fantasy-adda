@@ -1,108 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Wallet</title>
-
-<link rel="stylesheet"
-href="css/wallet.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f5f6fa; padding-bottom: 80px; }
+        header { background: #B80000; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+        header h2 { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .back-btn { color: #fff; font-size: 22px; text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 20px; }
+        .balance-card { background: linear-gradient(135deg, #B80000, #ff4d4d); color: #fff; padding: 30px 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(184,0,0,.3); }
+        .balance-card h3 { font-size: 14px; font-weight: 400; opacity: 0.9; margin-bottom: 5px; }
+        .balance-card h1 { font-size: 40px; font-weight: 700; margin: 5px 0; }
+        .balance-card p { font-size: 13px; opacity: 0.8; }
+        .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .quick-actions a { background: #fff; padding: 20px; border-radius: 15px; text-align: center; text-decoration: none; color: #333; box-shadow: 0 3px 10px rgba(0,0,0,.08); transition: transform 0.2s; }
+        .quick-actions a:hover { transform: translateY(-3px); }
+        .quick-actions a i { font-size: 28px; color: #B80000; display: block; margin-bottom: 8px; }
+        .quick-actions a span { font-size: 14px; font-weight: 600; }
+        .transactions { background: #fff; border-radius: 15px; padding: 20px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .transactions h3 { margin-bottom: 15px; color: #333; }
+        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .transaction-item:last-child { border-bottom: none; }
+        .transaction-item .info { display: flex; align-items: center; gap: 12px; }
+        .transaction-item .info i { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #f5f6fa; color: #B80000; }
+        .transaction-item .info .details .title { font-weight: 600; font-size: 14px; }
+        .transaction-item .info .details .date { font-size: 12px; color: #999; }
+        .transaction-item .amount { font-weight: 700; font-size: 16px; }
+        .transaction-item .amount.credit { color: #28a745; }
+        .transaction-item .amount.debit { color: #d40000; }
+        .empty { text-align: center; color: #999; padding: 20px 0; }
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -3px 10px rgba(0,0,0,.12); z-index: 100; }
+        nav a { text-decoration: none; color: #666; font-size: 12px; text-align: center; }
+        nav a.active { color: #B80000; }
+        nav i { display: block; font-size: 20px; margin-bottom: 5px; color: #666; }
+        nav a.active i { color: #B80000; }
+        .toast { position: fixed; top: 20px; right: 20px; background: #333; color: #fff; padding: 15px 25px; border-radius: 12px; z-index: 1000; display: none; animation: slideIn 0.4s ease; max-width: 350px; }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #d40000; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    </style>
 </head>
-
 <body>
+    <header>
+        <h2><i class="fa fa-wallet"></i> Wallet</h2>
+        <a href="index.html" class="back-btn"><i class="fa fa-home"></i></a>
+    </header>
+    <div class="container">
+        <div class="balance-card">
+            <h3>Available Balance</h3>
+            <h1 id="balance">₹0</h1>
+            <p>Your total wallet balance</p>
+        </div>
+        <div class="quick-actions">
+            <a href="recharge.html"><i class="fa fa-plus-circle"></i><span>Recharge</span></a>
+            <a href="withdraw.html"><i class="fa fa-money-bill-wave"></i><span>Withdraw</span></a>
+            <a href="transaction.html"><i class="fa fa-clock-rotate-left"></i><span>History</span></a>
+            <a href="trade-history.html"><i class="fa fa-chart-line"></i><span>My Trades</span></a>
+        </div>
+        <div class="transactions">
+            <h3>Recent Transactions</h3>
+            <div id="recentTransactions"></div>
+        </div>
+    </div>
+    <nav>
+        <a href="index.html"><i class="fa fa-home"></i>Home</a>
+        <a href="matches.html"><i class="fa fa-trophy"></i>Matches</a>
+        <a href="wallet.html" class="active"><i class="fa fa-wallet"></i>Wallet</a>
+        <a href="profile.html"><i class="fa fa-user"></i>Profile</a>
+    </nav>
+    <div class="toast" id="toast"><i class="fa fa-check-circle"></i><span id="toastMessage">Success!</span></div>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
 
-<header>
+        const balance = document.getElementById('balance');
+        const recentTransactions = document.getElementById('recentTransactions');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        let toastTimeout;
 
-<h2>My Wallet</h2>
+        function showToast(msg, type = 'success') {
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = msg;
+            toast.style.display = 'block';
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
 
-</header>
+        auth.onAuthStateChanged((user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            loadWallet(user.uid);
+            loadTransactions(user.uid);
+        });
 
-<div class="container">
+        function loadWallet(uid) {
+            database.ref('users/' + uid + '/wallet').on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const wallet = snapshot.val();
+                    balance.textContent = '₹' + (wallet.balance || 0);
+                } else {
+                    balance.textContent = '₹0';
+                }
+            });
+        }
 
-<div class="total-card">
-
-<h4>Total Balance</h4>
-
-<h1 id="totalBalance">₹0.00</h1>
-
-</div>
-
-<div class="wallet-grid">
-
-<div class="wallet-box">
-
-<h3>Recharge</h3>
-
-<p id="recharge">₹0</p>
-
-</div>
-
-<div class="wallet-box">
-
-<h3>Winning</h3>
-
-<p id="winning">₹0</p>
-
-</div>
-
-<div class="wallet-box">
-
-<h3>Bonus</h3>
-
-<p id="bonus">₹0</p>
-
-</div>
-
-</div>
-
-<div class="buttons">
-
-<button onclick="location.href='add-money.html'">
-
-Add Money
-
-</button>
-
-<button onclick="location.href='withdraw.html'">
-
-Withdraw
-
-</button>
-
-</div>
-
-<h3 class="title">
-
-Recent Transactions
-
-</h3>
-
-<div id="transactionList">
-
-No Transactions
-
-</div>
-
-</div>
-
-<script type="module"
-src="js/firebase.js"></script>
-
-<script type="module"
-src="js/session.js"></script>
-
-<script type="module"
-src="js/wallet.js"></script>
-
+        function loadTransactions(uid) {
+            database.ref('transactions').orderByChild('userId').equalTo(uid).limitToLast(5).on('value', (snapshot) => {
+                recentTransactions.innerHTML = '';
+                if (!snapshot.exists()) {
+                    recentTransactions.innerHTML = `<div class="empty">No transactions yet</div>`;
+                    return;
+                }
+                const transactions = snapshot.val();
+                const list = Object.values(transactions).reverse();
+                list.forEach(t => {
+                    const div = document.createElement('div');
+                    div.className = 'transaction-item';
+                    const isCredit = t.type === 'credit';
+                    div.innerHTML = `
+                        <div class="info">
+                            <i class="${isCredit ? 'fa fa-arrow-down' : 'fa fa-arrow-up'}"></i>
+                            <div class="details">
+                                <div class="title">${t.description || t.type || 'Transaction'}</div>
+                                <div class="date">${t.date ? new Date(t.date).toLocaleDateString() : ''}</div>
+                            </div>
+                        </div>
+                        <div class="amount ${isCredit ? 'credit' : 'debit'}">${isCredit ? '+' : '-'} ₹${t.amount || 0}</div>
+                    `;
+                    recentTransactions.appendChild(div);
+                });
+            });
+        }
+    </script>
 </body>
-
 </html>
