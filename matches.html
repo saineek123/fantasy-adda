@@ -1,210 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Manage Matches</title>
-
-<link rel="stylesheet" href="../css/matches.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches - Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f5f6fa; padding-bottom: 80px; }
+        header { background: #B80000; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+        header h2 { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .back-btn { color: #fff; font-size: 22px; text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: #fff; padding: 8px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .tab { flex: 1; padding: 10px; text-align: center; border: none; border-radius: 8px; background: #f5f6fa; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .tab.active { background: #B80000; color: #fff; }
+        .tab:hover:not(.active) { background: #e8e8e8; }
+        .match-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .match-card .teams { display: flex; justify-content: space-between; align-items: center; }
+        .team { text-align: center; }
+        .team img { width: 55px; height: 55px; border-radius: 50%; object-fit: contain; }
+        .vs { font-weight: bold; color: #B80000; }
+        .match-info { text-align: center; margin-top: 10px; color: #777; font-size: 13px; }
+        .match-info .status { display: inline-block; padding: 3px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-top: 5px; }
+        .status.live { background: #ff4d4d; color: #fff; animation: pulse 1.5s infinite; }
+        .status.upcoming { background: #ffd700; color: #333; }
+        .status.completed { background: #28a745; color: #fff; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .tradeBtn { display: block; width: 100%; margin-top: 12px; padding: 10px; background: #B80000; color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+        .tradeBtn:hover { background: #990000; }
+        .tradeBtn:disabled { background: #999; cursor: not-allowed; }
+        .empty { text-align: center; color: #777; padding: 40px 0; }
+        .empty i { font-size: 50px; color: #ddd; margin-bottom: 15px; display: block; }
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -3px 10px rgba(0,0,0,.12); z-index: 100; }
+        nav a { text-decoration: none; color: #666; font-size: 12px; text-align: center; }
+        nav a.active { color: #B80000; }
+        nav i { display: block; font-size: 20px; margin-bottom: 5px; color: #666; }
+        nav a.active i { color: #B80000; }
+        .toast { position: fixed; top: 20px; right: 20px; background: #333; color: #fff; padding: 15px 25px; border-radius: 12px; z-index: 1000; display: none; animation: slideIn 0.4s ease; max-width: 350px; }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #d40000; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    </style>
 </head>
-
 <body>
-
-<!-- Header -->
-
-<header>
-
-<h2>
-
-<i class="fa-solid fa-trophy"></i>
-
-Manage Matches
-
-</h2>
-
-<a href="add-match.html" class="addBtn">
-
-<i class="fa-solid fa-plus"></i>
-
-Add Match
-
-</a>
-
-</header>
-
-<!-- Search -->
-
-<div class="topbar">
-
-<input
-type="text"
-id="searchMatch"
-placeholder="Search Team or League...">
-
-<select id="filterStatus">
-
-<option value="All">All Matches</option>
-<option value="Upcoming">Upcoming</option>
-<option value="Live">Live</option>
-<option value="Completed">Completed</option>
-
-</select>
-
-</div>
-
-<!-- Match List -->
-
-<div id="matchList">
-
-<!-- Dynamic Match Cards -->
-
-</div>
-
-<!-- Match Template -->
-
-<template id="matchTemplate">
-
-<div class="match-card">
-
-<div class="banner">
-
-<img class="bannerImg"
-src="../assets/default-banner.jpg">
-
-</div>
-
-<div class="match-body">
-
-<div class="league">
-
-🏆 <span class="leagueName"></span>
-
-</div>
-
-<div class="teams">
-
-<div class="team">
-
-<img class="teamALogo"
-src="../assets/default-team.png">
-
-<h3 class="teamA"></h3>
-
-</div>
-
-<div class="vs">
-
-VS
-
-</div>
-
-<div class="team">
-
-<img class="teamBLogo"
-src="../assets/default-team.png">
-
-<h3 class="teamB"></h3>
-
-</div>
-
-</div>
-
-<div class="details">
-
-<p>
-
-📍 <span class="venue"></span>
-
-</p>
-
-<p>
-
-🕒 <span class="time"></span>
-
-</p>
-
-<p>
-
-🏏 <span class="sport"></span>
-
-</p>
-
-</div>
-
-<div class="status">
-
-<span class="statusBadge">
-
-Upcoming
-
-</span>
-
-</div>
-
-<div class="actions">
-
-<button class="liveBtn">
-
-<i class="fa-solid fa-play"></i>
-
-Go Live
-
-</button>
-
-<button class="marketBtn">
-
-<i class="fa-solid fa-chart-line"></i>
-
-Markets
-
-</button>
-
-<button class="resultBtn">
-
-<i class="fa-solid fa-trophy"></i>
-
-Result
-
-</button>
-
-<button class="editBtn">
-
-<i class="fa-solid fa-pen"></i>
-
-Edit
-
-</button>
-
-<button class="deleteBtn">
-
-<i class="fa-solid fa-trash"></i>
-
-Delete
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</template>
-
-<script type="module"
-src="../js/firebase.js"></script>
-
-<script type="module"
-src="../js/matches.js"></script>
-
+    <header>
+        <h2><i class="fa fa-trophy"></i> Matches</h2>
+        <a href="index.html" class="back-btn"><i class="fa fa-home"></i></a>
+    </header>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-tab="live">Live</button>
+            <button class="tab" data-tab="upcoming">Upcoming</button>
+            <button class="tab" data-tab="completed">Completed</button>
+        </div>
+        <div id="matchesContainer"></div>
+    </div>
+    <nav>
+        <a href="index.html"><i class="fa fa-home"></i>Home</a>
+        <a href="matches.html" class="active"><i class="fa fa-trophy"></i>Matches</a>
+        <a href="wallet.html"><i class="fa fa-wallet"></i>Wallet</a>
+        <a href="profile.html"><i class="fa fa-user"></i>Profile</a>
+    </nav>
+    <div class="toast" id="toast"><i class="fa fa-check-circle"></i><span id="toastMessage">Success!</span></div>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        const matchesContainer = document.getElementById('matchesContainer');
+        const tabs = document.querySelectorAll('.tab');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        let toastTimeout;
+        let currentTab = 'live';
+
+        function showToast(msg, type = 'success') {
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = msg;
+            toast.style.display = 'block';
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        auth.onAuthStateChanged((user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            loadMatches();
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentTab = this.dataset.tab;
+                loadMatches();
+            });
+        });
+
+        function loadMatches() {
+            database.ref('matches').on('value', (snapshot) => {
+                matchesContainer.innerHTML = '';
+                if (!snapshot.exists()) {
+                    matchesContainer.innerHTML = `<div class="empty"><i class="fa fa-trophy"></i>No matches available</div>`;
+                    return;
+                }
+                const matches = snapshot.val();
+                let filtered = Object.keys(matches).filter(id => {
+                    const match = matches[id];
+                    if (currentTab === 'live') return match.status === 'Live';
+                    if (currentTab === 'upcoming') return match.status === 'Upcoming';
+                    if (currentTab === 'completed') return match.status === 'Completed' || match.status === 'Finished';
+                    return true;
+                });
+                if (filtered.length === 0) {
+                    matchesContainer.innerHTML = `<div class="empty"><i class="fa fa-calendar"></i>No ${currentTab} matches</div>`;
+                    return;
+                }
+                filtered.forEach(id => {
+                    const match = matches[id];
+                    createMatchCard(id, match);
+                });
+            });
+        }
+
+        function createMatchCard(id, match) {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            const statusClass = match.status === 'Live' ? 'live' : match.status === 'Upcoming' ? 'upcoming' : 'completed';
+            const isLive = match.status === 'Live';
+            const btnDisabled = match.status === 'Completed' || match.status === 'Finished';
+            card.innerHTML = `
+                <div class="teams">
+                    <div class="team"><img src="${match.teamALogo || 'assets/default-team.png'}" alt="${match.teamA}"><p>${match.teamA}</p></div>
+                    <div class="vs">VS</div>
+                    <div class="team"><img src="${match.teamBLogo || 'assets/default-team.png'}" alt="${match.teamB}"><p>${match.teamB}</p></div>
+                </div>
+                <div class="match-info">
+                    <span>${match.league}</span>
+                    <span class="status ${statusClass}">${match.status}</span>
+                    ${match.time ? `<div>🕐 ${match.time}</div>` : ''}
+                </div>
+                <button class="tradeBtn" ${btnDisabled ? 'disabled' : ''}>${isLive ? '⚡ Trade Now' : btnDisabled ? 'Match Ended' : '📅 Trade Now'}</button>
+            `;
+            if (!btnDisabled) {
+                card.querySelector('.tradeBtn').addEventListener('click', () => {
+                    window.location.href = 'trade.html?id=' + id;
+                });
+            }
+            matchesContainer.appendChild(card);
+        }
+    </script>
 </body>
-
 </html>
