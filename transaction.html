@@ -1,121 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Transaction History</title>
-
-<link rel="stylesheet" href="css/transaction.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f5f6fa; padding-bottom: 80px; }
+        header { background: #B80000; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+        header h2 { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .back-btn { color: #fff; font-size: 22px; text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 20px; }
+        .filter-tabs { display: flex; gap: 10px; margin-bottom: 20px; background: #fff; padding: 8px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .filter-tab { flex: 1; padding: 10px; text-align: center; border: none; border-radius: 8px; background: #f5f6fa; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .filter-tab.active { background: #B80000; color: #fff; }
+        .filter-tab:hover:not(.active) { background: #e8e8e8; }
+        .transaction-item { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; box-shadow: 0 3px 10px rgba(0,0,0,.08); display: flex; justify-content: space-between; align-items: center; }
+        .transaction-item .info { display: flex; align-items: center; gap: 12px; }
+        .transaction-item .info i { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #f5f6fa; color: #B80000; font-size: 18px; }
+        .transaction-item .info .details .title { font-weight: 600; font-size: 14px; }
+        .transaction-item .info .details .date { font-size: 12px; color: #999; }
+        .transaction-item .amount { font-weight: 700; font-size: 16px; }
+        .transaction-item .amount.credit { color: #28a745; }
+        .transaction-item .amount.debit { color: #d40000; }
+        .empty { text-align: center; color: #999; padding: 40px 0; }
+        .empty i { font-size: 50px; color: #ddd; display: block; margin-bottom: 15px; }
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -3px 10px rgba(0,0,0,.12); z-index: 100; }
+        nav a { text-decoration: none; color: #666; font-size: 12px; text-align: center; }
+        nav a.active { color: #B80000; }
+        nav i { display: block; font-size: 20px; margin-bottom: 5px; color: #666; }
+        nav a.active i { color: #B80000; }
+    </style>
 </head>
-
 <body>
+    <header>
+        <h2><i class="fa fa-clock-rotate-left"></i> History</h2>
+        <a href="wallet.html" class="back-btn"><i class="fa fa-times"></i></a>
+    </header>
+    <div class="container">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="credit">Credits</button>
+            <button class="filter-tab" data-filter="debit">Debits</button>
+        </div>
+        <div id="transactionsContainer"></div>
+    </div>
+    <nav>
+        <a href="index.html"><i class="fa fa-home"></i>Home</a>
+        <a href="matches.html"><i class="fa fa-trophy"></i>Matches</a>
+        <a href="wallet.html" class="active"><i class="fa fa-wallet"></i>Wallet</a>
+        <a href="profile.html"><i class="fa fa-user"></i>Profile</a>
+    </nav>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
 
-<header>
+        const transactionsContainer = document.getElementById('transactionsContainer');
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        let currentFilter = 'all';
 
-<a href="wallet.html">
+        auth.onAuthStateChanged((user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            loadTransactions(user.uid);
+        });
 
-<i class="fa fa-arrow-left"></i>
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                auth.onAuthStateChanged((user) => {
+                    if (user) loadTransactions(user.uid);
+                });
+            });
+        });
 
-</a>
-
-<h2>Transaction History</h2>
-
-</header>
-
-<div class="container">
-
-<div class="filter">
-
-<select id="filter">
-
-<option value="all">All</option>
-
-<option value="Recharge">Recharge</option>
-
-<option value="Withdraw">Withdraw</option>
-
-<option value="Trade">Trade</option>
-
-<option value="Win">Win</option>
-
-<option value="Loss">Loss</option>
-
-</select>
-
-</div>
-
-<div id="transactionList">
-
-<!-- Transactions Here -->
-
-</div>
-
-</div>
-
-<template id="transactionTemplate">
-
-<div class="transaction-card">
-
-<div class="left">
-
-<div class="icon">
-
-<i class="fa fa-wallet"></i>
-
-</div>
-
-<div>
-
-<h3 class="type">
-
-Recharge
-
-</h3>
-
-<p class="date">
-
-12 Jul 2026
-
-</p>
-
-</div>
-
-</div>
-
-<div class="right">
-
-<h3 class="amount">
-
-₹0
-
-</h3>
-
-<span class="status">
-
-Success
-
-</span>
-
-</div>
-
-</div>
-
-</template>
-
-<script type="module"
-src="js/firebase.js"></script>
-
-<script type="module"
-src="js/transaction.js"></script>
-
+        function loadTransactions(uid) {
+            database.ref('transactions').orderByChild('userId').equalTo(uid).on('value', (snapshot) => {
+                transactionsContainer.innerHTML = '';
+                if (!snapshot.exists()) {
+                    transactionsContainer.innerHTML = `<div class="empty"><i class="fa fa-receipt"></i>No transactions yet</div>`;
+                    return;
+                }
+                const transactions = snapshot.val();
+                let list = Object.values(transactions);
+                if (currentFilter !== 'all') {
+                    list = list.filter(t => t.type === currentFilter);
+                }
+                if (list.length === 0) {
+                    transactionsContainer.innerHTML = `<div class="empty"><i class="fa fa-search"></i>No ${currentFilter} transactions</div>`;
+                    return;
+                }
+                list.reverse().forEach(t => {
+                    const div = document.createElement('div');
+                    div.className = 'transaction-item';
+                    const isCredit = t.type === 'credit';
+                    div.innerHTML = `
+                        <div class="info">
+                            <i class="${isCredit ? 'fa fa-arrow-down' : 'fa fa-arrow-up'}"></i>
+                            <div class="details">
+                                <div class="title">${t.description || t.type || 'Transaction'}</div>
+                                <div class="date">${t.date ? new Date(t.date).toLocaleString() : ''}</div>
+                            </div>
+                        </div>
+                        <div class="amount ${isCredit ? 'credit' : 'debit'}">${isCredit ? '+' : '-'} ₹${t.amount || 0}</div>
+                    `;
+                    transactionsContainer.appendChild(div);
+                });
+            });
+        }
+    </script>
 </body>
-
 </html>
