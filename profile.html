@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f5f6fa;
+            padding-bottom: 80px;
+        }
+
+        /* ======================
+           Header
+        ====================== */
+        header {
+            background: #B80000;
+            color: #fff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .15);
+        }
+
+        header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn {
+            color: #fff;
+            font-size: 22px;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ======================
+           Container
+        ====================== */
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* ======================
+           Profile Card
+        ====================== */
+        .profile-card {
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #B80000, #ff4d4d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 15px rgba(184, 0, 0, .3);
+        }
+
+        .profile-img i {
+            font-size: 50px;
+            color: #fff;
+        }
+
+        .profile-card h2 {
+            color: #222;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .profile-card p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .profile-card .member-since {
+            color: #999;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* ======================
+           Wallet Card
+        ====================== */
+        .wallet-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .wallet-card h3 {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .wallet-card h1 {
+            color: #B80000;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .wallet-card button {
+            background: #B80000;
+            color: #fff;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .wallet-card button:hover {
+            background: #8b0000;
+        }
+
+        /* ======================
+           Stats
+        ====================== */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stats div {
+            background: #fff;
+            padding: 18px 10px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+        }
+
+        .stats div h2 {
+            color: #B80000;
+            font-size: 24px;
+        }
+
+        .stats div p {
+            color: #888;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .stats div .stat-icon {
+            font-size: 20px;
+            color: #B80000;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* ======================
+           Menu Card
+        ====================== */
+        .menu-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .menu-card a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .menu-card a:last-child {
+            border-bottom: none;
+        }
+
+        .menu-card a:hover {
+            background: #f8f8f8;
+        }
+
+        .menu-card a i {
+            width: 24px;
+            color: #B80000;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .menu-card a .arrow {
+            margin-left: auto;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .menu-card a.logout {
+            color: #d40000;
+        }
+
+        .menu-card a.logout i {
+            color: #d40000;
+        }
+
+        /* ======================
+           Bottom Navigation
+        ====================== */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -3px 10px rgba(0, 0, 0, .12);
+            z-index: 100;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+            transition: color 0.3s;
+        }
+
+        nav a.active {
+            color: #B80000;
+        }
+
+        nav i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        nav a.active i {
+            color: #B80000;
+        }
+
+        /* ======================
+           Loading & Empty States
+        ====================== */
+        .loading {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+        .loading i {
+            font-size: 30px;
+            color: #B80000;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ======================
+           Toast Notification
+        ====================== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.4s ease;
+            max-width: 350px;
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+
+        .toast.error {
+            background: #d40000;
+        }
+
+        .toast i {
+            margin-right: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ======================
+           Mobile Responsive
+        ====================== */
+        @media(max-width: 500px) {
+            .container {
+                padding: 0 15px;
+                margin: 15px auto;
+            }
+
+            .profile-img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .profile-img i {
+                font-size: 40px;
+            }
+
+            .wallet-card h1 {
+                font-size: 28px;
+            }
+
+            .stats div h2 {
+                font-size: 20px;
+            }
+
+            .menu-card a {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h2>
+            <i class="fa fa-user"></i>
+            My Profile
+        </h2>
+        <a href="index.html" class="back-btn">
+            <i class="fa fa-home"></i>
+        </a>
+    </header>
+
+    <div class="container">
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-img">
+                <i class="fa fa-user"></i>
+            </div>
+            <h2 id="userName">Loading...</h2>
+            <p id="userEmail">Loading...</p>
+            <div class="member-since" id="memberSince">Member since: Loading...</div>
+        </div>
+
+        <!-- Wallet Summary -->
+        <div class="wallet-card">
+            <h3>Wallet Balance</h3>
+            <h1 id="walletBalance">₹0</h1>
+            <button onclick="location.href='wallet.html'">
+                <i class="fa fa-wallet"></i> Go to Wallet
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div>
+                <span class="stat-icon"><i class="fa fa-exchange-alt"></i></span>
+                <h2 id="totalTrades">0</h2>
+                <p>Total Trades</p>
+            </div>
+            <div>
+                <span class="stat-icon"><i class="fa fa-check-circle"></i></span>
+                <h2 id="winTrades">0</h2>
+                <p>Wins</p>
+            </div>
+            <div>
+                <span class="stat-icon"><i class="fa fa-times-circle"></i></span>
+                <h2 id="lossTrades">0</h2>
+                <p>Losses</p>
+            </div>
+        </div>
+
+        <!-- Menu -->
+        <div class="menu-card">
+            <a href="trade-history.html">
+                <i class="fa fa-chart-line"></i>
+                My Trades
+                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+            </a>
+            <a href="wallet.html">
+                <i class="fa fa-wallet"></i>
+                Wallet
+                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+            </a>
+            <a href="recharge.html">
+                <i class="fa fa-plus-circle"></i>
+                Recharge
+                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+            </a>
+            <a href="withdraw.html">
+                <i class="fa fa-money-bill-wave"></i>
+                Withdraw
+                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+            </a>
+            <a href="#" class="logout" id="logoutBtn">
+                <i class="fa fa-sign-out-alt"></i>
+                Logout
+                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav>
+        <a href="index.html">
+            <i class="fa fa-home"></i>
+            Home
+        </a>
+        <a href="matches.html">
+            <i class="fa fa-trophy"></i>
+            Matches
+        </a>
+        <a href="wallet.html">
+            <i class="fa fa-wallet"></i>
+            Wallet
+        </a>
+        <a href="profile.html" class="active">
+            <i class="fa fa-user"></i>
+            Profile
+        </a>
+    </nav>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fa fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+
+    <script>
+        // ======================================
+        // Firebase Configuration
+        // ======================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        // ======================================
+        // DOM Elements
+        // ======================================
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const memberSince = document.getElementById('memberSince');
+        const walletBalance = document.getElementById('walletBalance');
+        const totalTrades = document.getElementById('totalTrades');
+        const winTrades = document.getElementById('winTrades');
+        const lossTrades = document.getElementById('lossTrades');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+
+        // ======================================
+        // Toast Notification
+        // ======================================
+        let toastTimeout;
+
+        function showToast(message, type = 'success') {
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = message;
+            toast.style.display = 'block';
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // ======================================
+        // Load User Profile
+        // ======================================
+        function loadProfile(uid) {
+            const userRef = database.ref('users/' + uid);
+
+            userRef.on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+
+                    // Name & Email
+                    userName.textContent = userData.name || 'User';
+                    userEmail.textContent = userData.email || 'No email';
+
+                    // Member since
+                    if (userData.createdAt) {
+                        const date = new Date(userData.createdAt);
+                        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+                        memberSince.textContent = 'Member since: ' + date.toLocaleDateString('en-US', options);
+                    }
+
+                    // Wallet Balance
+                    if (userData.wallet) {
+                        walletBalance.textContent = '₹' + (userData.wallet.balance || 0);
+                    } else {
+                        walletBalance.textContent = '₹0';
+                    }
+                } else {
+                    showToast('User data not found', 'error');
+                }
+            });
+        }
+
+        // ======================================
+        // Load User Stats
+        // ======================================
+        function loadStats(uid) {
+            const tradesRef = database.ref('trades');
+
+            tradesRef.orderByChild('userId').equalTo(uid).on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    totalTrades.textContent = '0';
+                    winTrades.textContent = '0';
+                    lossTrades.textContent = '0';
+                    return;
+                }
+
+                const trades = snapshot.val();
+                let total = 0;
+                let wins = 0;
+                let losses = 0;
+
+                Object.values(trades).forEach((trade) => {
+                    total++;
+                    if (trade.status === 'win') wins++;
+                    else if (trade.status === 'loss') losses++;
+                });
+
+                totalTrades.textContent = total;
+                winTrades.textContent = wins;
+                lossTrades.textContent = losses;
+            });
+        }
+
+        // ======================================
+        // Check Auth State
+        // ======================================
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                showToast('Please login to continue', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+                return;
+            }
+
+            loadProfile(user.uid);
+            loadStats(user.uid);
+        });
+
+        // ======================================
+        // Logout
+        // ======================================
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            if (!confirm('Are you sure you want to logout?')) {
+                return;
+            }
+
+            try {
+                await auth.signOut();
+                showToast('Logged out successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            } catch (error) {
+                console.error('Logout Error:', error);
+                showToast('Logout failed. Please try again.', 'error');
+            }
+        });
+
+        // ======================================
+        // Keyboard shortcut: ESC to logout
+        // ======================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                logoutBtn.click();
+            }
+        });
+    </script>
+
+</body>
+</html>
