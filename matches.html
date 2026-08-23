@@ -1,903 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Matches - Fantasy Adda</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: #f4f6f9;
-            padding-bottom: 30px;
-        }
-
-        header {
-            background: #B80000;
-            color: #fff;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, .15);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        header h2 {
-            font-size: 22px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .addBtn {
-            background: #fff;
-            color: #B80000;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .addBtn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-        }
-
-        .topbar {
-            max-width: 1100px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .topbar input,
-        .topbar select {
-            padding: 12px 18px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 14px;
-            outline: none;
-            flex: 1;
-            min-width: 180px;
-            background: #fff;
-            transition: border-color 0.3s;
-        }
-
-        .topbar input:focus,
-        .topbar select:focus {
-            border-color: #B80000;
-        }
-
-        #matchList {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .match-card {
-            background: #fff;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, .08);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .match-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, .12);
-        }
-
-        .banner {
-            height: 120px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .banner .status-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            padding: 5px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-badge.live {
-            background: #ff4d4d;
-            color: #fff;
-            animation: pulse 1.5s infinite;
-        }
-
-        .status-badge.upcoming {
-            background: #ffd700;
-            color: #333;
-        }
-
-        .status-badge.completed {
-            background: #28a745;
-            color: #fff;
-        }
-
-        .status-badge.finished {
-            background: #6c757d;
-            color: #fff;
-        }
-
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        .match-body {
-            padding: 18px;
-        }
-
-        .league {
-            font-size: 13px;
-            color: #888;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .teams {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .team {
-            text-align: center;
-            flex: 1;
-        }
-
-        .team img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: contain;
-            background: #f5f6fa;
-            padding: 5px;
-        }
-
-        .team h3 {
-            font-size: 14px;
-            margin-top: 5px;
-            color: #222;
-        }
-
-        .vs {
-            font-weight: 700;
-            color: #B80000;
-            font-size: 14px;
-            padding: 0 10px;
-        }
-
-        .details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 15px;
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 12px;
-            padding: 8px 0;
-            border-top: 1px solid #f0f0f0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .details p {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .details p i {
-            width: 16px;
-            color: #B80000;
-        }
-
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 12px;
-        }
-
-        .actions button {
-            flex: 1;
-            min-width: 45px;
-            padding: 8px 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-
-        .actions button:hover {
-            transform: scale(1.05);
-        }
-
-        .actions .liveBtn {
-            background: #ff4d4d;
-            color: #fff;
-        }
-
-        .actions .liveBtn:hover {
-            background: #d40000;
-        }
-
-        .actions .marketBtn {
-            background: #17a2b8;
-            color: #fff;
-        }
-
-        .actions .marketBtn:hover {
-            background: #138496;
-        }
-
-        .actions .resultBtn {
-            background: #28a745;
-            color: #fff;
-        }
-
-        .actions .resultBtn:hover {
-            background: #1e7e34;
-        }
-
-        .actions .payoutBtn {
-            background: #ff8c00;
-            color: #fff;
-        }
-
-        .actions .payoutBtn:hover {
-            background: #e07b00;
-        }
-
-        .actions .editBtn {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .actions .editBtn:hover {
-            background: #e0a800;
-        }
-
-        .actions .deleteBtn {
-            background: #dc3545;
-            color: #fff;
-        }
-
-        .actions .deleteBtn:hover {
-            background: #bd2130;
-        }
-
-        .actions .payoutBtn:disabled {
-            background: #999;
-            cursor: not-allowed;
-        }
-
-        .empty {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: #999;
-            padding: 60px 20px;
-        }
-
-        .empty i {
-            font-size: 50px;
-            color: #ddd;
-            display: block;
-            margin-bottom: 15px;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #333;
-            color: #fff;
-            padding: 15px 25px;
-            border-radius: 12px;
-            z-index: 1000;
-            display: none;
-            animation: slideIn 0.4s ease;
-            max-width: 350px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .toast.success {
-            background: #28a745;
-        }
-        .toast.error {
-            background: #d40000;
-        }
-        .toast.info {
-            background: #17a2b8;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @media(max-width: 600px) {
-            #matchList {
-                grid-template-columns: 1fr;
-            }
-
-            .topbar {
-                flex-direction: column;
-            }
-
-            .topbar input,
-            .topbar select {
-                width: 100%;
-            }
-
-            .actions button {
-                font-size: 11px;
-                padding: 6px 8px;
-                min-width: 35px;
-            }
-
-            header h2 {
-                font-size: 18px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matches - Fantasy Adda</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f6fa;padding-bottom:80px}
+header{background:#b80000;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+header h2{font-size:20px}.back{color:#fff;text-decoration:none;font-size:22px}
+.container{max-width:600px;margin:20px auto;padding:0 15px}
+.tabs{display:flex;gap:8px;background:#fff;padding:7px;border-radius:12px;margin-bottom:20px}
+.tab{flex:1;padding:11px;border:0;border-radius:8px;background:#f1f1f1;font-weight:bold;cursor:pointer}
+.tab.active{background:#b80000;color:#fff}
+.card{background:#fff;padding:17px;border-radius:15px;margin-bottom:15px;box-shadow:0 3px 12px #0001}
+.teams{display:flex;align-items:center;justify-content:space-between;text-align:center}
+.team{width:40%}.team img{width:60px;height:60px;object-fit:contain;border-radius:50%}
+.team p{font-weight:bold;margin-top:6px}.vs{font-weight:bold;color:#b80000}
+.info{text-align:center;margin-top:12px;color:#777;font-size:13px}
+.status{display:inline-block;margin-top:7px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:bold}
+.live{background:#ff4d4d;color:#fff}.upcoming{background:#ffd700;color:#222}.completed{background:#28a745;color:#fff}
+.trade{width:100%;margin-top:13px;padding:11px;border:0;border-radius:9px;background:#b80000;color:#fff;font-weight:bold;font-size:15px}
+.empty{text-align:center;padding:50px 10px;color:#777}
+.loading{text-align:center;padding:40px;color:#777}
+nav{position:fixed;bottom:0;left:0;width:100%;background:#fff;display:flex;justify-content:space-around;padding:12px;box-shadow:0 -3px 10px #0002}
+nav a{color:#666;text-decoration:none;text-align:center;font-size:12px}nav i{display:block;font-size:20px;margin-bottom:4px}
+</style>
 </head>
 <body>
-
-    <header>
-        <h2><i class="fa-solid fa-trophy"></i> Manage Matches</h2>
-        <a href="add-match.html" class="addBtn">
-            <i class="fa-solid fa-plus"></i> Add Match
-        </a>
-    </header>
-
-    <div class="topbar">
-        <input type="text" id="searchMatch" placeholder="🔍 Search Team or League...">
-        <select id="filterStatus">
-            <option value="All">All Matches</option>
-            <option value="Upcoming">Upcoming</option>
-            <option value="Live">Live</option>
-            <option value="Completed">Completed</option>
-            <option value="Finished">Finished</option>
-        </select>
-    </div>
-
-    <div id="matchList">
-        <div class="empty"><i class="fa fa-spinner fa-spin"></i> Loading matches...</div>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast">
-        <i class="fa fa-check-circle"></i>
-        <span id="toastMessage">Success!</span>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
-
-    <script>
-        // ======================================
-        // Firebase Config
-        // ======================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
-            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
-            projectId: "fantasy-adda-e3b72",
-            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
-            messagingSenderId: "882657286194",
-            appId: "1:882657286194:web:284e818359de2363f0442b",
-            measurementId: "G-8HJX9NRL1B"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
-
-        // ======================================
-        // DOM Elements
-        // ======================================
-        const matchList = document.getElementById('matchList');
-        const searchInput = document.getElementById('searchMatch');
-        const filterStatus = document.getElementById('filterStatus');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
-        let toastTimeout;
-        let allMatches = [];
-        let currentUser = null;
-        let isAdmin = false;
-
-        // ======================================
-        // Toast Notification
-        // ======================================
-        function showToast(msg, type = 'success') {
-            toast.className = 'toast ' + type;
-            toastMessage.textContent = msg;
-            toast.style.display = 'block';
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.style.display = 'none';
-            }, 4000);
-        }
-
-        // ======================================
-        // Auth & Admin Check
-        // ======================================
-        auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                matchList.innerHTML =
-                    `<div class="empty"><i class="fa fa-lock"></i> Please login as admin<br><br><a href="login.html" style="color:#B80000;font-weight:600;">Go to Login</a></div>`;
-                return;
-            }
-
-            currentUser = user;
-
-            try {
-                const adminSnap = await db.ref('admins/' + user.uid).once('value');
-                isAdmin = adminSnap.exists() && adminSnap.val() === true;
-
-                if (!isAdmin) {
-                    matchList.innerHTML =
-                        `<div class="empty"><i class="fa fa-shield"></i> Access Denied<br><br>You are not an admin</div>`;
-                    return;
-                }
-
-                loadMatches();
-
-            } catch (error) {
-                console.error('Admin check error:', error);
-                matchList.innerHTML = `<div class="empty"><i class="fa fa-exclamation-circle"></i> Error loading data</div>`;
-            }
-        });
-
-        // ======================================
-        // Load Matches
-        // ======================================
-        function loadMatches() {
-            db.ref('matches').on('value', (snapshot) => {
-                if (!snapshot.exists()) {
-                    matchList.innerHTML =
-                        `<div class="empty"><i class="fa fa-trophy"></i> No matches yet<br><br><a href="add-match.html" style="color:#B80000;font-weight:600;">Create First Match</a></div>`;
-                    allMatches = [];
-                    return;
-                }
-
-                allMatches = [];
-                const data = snapshot.val();
-                Object.keys(data).forEach((id) => {
-                    allMatches.push({
-                        id: id,
-                        ...data[id]
-                    });
-                });
-
-                // Sort by date (newest first)
-                allMatches.sort((a, b) => {
-                    if (a.matchTime > b.matchTime) return -1;
-                    if (a.matchTime < b.matchTime) return 1;
-                    return 0;
-                });
-
-                renderMatches();
-            });
-        }
-
-        // ======================================
-        // Render Matches with Filters
-        // ======================================
-        function renderMatches() {
-            const search = searchInput.value.toLowerCase().trim();
-            const filter = filterStatus.value;
-
-            let filtered = allMatches.filter(m => {
-                const matchSearch = (m.teamA || '').toLowerCase() + (m.teamB || '').toLowerCase() + (m.league || '')
-                    .toLowerCase();
-                const matchesSearch = !search || matchSearch.includes(search);
-                const matchesFilter = filter === 'All' || m.status === filter;
-                return matchesSearch && matchesFilter;
-            });
-
-            if (filtered.length === 0) {
-                matchList.innerHTML =
-                    `<div class="empty"><i class="fa fa-search"></i> No matches found for "${search || filter}"</div>`;
-                return;
-            }
-
-            matchList.innerHTML = '';
-            filtered.forEach(match => {
-                const card = createMatchCard(match);
-                matchList.appendChild(card);
-            });
-        }
-
-        // ======================================
-        // Create Match Card
-        // ======================================
-        function createMatchCard(match) {
-            const card = document.createElement('div');
-            card.className = 'match-card';
-
-            const statusClass = (match.status || 'Upcoming').toLowerCase();
-            const isLive = match.status === 'Live';
-            const isCompleted = match.status === 'Completed' || match.status === 'Finished';
-            const hasResult = match.result && match.result.winner;
-
-            card.innerHTML = `
-                <div class="banner">
-                    <img src="${match.banner || 'assets/default-banner.jpg'}" alt="${match.league}">
-                    <span class="status-badge ${statusClass}">${match.status || 'Upcoming'}</span>
-                </div>
-                <div class="match-body">
-                    <div class="league">🏆 ${match.league || 'Unknown League'}</div>
-                    <div class="teams">
-                        <div class="team">
-                            <img src="${match.teamALogo || 'assets/default-team.png'}" alt="${match.teamA}">
-                            <h3>${match.teamA}</h3>
-                        </div>
-                        <div class="vs">VS</div>
-                        <div class="team">
-                            <img src="${match.teamBLogo || 'assets/default-team.png'}" alt="${match.teamB}">
-                            <h3>${match.teamB}</h3>
-                        </div>
-                    </div>
-                    <div class="details">
-                        <p><i class="fa fa-map-marker-alt"></i> ${match.venue || 'TBD'}</p>
-                        <p><i class="fa fa-clock"></i> ${match.matchTime ? new Date(match.matchTime).toLocaleString() : 'TBD'}</p>
-                        <p><i class="fa fa-sport"></i> ${match.sport || 'Cricket'}</p>
-                        <p><i class="fa fa-percent"></i> ${match.oddsA || 1.95} / ${match.oddsB || 1.95}</p>
-                    </div>
-                    ${hasResult ? `
-                        <div style="background:#f0f8f0;padding:8px;border-radius:8px;margin-bottom:10px;text-align:center;font-size:13px;color:#28a745;">
-                            🏆 Winner: <strong>${match.result.winner}</strong> ${match.result.score ? '| Score: '+match.result.score : ''}
-                        </div>
-                    ` : ''}
-                    <div class="actions">
-                        <button class="liveBtn" onclick="updateStatus('${match.id}','Live')" ${isLive ? 'disabled' : ''}>
-                            <i class="fa fa-play"></i> Live
-                        </button>
-                        <button class="resultBtn" onclick="openResultModal('${match.id}')" ${isCompleted ? 'disabled' : ''}>
-                            <i class="fa fa-trophy"></i> Result
-                        </button>
-                        <button class="payoutBtn" onclick="processPayout('${match.id}')" ${!isCompleted ? 'disabled' : ''}>
-                            <i class="fa fa-money-bill-wave"></i> Payout
-                        </button>
-                        <button class="editBtn" onclick="editMatch('${match.id}')">
-                            <i class="fa fa-pen"></i>
-                        </button>
-                        <button class="deleteBtn" onclick="deleteMatch('${match.id}')">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            return card;
-        }
-
-        // ======================================
-        // Update Match Status
-        // ======================================
-        window.updateStatus = async function(matchId, status) {
-            if (!currentUser || !isAdmin) {
-                showToast('Admin access required', 'error');
-                return;
-            }
-
-            try {
-                await db.ref('matches/' + matchId).update({
-                    status: status,
-                    updatedAt: Date.now()
-                });
-                showToast(`Match status updated to ${status}`, 'success');
-            } catch (error) {
-                console.error(error);
-                showToast('Failed to update status', 'error');
-            }
-        };
-
-        // ======================================
-        // Open Result Modal
-        // ======================================
-        window.openResultModal = function(matchId) {
-            // Find match
-            const match = allMatches.find(m => m.id === matchId);
-            if (!match) {
-                showToast('Match not found', 'error');
-                return;
-            }
-
-            const winner = prompt('🏆 Enter winning team name:\n\nTeam A: ' + match.teamA + '\nTeam B: ' + match.teamB +
-                '\n\nType "A" for ' + match.teamA + ' or "B" for ' + match.teamB);
-
-            if (winner === null) return; // cancelled
-
-            let winnerName = '';
-            if (winner.toLowerCase() === 'a') {
-                winnerName = match.teamA;
-            } else if (winner.toLowerCase() === 'b') {
-                winnerName = match.teamB;
-            } else {
-                winnerName = winner.trim();
-                if (!winnerName) {
-                    showToast('Invalid winner name', 'error');
-                    return;
-                }
-            }
-
-            const score = prompt('📊 Enter score (optional):\nExample: 185/6 - 182/8', '');
-
-            // Confirm
-            if (!confirm(`Confirm result:\nWinner: ${winnerName}\nScore: ${score || 'N/A'}\n\nMark match as Completed?`)) {
-                return;
-            }
-
-            setResult(matchId, winnerName, score || '');
-        };
-
-        // ======================================
-        // Set Match Result
-        // ======================================
-        async function setResult(matchId, winner, score) {
-            if (!currentUser || !isAdmin) {
-                showToast('Admin access required', 'error');
-                return;
-            }
-
-            try {
-                await db.ref('matches/' + matchId).update({
-                    status: 'Completed',
-                    result: {
-                        winner: winner,
-                        score: score || '',
-                        declaredAt: Date.now()
-                    },
-                    updatedAt: Date.now()
-                });
-
-                showToast(`🏆 Result declared! Winner: ${winner}`, 'success');
-
-                // Ask if user wants to process payout now
-                if (confirm('Do you want to process payouts for this match now?')) {
-                    await processPayout(matchId);
-                }
-
-            } catch (error) {
-                console.error(error);
-                showToast('Failed to set result', 'error');
-            }
-        }
-
-        // ======================================
-        // 🔥 AUTO PAYOUT SYSTEM 🔥
-        // ======================================
-        window.processPayout = async function(matchId) {
-            if (!currentUser || !isAdmin) {
-                showToast('Admin access required', 'error');
-                return;
-            }
-
-            // Find match
-            const match = allMatches.find(m => m.id === matchId);
-            if (!match) {
-                showToast('Match not found', 'error');
-                return;
-            }
-
-            if (match.status !== 'Completed' && match.status !== 'Finished') {
-                if (!confirm('Match is not completed yet. Do you still want to process payout?')) {
-                    return;
-                }
-            }
-
-            // Check if result exists
-            if (!match.result || !match.result.winner) {
-                showToast('No result declared for this match', 'error');
-                return;
-            }
-
-            if (!confirm(`⚠️ Process PAYOUT for ${match.teamA} vs ${match.teamB}?\nWinner: ${match.result.winner}\nThis will credit all winning trades!`)) {
-                return;
-            }
-
-            showToast('⏳ Processing payouts...', 'info');
-
-            try {
-                // Get all trades for this match
-                const tradesSnap = await db.ref('trades')
-                    .orderByChild('matchId')
-                    .equalTo(matchId)
-                    .once('value');
-
-                if (!tradesSnap.exists()) {
-                    showToast('No trades found for this match', 'error');
-                    return;
-                }
-
-                const trades = tradesSnap.val();
-                let totalPayout = 0;
-                let winningTrades = 0;
-                let losingTrades = 0;
-                let processedCount = 0;
-
-                // Process each trade
-                for (const [tradeId, trade] of Object.entries(trades)) {
-                    // Skip if already processed
-                    if (trade.status === 'win' || trade.status === 'loss') {
-                        continue;
-                    }
-
-                    const isWin = trade.selectedTeam === match.result.winner;
-                    const winAmount = isWin ? Math.round(trade.amount * trade.odds) : 0;
-
-                    // Update trade status
-                    await db.ref('trades/' + tradeId).update({
-                        status: isWin ? 'win' : 'loss',
-                        winAmount: winAmount,
-                        settledAt: Date.now(),
-                        matchResult: match.result.winner
-                    });
-
-                    // If win, credit user's wallet
-                    if (isWin && winAmount > 0) {
-                        const userRef = db.ref('users/' + trade.userId + '/wallet');
-                        const userSnap = await userRef.once('value');
-                        const currentBalance = userSnap.exists() ? (userSnap.val().balance || 0) : 0;
-
-                        await userRef.update({
-                            balance: currentBalance + winAmount,
-                            totalWon: (userSnap.exists() ? (userSnap.val().totalWon || 0) : 0) + winAmount
-                        });
-
-                        // Create transaction
-                        await db.ref('transactions').push({
-                            userId: trade.userId,
-                            type: 'credit',
-                            amount: winAmount,
-                            description: '💰 Payout for ' + match.teamA + ' vs ' + match.teamB + ' (Won)',
-                            date: Date.now()
-                        });
-
-                        totalPayout += winAmount;
-                        winningTrades++;
-                    } else {
-                        losingTrades++;
-                    }
-
-                    processedCount++;
-                }
-
-                // Update match status to Finished
-                await db.ref('matches/' + matchId).update({
-                    status: 'Finished',
-                    payoutProcessed: true,
-                    payoutAmount: totalPayout,
-                    payoutAt: Date.now(),
-                    updatedAt: Date.now()
-                });
-
-                showToast(
-                    `✅ Payout Complete!\n💰 ₹${totalPayout} distributed\n🏆 ${winningTrades} winners\n📉 ${losingTrades} losers`,
-                    'success'
-                );
-
-            } catch (error) {
-                console.error('Payout error:', error);
-                showToast('❌ Payout failed: ' + (error.message || 'Unknown error'), 'error');
-            }
-        };
-
-        // ======================================
-        // Edit Match
-        // ======================================
-        window.editMatch = function(matchId) {
-            window.location.href = 'edit-match.html?id=' + matchId;
-        };
-
-        // ======================================
-        // Delete Match
-        // ======================================
-        window.deleteMatch = async function(matchId) {
-            if (!currentUser || !isAdmin) {
-                showToast('Admin access required', 'error');
-                return;
-            }
-
-            if (!confirm('⚠️ Delete this match permanently? All trades will also be deleted.')) {
-                return;
-            }
-
-            if (!confirm('Are you sure? This cannot be undone!')) {
-                return;
-            }
-
-            try {
-                // Delete all trades for this match
-                const tradesSnap = await db.ref('trades')
-                    .orderByChild('matchId')
-                    .equalTo(matchId)
-                    .once('value');
-
-                if (tradesSnap.exists()) {
-                    const trades = tradesSnap.val();
-                    for (const tradeId of Object.keys(trades)) {
-                        await db.ref('trades/' + tradeId).remove();
-                    }
-                }
-
-                // Delete match
-                await db.ref('matches/' + matchId).remove();
-                showToast('Match deleted successfully', 'success');
-
-            } catch (error) {
-                console.error(error);
-                showToast('Failed to delete match', 'error');
-            }
-        };
-
-        // ======================================
-        // Search & Filter Events
-        // ======================================
-        searchInput.addEventListener('input', renderMatches);
-        filterStatus.addEventListener('change', renderMatches);
-
-        // ======================================
-        // Auto-refresh every 30 seconds
-        // ======================================
-        setInterval(() => {
-            if (currentUser && isAdmin) {
-                // Just re-render with existing data (listener handles updates)
-            }
-        }, 30000);
-    </script>
-
+<header>
+<h2><i class="fa fa-trophy"></i> Matches</h2>
+<a class="back" href="index.html"><i class="fa fa-home"></i></a>
+</header>
+
+<div class="container">
+<div class="tabs">
+<button class="tab active" data-tab="live">Live</button>
+<button class="tab" data-tab="upcoming">Upcoming</button>
+<button class="tab" data-tab="completed">Completed</button>
+</div>
+<div id="container" class="loading">Loading matches...</div>
+</div>
+
+<nav>
+<a href="index.html"><i class="fa fa-home"></i>Home</a>
+<a href="matches.html"><i class="fa fa-trophy"></i>Matches</a>
+<a href="wallet.html"><i class="fa fa-wallet"></i>Wallet</a>
+<a href="profile.html"><i class="fa fa-user"></i>Profile</a>
+</nav>
+
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={
+apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+authDomain:"fantasy-adda-e3b72.firebaseapp.com",
+projectId:"fantasy-adda-e3b72",
+storageBucket:"fantasy-adda-e3b72.firebasestorage.app",
+messagingSenderId:"882657286194",
+appId:"1:882657286194:web:284e818359de2363f0442b",
+measurementId:"G-8HJX9NRL1B"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.database();
+const box=document.getElementById("container");
+let tab="live";
+
+document.querySelectorAll(".tab").forEach(b=>{
+b.onclick=()=>{
+document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+b.classList.add("active");
+tab=b.dataset.tab;
+load();
+};
+});
+
+auth.onAuthStateChanged(user=>{
+if(!user){
+box.innerHTML='<div class="empty">Please login first.</div>';
+return;
+}
+load();
+});
+
+function load(){
+box.innerHTML='<div class="loading">Loading matches...</div>';
+
+db.ref("matches").once("value").then(snap=>{
+box.innerHTML="";
+if(!snap.exists()){
+box.innerHTML='<div class="empty"><i class="fa fa-trophy fa-3x"></i><br><br>No matches available</div>';
+return;
+}
+
+const data=snap.val();
+const list=Object.entries(data).filter(([id,m])=>{
+if(tab==="live")return m.status==="Live";
+if(tab==="upcoming")return m.status==="Upcoming";
+return m.status==="Completed"||m.status==="Finished";
+});
+
+if(!list.length){
+box.innerHTML=`<div class="empty">No ${tab} matches</div>`;
+return;
+}
+
+list.sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
+list.forEach(([id,m])=>render(id,m));
+}).catch(e=>{
+console.error(e);
+box.innerHTML='<div class="empty">❌ '+e.message+'</div>';
+});
+}
+
+function render(id,m){
+const status=(m.status||"Upcoming").toLowerCase();
+const card=document.createElement("div");
+card.className="card";
+
+const defaultLogo="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(
+`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" rx="100" fill="#eeeeee"/><text x="100" y="120" text-anchor="middle" font-size="80">🏏</text></svg>`);
+
+card.innerHTML=`
+<div class="teams">
+<div class="team"><img src="${escapeAttr(m.teamALogo||defaultLogo)}"><p>${escapeHtml(m.teamA||"Team A")}</p></div>
+<div class="vs">VS</div>
+<div class="team"><img src="${escapeAttr(m.teamBLogo||defaultLogo)}"><p>${escapeHtml(m.teamB||"Team B")}</p></div>
+</div>
+<div class="info">
+<div>${escapeHtml(m.league||"")}</div>
+<div>${escapeHtml(m.venue||"")}</div>
+<div>🕐 ${escapeHtml(m.matchTime||"")}</div>
+<span class="status ${status}">${escapeHtml(m.status||"Upcoming")}</span>
+</div>
+<button class="trade">${m.status==="Live"?"⚡ Trade Now":m.status==="Completed"||m.status==="Finished"?"Match Ended":"📅 Trade Now"}</button>`;
+
+const btn=card.querySelector(".trade");
+if(m.status==="Completed"||m.status==="Finished")btn.disabled=true;
+else btn.onclick=()=>location.href="trade.html?id="+encodeURIComponent(id);
+
+box.appendChild(card);
+}
+
+function escapeHtml(v){
+return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+function escapeAttr(v){return escapeHtml(v)}
+
+</script>
 </body>
 </html>
