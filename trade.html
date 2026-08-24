@@ -176,22 +176,22 @@
     <div class="container">
         <div class="match-detail" id="matchDetail">
             <div class="teams">
-                <div class="team"><img id="teamALogo" src="assets/default-team.png"><p id="teamAName">Team A</p></div>
+                <div class="team"><img id="teamALogo" src="https://cdn.jsdelivr.net/gh/CricketData/CricketData@main/assets/flags/unknown.png"><p id="teamAName">Team A</p></div>
                 <div class="vs">VS</div>
-                <div class="team"><img id="teamBLogo" src="assets/default-team.png"><p id="teamBName">Team B</p></div>
+                <div class="team"><img id="teamBLogo" src="https://cdn.jsdelivr.net/gh/CricketData/CricketData@main/assets/flags/unknown.png"><p id="teamBName">Team B</p></div>
             </div>
             <div class="info" id="matchInfo">Loading match details...</div>
 
             <!-- LIVE SCORE BLOCK -->
             <div class="live-score" id="liveScoreBlock">
                 <div class="score-team" id="scoreTeamA">
-                    <img id="liveTeamALogo" src="assets/default-team.png" alt="logo">
+                    <img id="liveTeamALogo" src="https://cdn.jsdelivr.net/gh/CricketData/CricketData@main/assets/flags/unknown.png" alt="logo">
                     <span class="name" id="liveTeamAName">Team A</span>
                     <span class="runs" id="liveTeamARuns">0</span>
                 </div>
                 <div class="score-divider">•</div>
                 <div class="score-team" id="scoreTeamB">
-                    <img id="liveTeamBLogo" src="assets/default-team.png" alt="logo">
+                    <img id="liveTeamBLogo" src="https://cdn.jsdelivr.net/gh/CricketData/CricketData@main/assets/flags/unknown.png" alt="logo">
                     <span class="name" id="liveTeamBName">Team B</span>
                     <span class="runs" id="liveTeamBRuns">0</span>
                 </div>
@@ -258,11 +258,10 @@
         let apiPollInterval = null;
 
         // ---------- CRICKETDATA.ORG / CRICAPI ----------
-        // Your GUID API key. The API expects the key as ?apikey=...
+        // Live score endpoint. eCricScore returns current live matches in a simple format.
         const API_KEY = 'e3243cef-c140-45e9-b56e-669632e081bc';
         const API_BASE = 'https://api.cricapi.com/v1';
 
-        let cricketApiMatchId = null;
         let lastApiMatch = null;
 
         function showToast(msg, type = 'success') {
@@ -273,84 +272,123 @@
             toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
-        function normaliseName(s) {
+        function cleanTeamName(s) {
             return String(s || '')
                 .toLowerCase()
+                .replace(/\b(cricket club|cc|women|womens|men|mens)\b/g, '')
                 .replace(/[^a-z0-9]/g, '');
         }
 
-        function teamsMatch(apiTeams, a, b) {
-            if (!Array.isArray(apiTeams) || apiTeams.length < 2) return false;
-            const names = apiTeams.map(normaliseName);
-            const aa = normaliseName(a);
-            const bb = normaliseName(b);
-            return (names.some(x => x.includes(aa) || aa.includes(x)) &&
-                    names.some(x => x.includes(bb) || bb.includes(x)));
+        // Common abbreviations -> full names. This makes Firebase names like IND/ENG,
+        // MI/CSK etc. match the API's long team names.
+        const TEAM_ALIASES = {
+            ind:'india', eng:'england', aus:'australia', nz:'newzealand',
+            sa:'southafrica', pak:'pakistan', sl:'srilanka', ban:'bangladesh',
+            wi:'westindies', afg:'afghanistan', ire:'ireland', zim:'zimbabwe',
+            nep:'nepal', uae:'uae', usa:'usa',
+            csk:'chennaisuperkings', mi:'mumbaiindians', rcb:'royalchallengersbengaluru',
+            kkr:'kolkataknightriders', dc:'delhicapitals', srh:'sunrisershyderabad',
+            rr:'rajasthanroyals', pbks:'punjabkings', gt:'gujarattitans',
+            lsg:'lucknowsupergiants'
+        };
+
+        function teamKeys(name) {
+            const n = cleanTeamName(name);
+            return [n, TEAM_ALIASES[n] || n];
         }
 
-        async function apiGet(endpoint, params = {}) {
-            const url = new URL(API_BASE + endpoint);
-            url.searchParams.set('apikey', API_KEY);
-            Object.entries(params).forEach(([k,v]) => {
-                if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, v);
-            });
+        function teamSimilar(a, b) {
+            const aa = teamKeys(a);
+            const bb = teamKeys(b);
+            return aa.some(x => bb.some(y => x === y || x.includes(y) || y.includes(x)));
+        }
 
-            const response = await fetch(url.toString(), {
+        async function fetchCricketScore() {
+            const url = `${API_BASE}/cricScore?apikey=${encodeURIComponent(API_KEY)}`;
+
+            const response = await fetch(url, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' },
                 cache: 'no-store'
             });
 
-            if (!response.ok) {
-                throw new Error('API HTTP ' + response.status);
-            }
+            if (!response.ok) throw new Error('Score API HTTP ' + response.status);
 
             const json = await response.json();
+
             if (json.status === 'failure') {
-                throw new Error(json.reason || 'API request failed');
+                throw new Error(json.reason || 'Score API rejected the request');
             }
-            return json;
+
+            return Array.isArray(json.data) ? json.data : [];
         }
 
-        // Find the CricAPI match ID from the teams stored in Firebase.
-        async function findCricketApiMatch() {
-            const json = await apiGet('/currentMatches');
-            const list = Array.isArray(json.data) ? json.data : [];
+        function scoreTextForTeam(match, teamName) {
+            // Different API versions may expose score as string or array.
+            if (Array.isArray(match.score)) {
+                const rows = match.score.filter(x =>
+                    teamSimilar(x.team, teamName)
+                );
+                if (rows.length) {
+                    const x = rows[rows.length - 1];
+                    return {
+                        text: `${x.r ?? 0}/${x.w ?? 0}`,
+                        overs: x.o ?? '0.0'
+                    };
+                }
+            }
 
-            const found = list.find(m => teamsMatch(
-                m.teams,
-                matchData?.teamA,
-                matchData?.teamB
-            ));
+            if (typeof match.score === 'string') {
+                return extractScoreFromText(match.score, teamName);
+            }
 
-            if (!found) return null;
-            cricketApiMatchId = found.id;
-            return found;
+            if (typeof match.score === 'object' && match.score !== null) {
+                const s = match.score;
+                if (s.r !== undefined) {
+                    return {
+                        text: `${s.r ?? 0}/${s.w ?? 0}`,
+                        overs: s.o ?? '0.0'
+                    };
+                }
+            }
+
+            return null;
         }
 
-        function parseScore(scoreArray, teamName) {
-            if (!Array.isArray(scoreArray)) return null;
+        function extractScoreFromText(text, teamName) {
+            const raw = String(text || '');
+            const parts = raw.split(/\s+vs\.?\s+|\s+v\.?\s+/i);
+            const wanted = cleanTeamName(teamName);
 
-            const rows = scoreArray.filter(x =>
-                normaliseName(x.team) === normaliseName(teamName) ||
-                normaliseName(x.team).includes(normaliseName(teamName)) ||
-                normaliseName(teamName).includes(normaliseName(x.team))
-            );
+            for (const part of parts) {
+                const m = part.match(/(.+?)\s+(\d+\/\d+)\s*\(?\s*([\d.]+)?\s*\)?/);
+                if (!m) continue;
+                if (teamSimilar(m[1], wanted) || m[1].toLowerCase().includes(wanted)) {
+                    return { text: m[2], overs: m[3] || '0.0' };
+                }
+            }
 
-            if (!rows.length) return null;
+            // If team names are abbreviated differently, grab score pairs as fallback.
+            const pair = raw.match(/(\d+\/\d+)\s*\(?\s*([\d.]+)?\s*\)?/);
+            return pair ? { text: pair[1], overs: pair[2] || '0.0' } : null;
+        }
 
-            // Prefer the latest innings for that team.
-            const row = rows[rows.length - 1];
-            const runs = row.r ?? 0;
-            const wickets = row.w ?? 0;
-            const overs = row.o ?? '0.0';
+        function matchBelongsToFirebase(match) {
+            const a = matchData?.teamA;
+            const b = matchData?.teamB;
+            if (!a || !b) return false;
 
-            return {
-                text: `${runs}/${wickets}`,
-                runs,
-                wickets,
-                overs
-            };
+            const apiTeams = Array.isArray(match.teams)
+                ? match.teams
+                : [];
+
+            if (apiTeams.length >= 2) {
+                return apiTeams.some(t => teamSimilar(t, a)) &&
+                       apiTeams.some(t => teamSimilar(t, b));
+            }
+
+            const name = `${match.name || ''} ${match.title || ''}`;
+            return teamSimilar(name, a) && teamSimilar(name, b);
         }
 
         function updateScoreUI(apiMatch) {
@@ -361,75 +399,109 @@
             const teamA = matchData?.teamA || apiMatch.teams?.[0] || 'Team A';
             const teamB = matchData?.teamB || apiMatch.teams?.[1] || 'Team B';
 
-            const scoreA = parseScore(apiMatch.score, teamA);
-            const scoreB = parseScore(apiMatch.score, teamB);
+            const scoreA = scoreTextForTeam(apiMatch, teamA);
+            const scoreB = scoreTextForTeam(apiMatch, teamB);
 
             document.getElementById('liveTeamAName').textContent = teamA;
             document.getElementById('liveTeamBName').textContent = teamB;
 
             document.getElementById('liveTeamARuns').textContent =
-                scoreA ? scoreA.text : '—';
+                scoreA?.text || '—';
             document.getElementById('liveTeamBRuns').textContent =
-                scoreB ? scoreB.text : '—';
+                scoreB?.text || '—';
 
-            // Show overs for the latest available innings.
-            const latestOvers = scoreB?.overs ?? scoreA?.overs ?? '0.0';
+            const latestOvers = scoreB?.overs || scoreA?.overs || '0.0';
             document.getElementById('liveOvers').textContent = latestOvers + ' ov';
 
             document.getElementById('liveBallByBall').textContent =
-                'Live score • ' + (apiMatch.matchType || 'Cricket');
+                '● LIVE SCORE';
 
             const status = apiMatch.status || matchData?.status || 'Upcoming';
             const badge = document.getElementById('liveStatusBadge');
             const lower = String(status).toLowerCase();
 
-            badge.textContent = status;
+            badge.textContent = lower.includes('live') ? 'LIVE' : status;
             badge.className = 'status-badge';
-            if (lower.includes('live')) badge.classList.add('live');
-            else if (lower.includes('complete') || lower.includes('finish')) badge.classList.add('finished');
 
-            // Keep logos from Firebase.
+            if (lower.includes('live')) badge.classList.add('live');
+            else if (lower.includes('complete') || lower.includes('finish'))
+                badge.classList.add('finished');
+
             if (matchData) {
                 document.getElementById('liveTeamALogo').src =
-                    matchData.teamALogo || 'assets/default-team.png';
+                    matchData.teamALogo || 'https://cdn.jsdelivr.net/gh/CricketData/CricketData@main/assets/flags/unknown.png';
                 document.getElementById('liveTeamBLogo').src =
-                    matchData.teamBLogo || 'assets/default-team.png';
+                    matchData.teamBLogo || 'https://cdn.jsdelivr.net/gh/CricketData/CricketData@main/assets/flags/unknown.png';
+
                 document.getElementById('matchInfo').textContent =
                     (matchData.league || apiMatch.name || 'Cricket') + ' • ' + status;
             }
         }
 
+        function showFirebaseFallback() {
+            if (!matchData) return;
+
+            updateScoreUI({
+                teams: [matchData.teamA, matchData.teamB],
+                score: [
+                    {
+                        team: matchData.teamA,
+                        r: matchData.scoreA ?? 0,
+                        w: matchData.wicketsA ?? 0,
+                        o: matchData.oversA ?? matchData.overs ?? '0.0'
+                    },
+                    {
+                        team: matchData.teamB,
+                        r: matchData.scoreB ?? 0,
+                        w: matchData.wicketsB ?? 0,
+                        o: matchData.oversB ?? matchData.overs ?? '0.0'
+                    }
+                ],
+                status: matchData.status || 'Upcoming',
+                name: matchData.teamA + ' vs ' + matchData.teamB
+            });
+        }
+
         async function fetchLiveScoreFromAPI() {
             try {
-                // If we already know the provider match ID, get the detailed score.
-                if (cricketApiMatchId) {
-                    const detail = await apiGet('/match_info', { id: cricketApiMatchId });
-                    if (detail.data) return detail.data;
+                const matches = await fetchCricketScore();
+
+                // First try the exact Firebase match.
+                let found = matches.find(matchBelongsToFirebase);
+
+                // Then prefer a match whose name contains both Firebase teams.
+                if (!found && matchData) {
+                    found = matches.find(m => {
+                        const text = cleanTeamName(`${m.name || ''} ${m.title || ''}`);
+                        return teamSimilar(text, matchData.teamA) &&
+                               teamSimilar(text, matchData.teamB);
+                    });
                 }
 
-                // Otherwise find the current match by team names.
-                return await findCricketApiMatch();
+                return found || null;
             } catch (err) {
-                console.warn('Cricket API:', err);
+                console.error('Cricket score API error:', err);
                 return null;
+            }
+        }
+
+        async function refreshLiveScore() {
+            const apiData = await fetchLiveScoreFromAPI();
+
+            if (apiData) {
+                updateScoreUI(apiData);
+                document.getElementById('apiLoader').textContent =
+                    '✅ Live score updated • ' + new Date().toLocaleTimeString();
+            } else {
+                showFirebaseFallback();
+                document.getElementById('apiLoader').textContent =
+                    '⚠️ API match not found • Firebase score shown';
             }
         }
 
         function startPolling() {
             if (apiPollInterval) clearInterval(apiPollInterval);
-
-            apiPollInterval = setInterval(async () => {
-                const apiData = await fetchLiveScoreFromAPI();
-
-                if (apiData) {
-                    updateScoreUI(apiData);
-                    document.getElementById('apiLoader').textContent =
-                        '✅ Live score updated • ' + new Date().toLocaleTimeString();
-                } else {
-                    document.getElementById('apiLoader').textContent =
-                        '⚠️ Live score unavailable right now';
-                }
-            }, 15000);
+            apiPollInterval = setInterval(refreshLiveScore, 15000);
         }
 
         // ----- AUTH + INIT -----
@@ -468,36 +540,15 @@
                 // update main match details
                 document.getElementById('teamAName').textContent = matchData.teamA;
                 document.getElementById('teamBName').textContent = matchData.teamB;
-                document.getElementById('teamALogo').src = matchData.teamALogo || 'assets/default-team.png';
-                document.getElementById('teamBLogo').src = matchData.teamBLogo || 'assets/default-team.png';
+                document.getElementById('teamALogo').src = matchData.teamALogo || 'https://cdn.jsdelivr.net/gh/CricketData/CricketData@main/assets/flags/unknown.png';
+                document.getElementById('teamBLogo').src = matchData.teamBLogo || 'https://cdn.jsdelivr.net/gh/CricketData/CricketData@main/assets/flags/unknown.png';
                 document.getElementById('teamAOddsLabel').textContent = matchData.teamA;
                 document.getElementById('teamBOddsLabel').textContent = matchData.teamB;
                 document.getElementById('teamAOdds').textContent = 'Odds: ' + (matchData.oddsA || '1.95');
                 document.getElementById('teamBOdds').textContent = 'Odds: ' + (matchData.oddsB || '1.95');
                 document.getElementById('matchInfo').textContent = matchData.league + ' • ' + (matchData.status || 'Upcoming');
 
-                // ---- Fetch live score from CricAPI and start polling ----
-                const apiData = await fetchLiveScoreFromAPI();
-
-                if (apiData) {
-                    updateScoreUI(apiData);
-                    document.getElementById('apiLoader').textContent =
-                        '✅ Live score connected • ' + new Date().toLocaleTimeString();
-                } else {
-                    // Firebase score is only a fallback when the provider has no data.
-                    updateScoreUI({
-                        teams: [matchData.teamA, matchData.teamB],
-                        score: [
-                            { team: matchData.teamA, r: matchData.scoreA ?? 0, w: 0, o: matchData.overs || '0.0' },
-                            { team: matchData.teamB, r: matchData.scoreB ?? 0, w: 0, o: matchData.overs || '0.0' }
-                        ],
-                        status: matchData.status || 'Upcoming',
-                        matchType: matchData.matchType || 'Cricket'
-                    });
-                    document.getElementById('apiLoader').textContent =
-                        '⚠️ Provider score unavailable • showing Firebase score';
-                }
-
+                await refreshLiveScore();
                 startPolling();
             });
         }
