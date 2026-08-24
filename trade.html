@@ -261,8 +261,7 @@
         // The browser NEVER calls CricketData directly.
         // It calls our Firebase Callable Function, which shares one cached
         // CricketData response between all users.
-        const functions = firebase.app().functions('asia-south1');
-        const getLiveScore = functions.httpsCallable('getLiveScore');
+        const SCORE_BACKEND_URL = 'https://asia-south1-fantasy-adda-e3b72.cloudfunctions.net/getLiveScore';
         let apiPollInterval = null;
         let lastApiMatch = null;
 
@@ -374,14 +373,23 @@
             if (!matchData?.teamA || !matchData?.teamB) return;
 
             try {
-                const result = await getLiveScore({
-                    teamA: matchData.teamA,
-                    teamB: matchData.teamB,
-                    matchId: matchId,
-                    apiMatchId: matchData.apiMatchId || matchData.cricApiMatchId || matchData.cricketApiMatchId || null
+                const response = await fetch(SCORE_BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        teamA: matchData.teamA,
+                        teamB: matchData.teamB,
+                        matchId: matchId,
+                        apiMatchId: matchData.apiMatchId || matchData.cricApiMatchId || matchData.cricketApiMatchId || null
+                    }),
+                    cache: 'no-store'
                 });
 
-                const data = result?.data || {};
+                const data = await response.json();
+                if (!response.ok || data.ok === false) {
+                    throw new Error(data.error || `Score backend HTTP ${response.status}`);
+                }
+
                 if (data.match) {
                     updateScoreUI(data.match);
                     document.getElementById('apiLoader').textContent =
