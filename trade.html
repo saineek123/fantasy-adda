@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -187,16 +187,16 @@
                 <div class="score-team" id="scoreTeamA">
                     <img id="liveTeamALogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23eeeeee'/%3E%3Cpath d='M50 18v64M18 50h64' stroke='%23aaaaaa' stroke-width='5'/%3E%3C/svg%3E" alt="logo" onerror="this.src=FALLBACK_TEAM_IMAGE">
                     <span class="name" id="liveTeamAName">Team A</span>
-                    <span class="runs" id="liveTeamARuns">0</span>
+                    <span class="runs" id="liveTeamARuns">—</span>
                 </div>
                 <div class="score-divider">•</div>
                 <div class="score-team" id="scoreTeamB">
                     <img id="liveTeamBLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23eeeeee'/%3E%3Cpath d='M50 18v64M18 50h64' stroke='%23aaaaaa' stroke-width='5'/%3E%3C/svg%3E" alt="logo" onerror="this.src=FALLBACK_TEAM_IMAGE">
                     <span class="name" id="liveTeamBName">Team B</span>
-                    <span class="runs" id="liveTeamBRuns">0</span>
+                    <span class="runs" id="liveTeamBRuns">—</span>
                 </div>
                 <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-                    <span class="overs" id="liveOvers">0.0 ov</span>
+                    <span class="overs" id="liveOvers">—</span>
                     <span class="ball-by-ball" id="liveBallByBall">Live score</span>
                     <span class="status-badge" id="liveStatusBadge">Upcoming</span>
                 </div>
@@ -213,7 +213,7 @@
                     <div><small>Potential Return</small><strong id="tradeReturn">₹0</strong></div>
                 </div>
             </div>
-            <div class="api-loader" id="apiLoader">🔄 Connecting to live cricket score API...</div>
+            <div class="api-loader" id="apiLoader">🔄 Connecting to CricketData live score...</div>
         </div>
 
         <div class="odds" id="oddsContainer">
@@ -277,6 +277,7 @@
             return String(s || '')
                 .toLowerCase()
                 .replace(/&/g, 'and')
+                .replace(/\b(cricket club|cc|women|womens|men|mens)\b/g, '')
                 .replace(/[^a-z0-9]/g, '');
         }
 
@@ -315,17 +316,18 @@
             if (!a || !b) return false;
 
             const teams = getApiTeams(m);
-
             if (teams.length >= 2) {
-                return teams.some(t => sameTeam(t, a)) &&
-                       teams.some(t => sameTeam(t, b));
+                const hasA = teams.some(t => sameTeam(t, a));
+                const hasB = teams.some(t => sameTeam(t, b));
+                if (hasA && hasB) return true;
             }
 
+            // Fallback for API records where teams[] is missing.
             const title = `${m.name || ''} ${m.match || ''} ${m.title || ''}`;
             const titleNorm = norm(title);
-
-            return nameVariants(a).some(x => titleNorm.includes(x)) &&
-                   nameVariants(b).some(x => titleNorm.includes(x));
+            const aFound = nameVariants(a).some(x => x && titleNorm.includes(x));
+            const bFound = nameVariants(b).some(x => x && titleNorm.includes(x));
+            return aFound && bFound;
         }
 
         async function getCurrentMatches() {
@@ -352,23 +354,24 @@
         function getTeamScore(match, teamName) {
             if (!Array.isArray(match.score)) return null;
 
-            // API score rows contain: team, r, w, o, inning.
-            // Search newest/most relevant row first.
-            const rows = match.score.filter(s => sameTeam(s.team, teamName));
+            const rows = match.score.filter(s => {
+                const scoreTeam = s && (s.team || s.teamName || s.name || '');
+                return sameTeam(scoreTeam, teamName);
+            });
 
             if (!rows.length) return null;
 
+            // Latest inning row for that team.
             const s = rows[rows.length - 1];
-
-            const runs = s.r !== undefined && s.r !== null ? s.r : 0;
-            const wickets = s.w !== undefined && s.w !== null ? s.w : 0;
-            const overs = s.o !== undefined && s.o !== null ? s.o : '0.0';
+            const runs = s.r ?? s.runs ?? 0;
+            const wickets = s.w ?? s.wickets ?? 0;
+            const overs = s.o ?? s.overs ?? '0.0';
 
             return {
                 text: `${runs}/${wickets}`,
-                runs,
-                wickets,
-                overs
+                runs: Number(runs),
+                wickets: Number(wickets),
+                overs: String(overs)
             };
         }
 
@@ -465,19 +468,30 @@
 
         async function refreshLiveScore() {
             try {
-                const matches = await getCurrentMatches();
-
-                // Exact Firebase team match.
-                let found = matches.find(matchIsOurMatch);
-
-                // If no exact team match, try Firebase's optional API match ID.
+                let found = null;
                 const firebaseApiId =
                     matchData?.apiMatchId ||
                     matchData?.cricApiMatchId ||
                     matchData?.cricketApiMatchId;
 
-                if (!found && firebaseApiId) {
-                    found = matches.find(m => String(m.id) === String(firebaseApiId));
+                // If admin has stored the provider match ID, use it first.
+                if (firebaseApiId) {
+                    try {
+                        const infoUrl = `${API_BASE}/match_info?apikey=${encodeURIComponent(API_KEY)}&id=${encodeURIComponent(firebaseApiId)}`;
+                        const infoRes = await fetch(infoUrl, { cache: 'no-store' });
+                        if (infoRes.ok) {
+                            const infoJson = await infoRes.json();
+                            if (infoJson.status !== 'failure' && infoJson.data) found = infoJson.data;
+                        }
+                    } catch (e) {
+                        console.warn('match_info failed, trying currentMatches:', e);
+                    }
+                }
+
+                // Official free live-score source: currentMatches.
+                if (!found) {
+                    const matches = await getCurrentMatches();
+                    found = matches.find(matchIsOurMatch) || null;
                 }
 
                 if (found) {
@@ -486,8 +500,6 @@
                     const a = getTeamScore(found, matchData.teamA);
                     const b = getTeamScore(found, matchData.teamB);
 
-                    // If the match is found but score rows are not present yet,
-                    // don't show fake 0/0.
                     if (!a && !b) {
                         document.getElementById('liveTeamARuns').textContent = '—';
                         document.getElementById('liveTeamBRuns').textContent = '—';
@@ -499,13 +511,11 @@
                 } else {
                     showFirebaseFallback();
                     document.getElementById('apiLoader').textContent =
-                        '⚠️ This match was not found in CricketData current matches';
+                        '⚠️ Match not found in CricketData current matches';
                 }
-
             } catch (error) {
                 console.error('CricketData API:', error);
                 showFirebaseFallback();
-
                 document.getElementById('apiLoader').textContent =
                     '❌ Score API error: ' + error.message;
             }
@@ -557,8 +567,8 @@
                 // update main match details
                 document.getElementById('teamAName').textContent = matchData.teamA;
                 document.getElementById('teamBName').textContent = matchData.teamB;
-                document.getElementById('teamALogo').src = matchData.teamALogo || 'data:image/svg+xml,%3Csvg xmlns=%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%23eeeeee%22%2F%3E%3Cpath d=%22M50 18v64M18 50h64%22 stroke=%22%23aaaaaa%22 stroke-width=%225%22%2F%3E%3C%2Fsvg%3E';
-                document.getElementById('teamBLogo').src = matchData.teamBLogo || 'data:image/svg+xml,%3Csvg xmlns=%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%23eeeeee%22%2F%3E%3Cpath d=%22M50 18v64M18 50h64%22 stroke=%22%23aaaaaa%22 stroke-width=%225%22%2F%3E%3C%2Fsvg%3E';
+                document.getElementById('teamALogo').src = matchData.teamALogo || FALLBACK_TEAM_IMAGE;
+                document.getElementById('teamBLogo').src = matchData.teamBLogo || FALLBACK_TEAM_IMAGE;
                 document.getElementById('teamAOddsLabel').textContent = matchData.teamA;
                 document.getElementById('teamBOddsLabel').textContent = matchData.teamB;
                 document.getElementById('teamAOdds').textContent = 'Odds: ' + (matchData.oddsA || '1.95');
@@ -619,7 +629,7 @@
             const amount = parseInt(document.getElementById('amount').value);
             if (!amount || amount < 1) { showToast('Please enter a valid amount', 'error'); return; }
             if (amount > userBalance) { showToast('Insufficient balance', 'error'); return; }
-            if (!matchData || matchData.status !== 'Live' && matchData.status !== 'Upcoming') {
+            if (!matchData || !['live','upcoming'].includes(String(matchData.status || '').toLowerCase())) {
                 showToast('This match is not available for trading', 'error');
                 return;
             }
