@@ -20,6 +20,79 @@
         .match-detail .team p { font-weight: 600; margin-top: 5px; }
         .match-detail .vs { font-size: 20px; font-weight: bold; color: #B80000; }
         .match-detail .info { color: #777; font-size: 14px; margin-top: 5px; }
+
+        /* ---- Live Score Section ---- */
+        .live-score {
+            background: #1e1e2f;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 14px;
+            margin: 12px 0 8px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            gap: 8px;
+        }
+        .live-score .score-team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .live-score .score-team img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: #fff;
+            padding: 2px;
+        }
+        .live-score .score-team .name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .live-score .score-team .runs {
+            font-weight: 700;
+            font-size: 18px;
+            background: #2d2d44;
+            padding: 0 10px;
+            border-radius: 20px;
+            line-height: 30px;
+        }
+        .live-score .score-divider {
+            font-weight: 300;
+            color: #aaa;
+            font-size: 20px;
+        }
+        .live-score .overs {
+            font-size: 12px;
+            color: #aaa;
+            background: #2d2d44;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+        .live-score .ball-by-ball {
+            font-size: 12px;
+            color: #f1c40f;
+            background: #2d2d44;
+            padding: 2px 10px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            font-family: monospace;
+        }
+        .live-score .status-badge {
+            background: #e74c3c;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .live-score .status-badge.live { background: #2ecc71; }
+        .live-score .status-badge.finished { background: #95a5a6; }
+
         .odds { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
         .odds button { padding: 20px; border: 2px solid #ddd; border-radius: 15px; background: #fff; cursor: pointer; transition: all 0.3s; font-size: 16px; font-weight: 600; }
         .odds button:hover { border-color: #B80000; transform: translateY(-2px); }
@@ -37,6 +110,62 @@
         .toast.success { background: #28a745; }
         .toast.error { background: #d40000; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .api-loader { color: #aaa; font-size: 12px; margin-top: 4px; }
+        .live-score .score-team .runs { min-width: 30px; text-align: center; }
+
+        .trade-live-card {
+            margin-top: 10px;
+            background: linear-gradient(135deg,#fff,#fff7f7);
+            border: 1px solid #eee;
+            border-radius: 14px;
+            padding: 14px;
+            text-align: left;
+        }
+        .trade-live-head {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            font-weight:700;
+            color:#333;
+            margin-bottom:12px;
+        }
+        .trade-live-status {
+            font-size:11px;
+            padding:4px 9px;
+            border-radius:20px;
+            background:#eee;
+            color:#666;
+        }
+        .trade-live-status.active { background:#e8f8ee; color:#168443; }
+        .trade-live-grid {
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:10px;
+        }
+        .trade-live-grid div {
+            background:#fff;
+            border:1px solid #eee;
+            border-radius:10px;
+            padding:9px;
+        }
+        .trade-live-grid small {
+            display:block;
+            color:#888;
+            font-size:11px;
+            margin-bottom:3px;
+        }
+        .trade-live-grid strong {
+            display:block;
+            color:#222;
+            font-size:15px;
+        }
+        .score-note {
+            width:100%;
+            font-size:11px;
+            color:#bbb;
+            text-align:center;
+            margin-top:2px;
+        }
     </style>
 </head>
 <body>
@@ -52,7 +181,41 @@
                 <div class="team"><img id="teamBLogo" src="assets/default-team.png"><p id="teamBName">Team B</p></div>
             </div>
             <div class="info" id="matchInfo">Loading match details...</div>
+
+            <!-- LIVE SCORE BLOCK -->
+            <div class="live-score" id="liveScoreBlock">
+                <div class="score-team" id="scoreTeamA">
+                    <img id="liveTeamALogo" src="assets/default-team.png" alt="logo">
+                    <span class="name" id="liveTeamAName">Team A</span>
+                    <span class="runs" id="liveTeamARuns">0</span>
+                </div>
+                <div class="score-divider">•</div>
+                <div class="score-team" id="scoreTeamB">
+                    <img id="liveTeamBLogo" src="assets/default-team.png" alt="logo">
+                    <span class="name" id="liveTeamBName">Team B</span>
+                    <span class="runs" id="liveTeamBRuns">0</span>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                    <span class="overs" id="liveOvers">0.0 ov</span>
+                    <span class="ball-by-ball" id="liveBallByBall">Live score</span>
+                    <span class="status-badge" id="liveStatusBadge">Upcoming</span>
+                </div>
+            </div>
+            <div class="trade-live-card" id="tradeLiveCard">
+                <div class="trade-live-head">
+                    <span><i class="fa fa-chart-line"></i> Your Trade</span>
+                    <span class="trade-live-status" id="tradeLiveStatus">Not selected</span>
+                </div>
+                <div class="trade-live-grid">
+                    <div><small>Selection</small><strong id="tradeSelection">—</strong></div>
+                    <div><small>Amount</small><strong id="tradeAmount">₹0</strong></div>
+                    <div><small>Odds</small><strong id="tradeOdds">—</strong></div>
+                    <div><small>Potential Return</small><strong id="tradeReturn">₹0</strong></div>
+                </div>
+            </div>
+            <div class="api-loader" id="apiLoader">🔄 Connecting to live cricket score API...</div>
         </div>
+
         <div class="odds" id="oddsContainer">
             <button data-team="teamA" class="odds-btn"><span id="teamAOddsLabel">Team A</span><span class="odd" id="teamAOdds">Odds: 1.95</span></button>
             <button data-team="teamB" class="odds-btn"><span id="teamBOddsLabel">Team B</span><span class="odd" id="teamBOdds">Odds: 1.95</span></button>
@@ -92,6 +255,15 @@
         let matchData = null;
         let userBalance = 0;
         let currentUser = null;
+        let apiPollInterval = null;
+
+        // ---------- CRICKETDATA.ORG / CRICAPI ----------
+        // Your GUID API key. The API expects the key as ?apikey=...
+        const API_KEY = 'e3243cef-c140-45e9-b56e-669632e081bc';
+        const API_BASE = 'https://api.cricapi.com/v1';
+
+        let cricketApiMatchId = null;
+        let lastApiMatch = null;
 
         function showToast(msg, type = 'success') {
             toast.className = 'toast ' + type;
@@ -101,27 +273,199 @@
             toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
+        function normaliseName(s) {
+            return String(s || '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '');
+        }
+
+        function teamsMatch(apiTeams, a, b) {
+            if (!Array.isArray(apiTeams) || apiTeams.length < 2) return false;
+            const names = apiTeams.map(normaliseName);
+            const aa = normaliseName(a);
+            const bb = normaliseName(b);
+            return (names.some(x => x.includes(aa) || aa.includes(x)) &&
+                    names.some(x => x.includes(bb) || bb.includes(x)));
+        }
+
+        async function apiGet(endpoint, params = {}) {
+            const url = new URL(API_BASE + endpoint);
+            url.searchParams.set('apikey', API_KEY);
+            Object.entries(params).forEach(([k,v]) => {
+                if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, v);
+            });
+
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+                cache: 'no-store'
+            });
+
+            if (!response.ok) {
+                throw new Error('API HTTP ' + response.status);
+            }
+
+            const json = await response.json();
+            if (json.status === 'failure') {
+                throw new Error(json.reason || 'API request failed');
+            }
+            return json;
+        }
+
+        // Find the CricAPI match ID from the teams stored in Firebase.
+        async function findCricketApiMatch() {
+            const json = await apiGet('/currentMatches');
+            const list = Array.isArray(json.data) ? json.data : [];
+
+            const found = list.find(m => teamsMatch(
+                m.teams,
+                matchData?.teamA,
+                matchData?.teamB
+            ));
+
+            if (!found) return null;
+            cricketApiMatchId = found.id;
+            return found;
+        }
+
+        function parseScore(scoreArray, teamName) {
+            if (!Array.isArray(scoreArray)) return null;
+
+            const rows = scoreArray.filter(x =>
+                normaliseName(x.team) === normaliseName(teamName) ||
+                normaliseName(x.team).includes(normaliseName(teamName)) ||
+                normaliseName(teamName).includes(normaliseName(x.team))
+            );
+
+            if (!rows.length) return null;
+
+            // Prefer the latest innings for that team.
+            const row = rows[rows.length - 1];
+            const runs = row.r ?? 0;
+            const wickets = row.w ?? 0;
+            const overs = row.o ?? '0.0';
+
+            return {
+                text: `${runs}/${wickets}`,
+                runs,
+                wickets,
+                overs
+            };
+        }
+
+        function updateScoreUI(apiMatch) {
+            if (!apiMatch) return;
+
+            lastApiMatch = apiMatch;
+
+            const teamA = matchData?.teamA || apiMatch.teams?.[0] || 'Team A';
+            const teamB = matchData?.teamB || apiMatch.teams?.[1] || 'Team B';
+
+            const scoreA = parseScore(apiMatch.score, teamA);
+            const scoreB = parseScore(apiMatch.score, teamB);
+
+            document.getElementById('liveTeamAName').textContent = teamA;
+            document.getElementById('liveTeamBName').textContent = teamB;
+
+            document.getElementById('liveTeamARuns').textContent =
+                scoreA ? scoreA.text : '—';
+            document.getElementById('liveTeamBRuns').textContent =
+                scoreB ? scoreB.text : '—';
+
+            // Show overs for the latest available innings.
+            const latestOvers = scoreB?.overs ?? scoreA?.overs ?? '0.0';
+            document.getElementById('liveOvers').textContent = latestOvers + ' ov';
+
+            document.getElementById('liveBallByBall').textContent =
+                'Live score • ' + (apiMatch.matchType || 'Cricket');
+
+            const status = apiMatch.status || matchData?.status || 'Upcoming';
+            const badge = document.getElementById('liveStatusBadge');
+            const lower = String(status).toLowerCase();
+
+            badge.textContent = status;
+            badge.className = 'status-badge';
+            if (lower.includes('live')) badge.classList.add('live');
+            else if (lower.includes('complete') || lower.includes('finish')) badge.classList.add('finished');
+
+            // Keep logos from Firebase.
+            if (matchData) {
+                document.getElementById('liveTeamALogo').src =
+                    matchData.teamALogo || 'assets/default-team.png';
+                document.getElementById('liveTeamBLogo').src =
+                    matchData.teamBLogo || 'assets/default-team.png';
+                document.getElementById('matchInfo').textContent =
+                    (matchData.league || apiMatch.name || 'Cricket') + ' • ' + status;
+            }
+        }
+
+        async function fetchLiveScoreFromAPI() {
+            try {
+                // If we already know the provider match ID, get the detailed score.
+                if (cricketApiMatchId) {
+                    const detail = await apiGet('/match_info', { id: cricketApiMatchId });
+                    if (detail.data) return detail.data;
+                }
+
+                // Otherwise find the current match by team names.
+                return await findCricketApiMatch();
+            } catch (err) {
+                console.warn('Cricket API:', err);
+                return null;
+            }
+        }
+
+        function startPolling() {
+            if (apiPollInterval) clearInterval(apiPollInterval);
+
+            apiPollInterval = setInterval(async () => {
+                const apiData = await fetchLiveScoreFromAPI();
+
+                if (apiData) {
+                    updateScoreUI(apiData);
+                    document.getElementById('apiLoader').textContent =
+                        '✅ Live score updated • ' + new Date().toLocaleTimeString();
+                } else {
+                    document.getElementById('apiLoader').textContent =
+                        '⚠️ Live score unavailable right now';
+                }
+            }, 15000);
+        }
+
+        // ----- AUTH + INIT -----
         auth.onAuthStateChanged((user) => {
             if (!user) { window.location.href = 'login.html'; return; }
             currentUser = user;
             loadMatch();
             loadBalance(user.uid);
+            // start polling API after match loads
         });
 
         function loadBalance(uid) {
             database.ref('users/' + uid + '/wallet').on('value', (snapshot) => {
                 if (snapshot.exists()) {
-                    userBalance = snapshot.val().balance || 0;
-                    document.getElementById('userBalance').textContent = '₹' + userBalance;
+                    const wallet = snapshot.val() || {};
+                    userBalance = Number(wallet.balance ?? wallet.total ?? 0);
+
+                    // Support common wallet structures used by this app.
+                    if (wallet.balance === undefined && wallet.recharge !== undefined && wallet.winning !== undefined) {
+                        userBalance = Number(wallet.recharge || 0) + Number(wallet.winning || 0);
+                    }
+
+                    document.getElementById('userBalance').textContent =
+                        '₹' + userBalance.toFixed(2);
+                    updateTradePreview();
                 }
             });
         }
 
         function loadMatch() {
             if (!matchId) { showToast('Match not found', 'error'); return; }
-            database.ref('matches/' + matchId).on('value', (snapshot) => {
+            database.ref('matches/' + matchId).on('value', async (snapshot) => {
                 if (!snapshot.exists()) { showToast('Match not found', 'error'); return; }
                 matchData = snapshot.val();
+
+                // update main match details
                 document.getElementById('teamAName').textContent = matchData.teamA;
                 document.getElementById('teamBName').textContent = matchData.teamB;
                 document.getElementById('teamALogo').src = matchData.teamALogo || 'assets/default-team.png';
@@ -131,17 +475,77 @@
                 document.getElementById('teamAOdds').textContent = 'Odds: ' + (matchData.oddsA || '1.95');
                 document.getElementById('teamBOdds').textContent = 'Odds: ' + (matchData.oddsB || '1.95');
                 document.getElementById('matchInfo').textContent = matchData.league + ' • ' + (matchData.status || 'Upcoming');
+
+                // ---- Fetch live score from CricAPI and start polling ----
+                const apiData = await fetchLiveScoreFromAPI();
+
+                if (apiData) {
+                    updateScoreUI(apiData);
+                    document.getElementById('apiLoader').textContent =
+                        '✅ Live score connected • ' + new Date().toLocaleTimeString();
+                } else {
+                    // Firebase score is only a fallback when the provider has no data.
+                    updateScoreUI({
+                        teams: [matchData.teamA, matchData.teamB],
+                        score: [
+                            { team: matchData.teamA, r: matchData.scoreA ?? 0, w: 0, o: matchData.overs || '0.0' },
+                            { team: matchData.teamB, r: matchData.scoreB ?? 0, w: 0, o: matchData.overs || '0.0' }
+                        ],
+                        status: matchData.status || 'Upcoming',
+                        matchType: matchData.matchType || 'Cricket'
+                    });
+                    document.getElementById('apiLoader').textContent =
+                        '⚠️ Provider score unavailable • showing Firebase score';
+                }
+
+                startPolling();
             });
         }
 
+        // ----- ODDS SELECTION -----
         document.querySelectorAll('.odds-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.odds-btn').forEach(b => b.classList.remove('selected'));
                 this.classList.add('selected');
                 selectedTeam = this.dataset.team;
+                updateTradePreview();
             });
         });
 
+        // ----- LIVE TRADE PREVIEW -----
+        function updateTradePreview() {
+            const amount = Number(document.getElementById('amount').value || 0);
+            const selectedName = selectedTeam === 'teamA'
+                ? (matchData?.teamA || 'Team A')
+                : selectedTeam === 'teamB'
+                    ? (matchData?.teamB || 'Team B')
+                    : '—';
+
+            const odds = selectedTeam === 'teamA'
+                ? Number(matchData?.oddsA || 1.95)
+                : selectedTeam === 'teamB'
+                    ? Number(matchData?.oddsB || 1.95)
+                    : 0;
+
+            document.getElementById('tradeSelection').textContent = selectedName;
+            document.getElementById('tradeAmount').textContent = '₹' + amount.toFixed(0);
+            document.getElementById('tradeOdds').textContent = odds ? odds.toFixed(2) : '—';
+            document.getElementById('tradeReturn').textContent =
+                odds && amount ? '₹' + (amount * odds).toFixed(2) : '₹0';
+
+            const status = document.getElementById('tradeLiveStatus');
+            if (selectedTeam) {
+                status.textContent = 'Ready to trade';
+                status.classList.add('active');
+            } else {
+                status.textContent = 'Not selected';
+                status.classList.remove('active');
+            }
+        }
+
+        document.getElementById('amount').addEventListener('input', updateTradePreview);
+
+        // ----- PLACE TRADE -----
         document.getElementById('placeTradeBtn').addEventListener('click', async function() {
             if (!selectedTeam) { showToast('Please select a team first', 'error'); return; }
             const amount = parseInt(document.getElementById('amount').value);
@@ -170,8 +574,8 @@
                     createdAt: Date.now()
                 });
 
-                const newBalance = userBalance - amount;
-                await database.ref('users/' + currentUser.uid + '/wallet/balance').set(newBalance);
+                const newBalance = Number(userBalance) - Number(amount);
+                await database.ref('users/' + currentUser.uid + '/wallet/balance').set(Number(newBalance.toFixed(2)));
 
                 await database.ref('transactions').push({
                     userId: currentUser.uid,
