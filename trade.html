@@ -231,6 +231,7 @@
     <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-functions-compat.js"></script>
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
@@ -255,23 +256,17 @@
         let matchData = null;
         let userBalance = 0;
         let currentUser = null;
+
+        // ---------- SHARED LIVE SCORE BACKEND ----------
+        // The browser NEVER calls CricketData directly.
+        // It calls our Firebase Callable Function, which shares one cached
+        // CricketData response between all users.
+        const functions = firebase.app().functions('asia-south1');
+        const getLiveScore = functions.httpsCallable('getLiveScore');
         let apiPollInterval = null;
-
-        // ---------- CRICKETDATA.ORG / CRICAPI ----------
-        // Official Current Matches endpoint:
-        // https://api.cricapi.com/v1/currentMatches?apikey=YOUR_KEY&offset=0
-        const API_KEY = 'e3243cef-c140-45e9-b56e-669632e081bc';
-        const API_BASE = 'https://api.cricapi.com/v1';
-
         let lastApiMatch = null;
 
-        function showToast(msg, type = 'success') {
-            toast.className = 'toast ' + type;
-            toastMessage.textContent = msg;
-            toast.style.display = 'block';
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3000);
-        }
+        const FALLBACK_TEAM_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23eeeeee'/%3E%3Cpath d='M50 18v64M18 50h64' stroke='%23aaaaaa' stroke-width='5'/%3E%3C/svg%3E";
 
         function norm(s) {
             return String(s || '')
@@ -285,6 +280,7 @@
             ind:'india', eng:'england', aus:'australia', nz:'newzealand',
             pak:'pakistan', sa:'southafrica', ban:'bangladesh', sl:'srilanka',
             wi:'westindies', afg:'afghanistan', ire:'ireland', zim:'zimbabwe',
+            nep:'nepal', uae:'uae', usa:'usa',
             csk:'chennaisuperkings', mi:'mumbaiindians', rcb:'royalchallengersbengaluru',
             kkr:'kolkataknightriders', dc:'delhicapitals', srh:'sunrisershyderabad',
             rr:'rajasthanroyals', pbks:'punjabkings', gt:'gujarattitans',
@@ -304,64 +300,19 @@
 
         function getApiTeams(m) {
             if (Array.isArray(m.teams)) return m.teams;
-            if (m.teamInfo && Array.isArray(m.teamInfo)) {
-                return m.teamInfo.map(x => x.name).filter(Boolean);
-            }
+            if (Array.isArray(m.teamInfo)) return m.teamInfo.map(x => x.name).filter(Boolean);
             return [];
         }
 
-        function matchIsOurMatch(m) {
-            const a = matchData?.teamA;
-            const b = matchData?.teamB;
-            if (!a || !b) return false;
-
-            const teams = getApiTeams(m);
-            if (teams.length >= 2) {
-                const hasA = teams.some(t => sameTeam(t, a));
-                const hasB = teams.some(t => sameTeam(t, b));
-                if (hasA && hasB) return true;
-            }
-
-            // Fallback for API records where teams[] is missing.
-            const title = `${m.name || ''} ${m.match || ''} ${m.title || ''}`;
-            const titleNorm = norm(title);
-            const aFound = nameVariants(a).some(x => x && titleNorm.includes(x));
-            const bFound = nameVariants(b).some(x => x && titleNorm.includes(x));
-            return aFound && bFound;
-        }
-
-        async function getCurrentMatches() {
-            const url = `${API_BASE}/currentMatches?apikey=${encodeURIComponent(API_KEY)}&offset=0`;
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: { 'Accept': 'application/json' },
-                cache: 'no-store'
-            });
-
-            if (!response.ok) {
-                throw new Error(`API HTTP ${response.status}`);
-            }
-
-            const json = await response.json();
-
-            if (json.status === 'failure') {
-                throw new Error(json.reason || 'CricketData API failure');
-            }
-
-            return Array.isArray(json.data) ? json.data : [];
-        }
-
         function getTeamScore(match, teamName) {
-            if (!Array.isArray(match.score)) return null;
+            if (!Array.isArray(match?.score)) return null;
 
             const rows = match.score.filter(s => {
                 const scoreTeam = s && (s.team || s.teamName || s.name || '');
                 return sameTeam(scoreTeam, teamName);
             });
-
             if (!rows.length) return null;
 
-            // Latest inning row for that team.
             const s = rows[rows.length - 1];
             const runs = s.r ?? s.runs ?? 0;
             const wickets = s.w ?? s.wickets ?? 0;
@@ -377,159 +328,82 @@
 
         function updateScoreUI(apiMatch) {
             if (!apiMatch) return;
-
             lastApiMatch = apiMatch;
 
             const teamA = matchData?.teamA || getApiTeams(apiMatch)[0] || 'Team A';
             const teamB = matchData?.teamB || getApiTeams(apiMatch)[1] || 'Team B';
-
             const scoreA = getTeamScore(apiMatch, teamA);
             const scoreB = getTeamScore(apiMatch, teamB);
 
             document.getElementById('liveTeamAName').textContent = teamA;
             document.getElementById('liveTeamBName').textContent = teamB;
+            document.getElementById('liveTeamARuns').textContent = scoreA ? scoreA.text : '—';
+            document.getElementById('liveTeamBRuns').textContent = scoreB ? scoreB.text : '—';
+            document.getElementById('liveOvers').textContent = (scoreA?.overs || scoreB?.overs || '—') + (scoreA || scoreB ? ' ov' : '');
 
-            // IMPORTANT: Never replace a real API score with 0/0.
-            document.getElementById('liveTeamARuns').textContent =
-                scoreA ? scoreA.text : '—';
-
-            document.getElementById('liveTeamBRuns').textContent =
-                scoreB ? scoreB.text : '—';
-
-            const overs = scoreA?.overs || scoreB?.overs || '0.0';
-            document.getElementById('liveOvers').textContent = overs + ' ov';
-
-            const status = String(
-                apiMatch.status ||
-                apiMatch.matchStatus ||
-                matchData?.status ||
-                'Upcoming'
-            );
-
+            const status = String(apiMatch.status || apiMatch.matchStatus || matchData?.status || 'Upcoming');
             document.getElementById('liveBallByBall').textContent = '● LIVE SCORE';
 
             const badge = document.getElementById('liveStatusBadge');
             const lower = status.toLowerCase();
-
-            badge.textContent =
-                lower.includes('live') || lower.includes('in progress')
-                    ? 'LIVE'
-                    : status;
-
+            badge.textContent = lower.includes('live') || lower.includes('in progress') ? 'LIVE' : status;
             badge.className = 'status-badge';
+            if (lower.includes('live') || lower.includes('in progress')) badge.classList.add('live');
+            else if (lower.includes('complete') || lower.includes('finished') || lower.includes('finish')) badge.classList.add('finished');
 
-            if (lower.includes('live') || lower.includes('in progress')) {
-                badge.classList.add('live');
-            } else if (
-                lower.includes('complete') ||
-                lower.includes('finished') ||
-                lower.includes('finish')
-            ) {
-                badge.classList.add('finished');
-            }
-
-            if (matchData) {
-                document.getElementById('liveTeamALogo').src =
-                    matchData.teamALogo || FALLBACK_TEAM_IMAGE;
-
-                document.getElementById('liveTeamBLogo').src =
-                    matchData.teamBLogo || FALLBACK_TEAM_IMAGE;
-
-                document.getElementById('matchInfo').textContent =
-                    `${matchData.league || apiMatch.name || 'Cricket'} • ${status}`;
-            }
+            document.getElementById('liveTeamALogo').src = matchData?.teamALogo || FALLBACK_TEAM_IMAGE;
+            document.getElementById('liveTeamBLogo').src = matchData?.teamBLogo || FALLBACK_TEAM_IMAGE;
+            document.getElementById('matchInfo').textContent = `${matchData?.league || apiMatch.name || 'Cricket'} • ${status}`;
         }
 
         function showFirebaseFallback() {
             if (!matchData) return;
-
-            // Only use Firebase values if they actually exist.
-            const hasFirebaseScore =
-                matchData.scoreA !== undefined ||
-                matchData.scoreB !== undefined ||
-                matchData.overs !== undefined;
-
+            const hasFirebaseScore = matchData.scoreA !== undefined || matchData.scoreB !== undefined || matchData.overs !== undefined;
             if (!hasFirebaseScore) {
                 document.getElementById('liveTeamARuns').textContent = '—';
                 document.getElementById('liveTeamBRuns').textContent = '—';
                 document.getElementById('liveOvers').textContent = '—';
                 return;
             }
-
-            document.getElementById('liveTeamARuns').textContent =
-                matchData.scoreA !== undefined ? `${matchData.scoreA}/${matchData.wicketsA ?? 0}` : '—';
-
-            document.getElementById('liveTeamBRuns').textContent =
-                matchData.scoreB !== undefined ? `${matchData.scoreB}/${matchData.wicketsB ?? 0}` : '—';
-
-            document.getElementById('liveOvers').textContent =
-                (matchData.overs || '0.0') + ' ov';
+            document.getElementById('liveTeamARuns').textContent = matchData.scoreA !== undefined ? `${matchData.scoreA}/${matchData.wicketsA ?? 0}` : '—';
+            document.getElementById('liveTeamBRuns').textContent = matchData.scoreB !== undefined ? `${matchData.scoreB}/${matchData.wicketsB ?? 0}` : '—';
+            document.getElementById('liveOvers').textContent = matchData.overs ? `${matchData.overs} ov` : '—';
         }
 
         async function refreshLiveScore() {
+            if (!matchData?.teamA || !matchData?.teamB) return;
+
             try {
-                let found = null;
-                const firebaseApiId =
-                    matchData?.apiMatchId ||
-                    matchData?.cricApiMatchId ||
-                    matchData?.cricketApiMatchId;
+                const result = await getLiveScore({
+                    teamA: matchData.teamA,
+                    teamB: matchData.teamB,
+                    matchId: matchId,
+                    apiMatchId: matchData.apiMatchId || matchData.cricApiMatchId || matchData.cricketApiMatchId || null
+                });
 
-                // If admin has stored the provider match ID, use it first.
-                if (firebaseApiId) {
-                    try {
-                        const infoUrl = `${API_BASE}/match_info?apikey=${encodeURIComponent(API_KEY)}&id=${encodeURIComponent(firebaseApiId)}`;
-                        const infoRes = await fetch(infoUrl, { cache: 'no-store' });
-                        if (infoRes.ok) {
-                            const infoJson = await infoRes.json();
-                            if (infoJson.status !== 'failure' && infoJson.data) found = infoJson.data;
-                        }
-                    } catch (e) {
-                        console.warn('match_info failed, trying currentMatches:', e);
-                    }
-                }
-
-                // Official free live-score source: currentMatches.
-                if (!found) {
-                    const matches = await getCurrentMatches();
-                    found = matches.find(matchIsOurMatch) || null;
-                }
-
-                if (found) {
-                    updateScoreUI(found);
-
-                    const a = getTeamScore(found, matchData.teamA);
-                    const b = getTeamScore(found, matchData.teamB);
-
-                    if (!a && !b) {
-                        document.getElementById('liveTeamARuns').textContent = '—';
-                        document.getElementById('liveTeamBRuns').textContent = '—';
-                        document.getElementById('liveOvers').textContent = '—';
-                    }
-
+                const data = result?.data || {};
+                if (data.match) {
+                    updateScoreUI(data.match);
                     document.getElementById('apiLoader').textContent =
-                        '✅ Live score connected • ' + new Date().toLocaleTimeString();
+                        `✅ Live score • updated ${data.cacheAgeSeconds || 0}s ago`;
                 } else {
                     showFirebaseFallback();
                     document.getElementById('apiLoader').textContent =
-                        '⚠️ Match not found in CricketData current matches';
+                        '⚠️ This match is not currently available from CricketData';
                 }
             } catch (error) {
-                console.error('CricketData API:', error);
+                console.error('Shared score backend:', error);
                 showFirebaseFallback();
                 document.getElementById('apiLoader').textContent =
-                    '❌ Score API error: ' + error.message;
+                    '⚠️ Live score service unavailable • showing saved score';
             }
         }
 
         function startPolling() {
             if (apiPollInterval) clearInterval(apiPollInterval);
-
-            // Free plan is limited to 100 hits/day, so 60-second polling
-            // is safer than requesting every few seconds.
-            apiPollInterval = setInterval(refreshLiveScore, 60000);
+            // Client requests are cheap because the backend returns the shared cache.
+            apiPollInterval = setInterval(refreshLiveScore, 20000);
         }
-
-        const FALLBACK_TEAM_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23eeeeee'/%3E%3Cpath d='M50 18v64M18 50h64' stroke='%23aaaaaa' stroke-width='5'/%3E%3C/svg%3E";
 
         // ----- AUTH + INIT -----
         auth.onAuthStateChanged((user) => {
