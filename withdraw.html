@@ -1,260 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Withdraw - Fantasy Adda</title>
+<title>Withdraw - Fantasy Adda</title>
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+<style>
 
-        body {
-            background: #f5f6fa;
-            padding-bottom: 85px;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
 
-        header {
-            background: #B80000;
-            color: #fff;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,.15);
-        }
+body{
+    background:#f5f6fa;
+    padding-bottom:80px;
+}
 
-        header h2 {
-            font-size: 20px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+header{
+    background:#B80000;
+    color:white;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.15);
+}
 
-        .back-btn {
-            color: #fff;
-            font-size: 22px;
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 8px;
-        }
+header h2{
+    font-size:20px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
 
-        .container {
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
+.back-btn{
+    color:white;
+    text-decoration:none;
+    font-size:22px;
+}
 
-        .balance-card {
-            background: linear-gradient(135deg, #B80000, #ff4d4d);
-            color: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(184,0,0,.3);
-        }
+.container{
+    max-width:520px;
+    margin:20px auto;
+    padding:0 15px;
+}
 
-        .balance-card h3 {
-            font-size: 14px;
-            font-weight: 400;
-            opacity: .9;
-        }
+.balance-card{
+    background:linear-gradient(135deg,#B80000,#ff4d4d);
+    color:white;
+    padding:25px 20px;
+    border-radius:16px;
+    text-align:center;
+    margin-bottom:18px;
+    box-shadow:0 5px 20px rgba(184,0,0,.25);
+}
 
-        .balance-card h1 {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 5px 0;
-        }
+.balance-card h3{
+    font-size:14px;
+    font-weight:400;
+    opacity:.9;
+}
 
-        .bank-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 3px 15px rgba(0,0,0,.08);
-        }
+.balance-card h1{
+    font-size:34px;
+    margin-top:5px;
+}
 
-        .bank-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 20px;
-        }
+.card{
+    background:white;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 3px 15px rgba(0,0,0,.08);
+}
 
-        .bank-title i {
-            color: #B80000;
-            font-size: 22px;
-        }
+.card-title{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
 
-        .form-group {
-            margin-bottom: 17px;
-        }
+.card-title i{
+    color:#B80000;
+}
 
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 7px;
-            color: #333;
-            font-size: 14px;
-        }
+.form-group{
+    margin-bottom:16px;
+}
 
-        .input-box {
-            position: relative;
-        }
+.form-group label{
+    display:block;
+    font-size:14px;
+    font-weight:bold;
+    color:#333;
+    margin-bottom:7px;
+}
 
-        .input-box i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-        }
+.form-group input{
+    width:100%;
+    padding:14px;
+    border:2px solid #ddd;
+    border-radius:11px;
+    font-size:16px;
+    outline:none;
+}
 
-        .form-group input {
-            width: 100%;
-            padding: 14px 14px 14px 43px;
-            border: 2px solid #ddd;
-            border-radius: 12px;
-            font-size: 15px;
-            outline: none;
-            transition: .3s;
-            background: #fff;
-        }
+.form-group input:focus{
+    border-color:#B80000;
+}
 
-        .form-group input:focus {
-            border-color: #B80000;
-        }
+.withdraw-btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:#B80000;
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:5px;
+}
 
-        .amount-input {
-            padding-left: 43px !important;
-        }
+.withdraw-btn:disabled{
+    background:#999;
+}
 
-        .withdraw-btn {
-            width: 100%;
-            padding: 16px;
-            background: #B80000;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 5px;
-        }
+.info{
+    margin-top:15px;
+    background:#fff7f7;
+    border:1px solid #ffd0d0;
+    padding:12px;
+    border-radius:10px;
+    color:#666;
+    font-size:13px;
+    line-height:1.6;
+}
 
-        .withdraw-btn:hover {
-            background: #8b0000;
-        }
+.toast{
+    position:fixed;
+    top:20px;
+    right:20px;
+    max-width:330px;
+    padding:15px 20px;
+    border-radius:10px;
+    color:white;
+    display:none;
+    z-index:9999;
+}
 
-        .withdraw-btn:disabled {
-            background: #999;
-            cursor: not-allowed;
-        }
+.toast.success{
+    background:#28a745;
+}
 
-        .info-box {
-            background: #fff7f7;
-            border: 1px solid #ffd6d6;
-            color: #666;
-            font-size: 12px;
-            line-height: 1.6;
-            padding: 12px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
+.toast.error{
+    background:#d40000;
+}
 
-        .info-box i {
-            color: #B80000;
-            margin-right: 5px;
-        }
+nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    padding:11px 0;
+    box-shadow:0 -3px 10px rgba(0,0,0,.12);
+    z-index:100;
+}
 
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #333;
-            color: #fff;
-            padding: 14px 20px;
-            border-radius: 12px;
-            z-index: 9999;
-            display: none;
-            max-width: 350px;
-            box-shadow: 0 5px 20px rgba(0,0,0,.2);
-        }
+nav a{
+    text-decoration:none;
+    color:#666;
+    font-size:12px;
+    text-align:center;
+}
 
-        .toast.success {
-            background: #28a745;
-        }
+nav i{
+    display:block;
+    font-size:20px;
+    margin-bottom:5px;
+}
 
-        .toast.error {
-            background: #d40000;
-        }
+nav a.active,
+nav a.active i{
+    color:#B80000;
+}
 
-        nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #fff;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            box-shadow: 0 -3px 10px rgba(0,0,0,.12);
-            z-index: 100;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #666;
-            font-size: 12px;
-            text-align: center;
-        }
-
-        nav a.active {
-            color: #B80000;
-        }
-
-        nav i {
-            display: block;
-            font-size: 20px;
-            margin-bottom: 5px;
-            color: #666;
-        }
-
-        nav a.active i {
-            color: #B80000;
-        }
-
-        @media (max-width: 400px) {
-            .container {
-                padding: 0 12px;
-            }
-
-            .bank-card {
-                padding: 16px;
-            }
-
-            header h2 {
-                font-size: 18px;
-            }
-        }
-    </style>
+</style>
 </head>
 
 <body>
 
 <header>
+
     <h2>
         <i class="fa fa-building-columns"></i>
         Withdraw
@@ -263,157 +212,113 @@
     <a href="wallet.html" class="back-btn">
         <i class="fa fa-times"></i>
     </a>
+
 </header>
 
 
 <div class="container">
 
     <div class="balance-card">
+
         <h3>Available Balance</h3>
+
         <h1 id="balance">₹0</h1>
+
     </div>
 
 
-    <div class="bank-card">
+    <div class="card">
 
-        <div class="bank-title">
-            <i class="fa fa-building-columns"></i>
-            Bank Account Details
+        <div class="card-title">
+            <i class="fa fa-university"></i>
+            Bank Account
         </div>
 
 
-        <!-- Amount -->
         <div class="form-group">
 
-            <label>Withdrawal Amount (₹)</label>
+            <label>Withdrawal Amount</label>
 
-            <div class="input-box">
-
-                <i class="fa fa-indian-rupee-sign"></i>
-
-                <input
-                    type="number"
-                    id="amount"
-                    class="amount-input"
-                    placeholder="Enter amount"
-                    min="50"
-                    inputmode="numeric"
-                >
-
-            </div>
+            <input
+                type="number"
+                id="amount"
+                placeholder="Enter amount"
+                min="50"
+                inputmode="numeric"
+            >
 
         </div>
 
 
-        <!-- Account Holder -->
         <div class="form-group">
 
             <label>Account Holder Name</label>
 
-            <div class="input-box">
-
-                <i class="fa fa-user"></i>
-
-                <input
-                    type="text"
-                    id="accountName"
-                    placeholder="Enter account holder name"
-                    maxlength="100"
-                    autocomplete="name"
-                >
-
-            </div>
+            <input
+                type="text"
+                id="accountName"
+                placeholder="Enter account holder name"
+                maxlength="100"
+            >
 
         </div>
 
 
-        <!-- Bank Name -->
         <div class="form-group">
 
             <label>Bank Name</label>
 
-            <div class="input-box">
-
-                <i class="fa fa-building-columns"></i>
-
-                <input
-                    type="text"
-                    id="bankName"
-                    placeholder="Enter bank name"
-                    maxlength="100"
-                    autocomplete="organization"
-                >
-
-            </div>
+            <input
+                type="text"
+                id="bankName"
+                placeholder="Enter bank name"
+                maxlength="100"
+            >
 
         </div>
 
 
-        <!-- Account Number -->
         <div class="form-group">
 
             <label>Account Number</label>
 
-            <div class="input-box">
-
-                <i class="fa fa-credit-card"></i>
-
-                <input
-                    type="password"
-                    id="accountNumber"
-                    placeholder="Enter account number"
-                    inputmode="numeric"
-                    maxlength="20"
-                    autocomplete="off"
-                >
-
-            </div>
+            <input
+                type="password"
+                id="accountNumber"
+                placeholder="Enter account number"
+                inputmode="numeric"
+                maxlength="20"
+            >
 
         </div>
 
 
-        <!-- Confirm Account -->
         <div class="form-group">
 
             <label>Confirm Account Number</label>
 
-            <div class="input-box">
-
-                <i class="fa fa-check-circle"></i>
-
-                <input
-                    type="password"
-                    id="confirmAccountNumber"
-                    placeholder="Re-enter account number"
-                    inputmode="numeric"
-                    maxlength="20"
-                    autocomplete="off"
-                >
-
-            </div>
+            <input
+                type="password"
+                id="confirmAccountNumber"
+                placeholder="Confirm account number"
+                inputmode="numeric"
+                maxlength="20"
+            >
 
         </div>
 
 
-        <!-- IFSC -->
         <div class="form-group">
 
             <label>IFSC Code</label>
 
-            <div class="input-box">
-
-                <i class="fa fa-code"></i>
-
-                <input
-                    type="text"
-                    id="ifsc"
-                    placeholder="Example: SBIN0001234"
-                    maxlength="11"
-                    style="text-transform:uppercase"
-                    autocomplete="off"
-                >
-
-            </div>
+            <input
+                type="text"
+                id="ifsc"
+                placeholder="Example: SBIN0001234"
+                maxlength="11"
+                style="text-transform:uppercase"
+            >
 
         </div>
 
@@ -423,18 +328,18 @@
             id="withdrawBtn">
 
             <i class="fa fa-paper-plane"></i>
-            Request Withdrawal
+            Submit Withdrawal
 
         </button>
 
 
-        <div class="info-box">
+        <div class="info">
 
             <i class="fa fa-circle-info"></i>
 
-            Minimum withdrawal: ₹50.
-            Your withdrawal request will be reviewed by admin.
-            Processing time may take 24–48 hours.
+            Minimum withdrawal ₹50.
+            Your request will first go to admin for approval.
+            Balance will be adjusted only after admin approval.
 
         </div>
 
@@ -469,13 +374,7 @@
 
 
 <div class="toast" id="toast">
-
-    <i class="fa fa-check-circle"></i>
-
-    <span id="toastMessage">
-        Success!
-    </span>
-
+    <span id="toastMessage"></span>
 </div>
 
 
@@ -483,299 +382,214 @@
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
 
-
 <script>
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+    apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
 
-    authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+    authDomain:"fantasy-adda-e3b72.firebaseapp.com",
 
-    projectId: "fantasy-adda-e3b72",
+    projectId:"fantasy-adda-e3b72",
 
-    storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+    storageBucket:"fantasy-adda-e3b72.firebasestorage.app",
 
-    messagingSenderId: "882657286194",
+    messagingSenderId:"882657286194",
 
-    appId: "1:882657286194:web:284e818359de2363f0442b",
+    appId:"1:882657286194:web:284e818359de2363f0442b",
 
-    measurementId: "G-8HJX9NRL1B"
+    measurementId:"G-8HJX9NRL1B"
 
 };
 
-
 firebase.initializeApp(firebaseConfig);
 
+const auth=firebase.auth();
+const db=firebase.database();
 
-const auth = firebase.auth();
+let currentUser=null;
+let userBalance=0;
 
-const database = firebase.database();
+const balanceEl=document.getElementById("balance");
 
+const amount=document.getElementById("amount");
+const accountName=document.getElementById("accountName");
+const bankName=document.getElementById("bankName");
+const accountNumber=document.getElementById("accountNumber");
+const confirmAccountNumber=document.getElementById("confirmAccountNumber");
+const ifsc=document.getElementById("ifsc");
+const withdrawBtn=document.getElementById("withdrawBtn");
 
-const balance = document.getElementById("balance");
+const toast=document.getElementById("toast");
+const toastMessage=document.getElementById("toastMessage");
 
-const amount = document.getElementById("amount");
-
-const accountName = document.getElementById("accountName");
-
-const bankName = document.getElementById("bankName");
-
-const accountNumber = document.getElementById("accountNumber");
-
-const confirmAccountNumber =
-    document.getElementById("confirmAccountNumber");
-
-const ifsc = document.getElementById("ifsc");
-
-const withdrawBtn =
-    document.getElementById("withdrawBtn");
-
-const toast =
-    document.getElementById("toast");
-
-const toastMessage =
-    document.getElementById("toastMessage");
+let toastTimer;
 
 
-let toastTimeout;
+function showToast(message,type="success"){
 
-let currentUser = null;
+    toast.className="toast "+type;
 
-let userBalance = 0;
+    toastMessage.textContent=message;
 
+    toast.style.display="block";
 
-function showToast(message, type = "success") {
+    clearTimeout(toastTimer);
 
-    toast.className = "toast " + type;
-
-    toastMessage.textContent = message;
-
-    toast.style.display = "block";
-
-    clearTimeout(toastTimeout);
-
-    toastTimeout = setTimeout(() => {
-
-        toast.style.display = "none";
-
-    }, 3500);
-
+    toastTimer=setTimeout(()=>{
+        toast.style.display="none";
+    },3500);
 }
 
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(user=>{
 
-    if (!user) {
+    if(!user){
 
-        window.location.href = "login.html";
+        window.location.href="login.html";
 
         return;
-
     }
 
-    currentUser = user;
+    currentUser=user;
 
-    loadBalance(user.uid);
+    db.ref("users/"+user.uid+"/wallet/balance")
+      .on("value",snap=>{
+
+        userBalance=Number(snap.val())||0;
+
+        balanceEl.textContent=
+            "₹"+userBalance.toLocaleString("en-IN");
+
+    });
 
 });
 
 
-function loadBalance(uid) {
+accountNumber.addEventListener("input",function(){
 
-    database
-        .ref("users/" + uid + "/wallet/balance")
-        .on("value", (snapshot) => {
+    this.value=this.value
+        .replace(/\D/g,"")
+        .slice(0,20);
 
-            userBalance = Number(snapshot.val()) || 0;
-
-            balance.textContent =
-                "₹" + userBalance.toLocaleString("en-IN");
-
-        });
-
-}
+});
 
 
-/* IFSC AUTO UPPERCASE */
+confirmAccountNumber.addEventListener("input",function(){
 
-ifsc.addEventListener("input", function() {
+    this.value=this.value
+        .replace(/\D/g,"")
+        .slice(0,20);
 
-    this.value = this.value
+});
+
+
+ifsc.addEventListener("input",function(){
+
+    this.value=this.value
         .toUpperCase()
-        .replace(/[^A-Z0-9]/g, "")
-        .slice(0, 11);
+        .replace(/[^A-Z0-9]/g,"")
+        .slice(0,11);
 
 });
 
 
-/* Account number only digits */
+withdrawBtn.addEventListener("click",async()=>{
 
-accountNumber.addEventListener("input", function() {
+    const amt=Number(amount.value);
 
-    this.value = this.value
-        .replace(/\D/g, "")
-        .slice(0, 20);
+    const holder=accountName.value.trim();
 
-});
+    const bank=bankName.value.trim();
 
+    const acc=accountNumber.value.trim();
 
-confirmAccountNumber.addEventListener("input", function() {
+    const confirmAcc=confirmAccountNumber.value.trim();
 
-    this.value = this.value
-        .replace(/\D/g, "")
-        .slice(0, 20);
-
-});
+    const ifscCode=ifsc.value.trim().toUpperCase();
 
 
-/* Withdrawal */
+    if(!amt || amt<50){
 
-withdrawBtn.addEventListener("click", async function() {
-
-    const amt = Number(amount.value);
-
-    const holder =
-        accountName.value.trim();
-
-    const bank =
-        bankName.value.trim();
-
-    const acc =
-        accountNumber.value.trim();
-
-    const confirmAcc =
-        confirmAccountNumber.value.trim();
-
-    const ifscCode =
-        ifsc.value.trim().toUpperCase();
-
-
-    /* Validation */
-
-    if (!amt || amt < 50) {
-
-        showToast(
-            "Minimum withdrawal is ₹50",
-            "error"
-        );
+        showToast("Minimum withdrawal is ₹50","error");
 
         return;
     }
 
 
-    if (amt > userBalance) {
+    if(amt>userBalance){
 
-        showToast(
-            "Insufficient balance",
-            "error"
-        );
+        showToast("Insufficient balance","error");
 
         return;
     }
 
 
-    if (!holder) {
+    if(!holder){
 
-        showToast(
-            "Please enter account holder name",
-            "error"
-        );
-
-        accountName.focus();
+        showToast("Enter account holder name","error");
 
         return;
     }
 
 
-    if (!bank) {
+    if(!bank){
 
-        showToast(
-            "Please enter bank name",
-            "error"
-        );
-
-        bankName.focus();
+        showToast("Enter bank name","error");
 
         return;
     }
 
 
-    if (!acc || acc.length < 9 || acc.length > 20) {
+    if(acc.length<9){
 
-        showToast(
-            "Enter a valid account number",
-            "error"
-        );
-
-        accountNumber.focus();
+        showToast("Enter valid account number","error");
 
         return;
     }
 
 
-    if (acc !== confirmAcc) {
+    if(acc!==confirmAcc){
 
-        showToast(
-            "Account numbers do not match",
-            "error"
-        );
-
-        confirmAccountNumber.focus();
+        showToast("Account numbers do not match","error");
 
         return;
     }
 
 
-    /* IFSC format */
+    const ifscRegex=/^[A-Z]{4}0[A-Z0-9]{6}$/;
 
-    const ifscPattern =
-        /^[A-Z]{4}0[A-Z0-9]{6}$/;
+    if(!ifscRegex.test(ifscCode)){
 
-
-    if (!ifscPattern.test(ifscCode)) {
-
-        showToast(
-            "Enter a valid IFSC code",
-            "error"
-        );
-
-        ifsc.focus();
+        showToast("Enter valid IFSC code","error");
 
         return;
     }
 
 
-    withdrawBtn.disabled = true;
+    withdrawBtn.disabled=true;
 
-    withdrawBtn.innerHTML =
-        '<i class="fa fa-spinner fa-spin"></i> Processing...';
+    withdrawBtn.innerHTML=
+        '<i class="fa fa-spinner fa-spin"></i> Submitting...';
 
 
-    try {
+    try{
 
         /*
-         * Re-read balance from Firebase
-         * so old/stale balance is not used.
-         */
+        Recheck latest balance.
+        */
 
-        const balanceRef =
-            database.ref(
-                "users/" +
-                currentUser.uid +
-                "/wallet/balance"
-            );
+        const balanceSnap=
+            await db.ref(
+                "users/"+currentUser.uid+"/wallet/balance"
+            ).once("value");
 
 
-        const balanceSnap =
-            await balanceRef.once("value");
+        const latestBalance=
+            Number(balanceSnap.val())||0;
 
 
-        const latestBalance =
-            Number(balanceSnap.val()) || 0;
-
-
-        if (amt > latestBalance) {
+        if(amt>latestBalance){
 
             showToast(
                 "Insufficient balance",
@@ -786,111 +600,86 @@ withdrawBtn.addEventListener("click", async function() {
         }
 
 
-        const newBalance =
-            latestBalance - amt;
+        /*
+        Payment details string
+        */
+
+        const paymentDetails=
+            "Bank Account | Holder: "+
+            holder+
+            " | Bank: "+
+            bank+
+            " | Account: "+
+            acc+
+            " | IFSC: "+
+            ifscCode;
 
 
         /*
-         * Store bank details as a single string
-         * because your current Firebase rules
-         * use paymentDetails as a string.
-         */
+        Create pending request.
+        IMPORTANT:
+        No wallet deduction here.
+        */
 
-        const paymentDetails =
-            "Account Holder: " + holder +
-            " | Bank: " + bank +
-            " | Account Number: " + acc +
-            " | IFSC: " + ifscCode;
+        await db.ref("withdrawals").push({
 
+            userId:currentUser.uid,
 
-        /*
-         * Deduct balance
-         */
+            amount:amt,
 
-        await balanceRef.set(newBalance);
+            accountName:holder,
 
+            bankName:bank,
 
-        /*
-         * Create withdrawal request
-         */
+            accountNumber:acc,
 
-        const withdrawalRef =
-            await database
-                .ref("withdrawals")
-                .push({
+            ifsc:ifscCode,
 
-                    userId: currentUser.uid,
+            paymentDetails:paymentDetails,
 
-                    amount: amt,
+            status:"pending",
 
-                    paymentDetails: paymentDetails,
+            createdAt:Date.now()
 
-                    status: "pending",
-
-                    createdAt: Date.now()
-
-                });
-
-
-        /*
-         * Transaction record
-         */
-
-        await database
-            .ref("transactions")
-            .push({
-
-                userId: currentUser.uid,
-
-                type: "debit",
-
-                amount: amt,
-
-                description:
-                    "Bank withdrawal request",
-
-                date: Date.now(),
-
-                withdrawalId:
-                    withdrawalRef.key
-
-            });
+        });
 
 
         showToast(
-            "Withdrawal request submitted successfully! 🎉",
+            "Withdrawal request sent to admin successfully!",
             "success"
         );
 
 
-        setTimeout(() => {
+        amount.value="";
+        accountName.value="";
+        bankName.value="";
+        accountNumber.value="";
+        confirmAccountNumber.value="";
+        ifsc.value="";
 
-            window.location.href =
-                "wallet.html";
 
-        }, 1800);
+        setTimeout(()=>{
+
+            window.location.href="wallet.html";
+
+        },1800);
 
 
-    } catch (error) {
+    }catch(error){
 
-        console.error(
-            "Withdrawal Error:",
-            error
-        );
-
+        console.error(error);
 
         showToast(
-            "Withdrawal failed. Please try again.",
+            "Unable to submit withdrawal request.",
             "error"
         );
 
+    }finally{
 
-    } finally {
+        withdrawBtn.disabled=false;
 
-        withdrawBtn.disabled = false;
-
-        withdrawBtn.innerHTML =
-            '<i class="fa fa-paper-plane"></i> Request Withdrawal';
+        withdrawBtn.innerHTML=
+            '<i class="fa fa-paper-plane"></i> Submit Withdrawal';
 
     }
 
