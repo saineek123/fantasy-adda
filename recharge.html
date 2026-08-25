@@ -9,6 +9,7 @@
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -71,7 +72,7 @@ header h2{
 }
 
 .card{
-    background:white;
+    background:#fff;
     padding:18px;
     border-radius:18px;
     margin-bottom:15px;
@@ -125,7 +126,6 @@ input:focus{
     border:1px dashed #B80000;
     padding:15px;
     border-radius:13px;
-    margin-bottom:15px;
 }
 
 .upi-id{
@@ -145,16 +145,6 @@ input:focus{
     cursor:pointer;
 }
 
-.qr{
-    width:210px;
-    height:210px;
-    object-fit:contain;
-    display:block;
-    margin:12px auto;
-    border:1px solid #ddd;
-    border-radius:12px;
-}
-
 .pay-note{
     background:#fff8e1;
     color:#795600;
@@ -162,6 +152,7 @@ input:focus{
     border-radius:10px;
     font-size:13px;
     line-height:1.5;
+    margin-top:15px;
 }
 
 .submit-btn{
@@ -179,10 +170,6 @@ input:focus{
 .submit-btn:disabled{
     background:#999;
     cursor:not-allowed;
-}
-
-.status{
-    margin-top:15px;
 }
 
 .status-item{
@@ -216,16 +203,6 @@ input:focus{
     color:#721c24;
 }
 
-.preview{
-    display:none;
-    width:100%;
-    max-height:250px;
-    object-fit:contain;
-    margin-top:10px;
-    border-radius:10px;
-    border:1px solid #ddd;
-}
-
 .toast{
     position:fixed;
     top:20px;
@@ -252,7 +229,7 @@ nav{
     bottom:0;
     left:0;
     width:100%;
-    background:white;
+    background:#fff;
     display:flex;
     justify-content:space-around;
     padding:11px 0;
@@ -278,16 +255,20 @@ nav i{
 }
 
 @media(max-width:380px){
+
     .amount-options{
         grid-template-columns:repeat(2,1fr);
     }
+
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
+
     <h2>
         <i class="fa fa-plus-circle"></i>
         Recharge
@@ -296,14 +277,25 @@ nav i{
     <a href="wallet.html" class="back-btn">
         <i class="fa fa-times"></i>
     </a>
+
 </header>
+
 
 <div class="container">
 
+
+    <!-- BALANCE -->
+
     <div class="balance-card">
+
         <small>Current Wallet Balance</small>
+
         <h1 id="balance">₹0</h1>
+
     </div>
+
+
+    <!-- AMOUNT -->
 
     <div class="card">
 
@@ -314,10 +306,15 @@ nav i{
         <div class="amount-options">
 
             <button data-amount="100">₹100</button>
+
             <button data-amount="200">₹200</button>
+
             <button data-amount="500">₹500</button>
+
             <button data-amount="1000">₹1,000</button>
+
             <button data-amount="2000">₹2,000</button>
+
             <button data-amount="5000">₹5,000</button>
 
         </div>
@@ -331,6 +328,9 @@ nav i{
         >
 
     </div>
+
+
+    <!-- PAYMENT -->
 
     <div class="card">
 
@@ -348,26 +348,39 @@ nav i{
                 Loading...
             </div>
 
-            <button class="copy-btn" onclick="copyUPI()">
-                <i class="fa fa-copy"></i> Copy UPI
+            <button class="copy-btn" id="copyBtn">
+
+                <i class="fa fa-copy"></i>
+
+                Copy UPI
+
             </button>
 
         </div>
 
-        <img id="qrImage" class="qr" alt="Payment QR">
-
         <div class="pay-note">
+
             <b>Important:</b><br>
-            Payment karne ke baad hi UTR number enter karein.
-            Galat UTR ya fake payment submit karne par request reject ho sakti hai.
+
+            Pehle selected amount ka payment UPI par karein.
+
+            Payment complete hone ke baad UTR / Transaction ID
+            neeche enter karein.
+
+            Admin payment verify karne ke baad hi wallet me balance
+            add karega.
+
         </div>
 
     </div>
 
+
+    <!-- UTR -->
+
     <div class="card">
 
         <div class="card-title">
-            3. Payment Details
+            3. Enter Payment UTR
         </div>
 
         <label>
@@ -379,28 +392,26 @@ nav i{
             id="utr"
             maxlength="50"
             placeholder="Enter UTR / Transaction ID"
+            autocomplete="off"
         >
-
-        <label style="display:block;margin-top:15px;">
-            Payment Screenshot
-        </label>
-
-        <input
-            type="file"
-            id="screenshot"
-            accept="image/jpeg,image/png,image/webp"
-        >
-
-        <img id="preview" class="preview">
 
     </div>
 
+
+    <!-- SUBMIT -->
+
     <button class="submit-btn" id="submitBtn">
+
         <i class="fa fa-paper-plane"></i>
+
         Submit Recharge Request
+
     </button>
 
-    <div class="card status">
+
+    <!-- REQUEST HISTORY -->
+
+    <div class="card" style="margin-top:15px;">
 
         <div class="card-title">
             My Recharge Requests
@@ -414,222 +425,329 @@ nav i{
 
 </div>
 
+
+<!-- NAV -->
+
 <nav>
 
     <a href="index.html">
+
         <i class="fa fa-home"></i>
+
         Home
+
     </a>
 
     <a href="matches.html">
+
         <i class="fa fa-trophy"></i>
+
         Matches
+
     </a>
 
     <a href="wallet.html" class="active">
+
         <i class="fa fa-wallet"></i>
+
         Wallet
+
     </a>
 
     <a href="profile.html">
+
         <i class="fa fa-user"></i>
+
         Profile
+
     </a>
 
 </nav>
 
+
 <div class="toast" id="toast">
+
     <span id="toastMessage"></span>
+
 </div>
 
+
+<!-- FIREBASE -->
+
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-storage-compat.js"></script>
+
 
 <script>
 
+
 const firebaseConfig = {
+
     apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+
     authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+
     projectId: "fantasy-adda-e3b72",
+
     storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+
     messagingSenderId: "882657286194",
+
     appId: "1:882657286194:web:284e818359de2363f0442b",
+
     measurementId: "G-8HJX9NRL1B"
+
 };
+
 
 firebase.initializeApp(firebaseConfig);
 
+
 const auth = firebase.auth();
+
 const db = firebase.database();
-const storage = firebase.storage();
+
 
 let currentUser = null;
+
 let selectedAmount = 0;
+
 let toastTimer = null;
 
-const balanceEl = document.getElementById("balance");
-const customAmount = document.getElementById("customAmount");
-const utrInput = document.getElementById("utr");
-const screenshotInput = document.getElementById("screenshot");
-const preview = document.getElementById("preview");
-const submitBtn = document.getElementById("submitBtn");
-const requestList = document.getElementById("requestList");
+
+const balanceEl =
+    document.getElementById("balance");
+
+const customAmount =
+    document.getElementById("customAmount");
+
+const utrInput =
+    document.getElementById("utr");
+
+const submitBtn =
+    document.getElementById("submitBtn");
+
+const requestList =
+    document.getElementById("requestList");
+
+
+
+/* TOAST */
 
 function showToast(message,type="success"){
 
-    const toast = document.getElementById("toast");
-    const text = document.getElementById("toastMessage");
+    const toast =
+        document.getElementById("toast");
 
-    toast.className = "toast " + type;
-    text.textContent = message;
-    toast.style.display = "block";
+    const text =
+        document.getElementById("toastMessage");
+
+    toast.className =
+        "toast " + type;
+
+    text.textContent =
+        message;
+
+    toast.style.display =
+        "block";
 
     clearTimeout(toastTimer);
 
-    toastTimer = setTimeout(()=>{
-        toast.style.display = "none";
-    },3500);
+    toastTimer =
+        setTimeout(()=>{
+
+            toast.style.display =
+                "none";
+
+        },3500);
+
 }
 
-auth.onAuthStateChanged(async user=>{
+
+
+/* AUTH */
+
+auth.onAuthStateChanged(user=>{
 
     if(!user){
 
-        window.location.href="login.html";
+        window.location.href =
+            "login.html";
+
         return;
 
     }
 
-    currentUser = user;
+    currentUser =
+        user;
 
     loadBalance();
-    loadRequests();
+
     loadPaymentSettings();
+
+    loadRequests();
 
 });
 
+
+
+/* BALANCE */
+
 function loadBalance(){
 
-    db.ref("users/"+currentUser.uid+"/wallet/balance")
+    db.ref(
+        "users/" +
+        currentUser.uid +
+        "/wallet/balance"
+    )
     .on("value",snapshot=>{
 
-        const value = Number(snapshot.val() || 0);
+        const value =
+            Number(snapshot.val() || 0);
 
         balanceEl.textContent =
-            "₹" + value.toLocaleString("en-IN");
+            "₹" +
+            value.toLocaleString("en-IN");
 
     });
 
 }
+
+
+
+/* PAYMENT SETTINGS */
 
 function loadPaymentSettings(){
 
     db.ref("settings/payment")
     .on("value",snapshot=>{
 
-        const data = snapshot.val() || {};
+        const data =
+            snapshot.val() || {};
 
-        document.getElementById("upiId").textContent =
-            data.upiId || "admin@upi";
-
-        const qr = document.getElementById("qrImage");
-
-        if(data.qrUrl){
-
-            qr.src = data.qrUrl;
-            qr.style.display = "block";
-
-        }else{
-
-            qr.style.display = "none";
-
-        }
+        document.getElementById("upiId")
+            .textContent =
+            data.upiId ||
+            "admin@upi";
 
     });
 
 }
 
-function copyUPI(){
+
+
+/* COPY UPI */
+
+document.getElementById("copyBtn")
+.addEventListener("click",()=>{
 
     const upi =
-        document.getElementById("upiId").textContent.trim();
+        document.getElementById("upiId")
+        .textContent
+        .trim();
 
-    navigator.clipboard.writeText(upi)
+    if(!upi){
+
+        showToast(
+            "UPI ID available nahi hai",
+            "error"
+        );
+
+        return;
+
+    }
+
+    navigator.clipboard
+    .writeText(upi)
     .then(()=>{
-        showToast("UPI ID copied");
+
+        showToast(
+            "UPI ID copied"
+        );
+
     })
     .catch(()=>{
-        showToast("UPI ID: "+upi);
+
+        showToast(
+            "UPI ID: " + upi
+        );
+
     });
 
-}
+});
 
-document.querySelectorAll(".amount-options button")
+
+
+/* AMOUNT BUTTONS */
+
+document
+.querySelectorAll(".amount-options button")
 .forEach(button=>{
 
-    button.addEventListener("click",()=>{
+    button.addEventListener(
+        "click",
+        ()=>{
+
+            document
+            .querySelectorAll(
+                ".amount-options button"
+            )
+            .forEach(btn=>{
+
+                btn.classList
+                .remove("selected");
+
+            });
+
+            button.classList
+            .add("selected");
+
+            selectedAmount =
+                Number(
+                    button.dataset.amount
+                );
+
+            customAmount.value =
+                "";
+
+        }
+    );
+
+});
+
+
+
+/* CUSTOM AMOUNT */
+
+customAmount.addEventListener(
+    "input",
+    ()=>{
 
         document
-        .querySelectorAll(".amount-options button")
-        .forEach(btn=>btn.classList.remove("selected"));
+        .querySelectorAll(
+            ".amount-options button"
+        )
+        .forEach(btn=>{
 
-        button.classList.add("selected");
+            btn.classList
+            .remove("selected");
+
+        });
 
         selectedAmount =
-            Number(button.dataset.amount);
-
-        customAmount.value = "";
-
-    });
-
-});
-
-customAmount.addEventListener("input",()=>{
-
-    document
-    .querySelectorAll(".amount-options button")
-    .forEach(btn=>btn.classList.remove("selected"));
-
-    selectedAmount =
-        Number(customAmount.value || 0);
-
-});
-
-screenshotInput.addEventListener("change",()=>{
-
-    const file = screenshotInput.files[0];
-
-    if(!file){
-
-        preview.style.display="none";
-        return;
+            Number(
+                customAmount.value || 0
+            );
 
     }
+);
 
-    if(file.size > 5 * 1024 * 1024){
 
-        screenshotInput.value="";
-        preview.style.display="none";
 
-        showToast("Screenshot must be below 5MB","error");
-        return;
-
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = e=>{
-
-        preview.src=e.target.result;
-        preview.style.display="block";
-
-    };
-
-    reader.readAsDataURL(file);
-
-});
+/* CLEAN UTR */
 
 function cleanUTR(value){
 
@@ -640,232 +758,333 @@ function cleanUTR(value){
 
 }
 
-submitBtn.addEventListener("click",async()=>{
 
-    if(!currentUser){
 
-        showToast("Please login first","error");
-        return;
+/* SUBMIT */
 
-    }
+submitBtn.addEventListener(
+    "click",
+    async ()=>{
 
-    selectedAmount =
-        Number(selectedAmount);
+        if(!currentUser){
 
-    if(!selectedAmount ||
-       selectedAmount < 1 ||
-       selectedAmount > 100000){
-
-        showToast(
-            "Enter a valid amount ₹1 - ₹1,00,000",
-            "error"
-        );
-
-        return;
-
-    }
-
-    const utr = cleanUTR(utrInput.value);
-
-    if(utr.length < 6){
-
-        showToast(
-            "Please enter a valid UTR / Transaction ID",
-            "error"
-        );
-
-        return;
-
-    }
-
-    const file = screenshotInput.files[0];
-
-    if(!file){
-
-        showToast(
-            "Payment screenshot upload karein",
-            "error"
-        );
-
-        return;
-
-    }
-
-    if(file.size > 5 * 1024 * 1024){
-
-        showToast(
-            "Screenshot must be below 5MB",
-            "error"
-        );
-
-        return;
-
-    }
-
-    submitBtn.disabled = true;
-    submitBtn.innerHTML =
-        '<i class="fa fa-spinner fa-spin"></i> Uploading...';
-
-    try{
-
-        const requestRef =
-            db.ref("rechargeRequests").push();
-
-        const requestId =
-            requestRef.key;
-
-        const storageRef =
-            storage.ref(
-                "rechargeScreenshots/" +
-                currentUser.uid +
-                "/" +
-                requestId
+            showToast(
+                "Please login first",
+                "error"
             );
 
-        const upload =
-            await storageRef.put(file);
+            return;
 
-        const screenshotUrl =
-            await upload.ref.getDownloadURL();
+        }
 
-        await requestRef.set({
 
-            id: requestId,
+        selectedAmount =
+            Number(selectedAmount);
 
-            userId: currentUser.uid,
 
-            userEmail:
-                currentUser.email || "",
+        if(
+            !selectedAmount ||
+            selectedAmount < 1 ||
+            selectedAmount > 100000
+        ){
 
-            amount: selectedAmount,
+            showToast(
+                "Valid recharge amount enter karein",
+                "error"
+            );
 
-            utr: utr,
+            return;
 
-            screenshotUrl: screenshotUrl,
+        }
 
-            status: "pending",
 
-            createdAt:
-                firebase.database.ServerValue.TIMESTAMP,
+        const utr =
+            cleanUTR(
+                utrInput.value
+            );
 
-            updatedAt:
-                firebase.database.ServerValue.TIMESTAMP
 
-        });
+        if(utr.length < 6){
 
-        utrInput.value="";
-        screenshotInput.value="";
-        customAmount.value="";
-        selectedAmount=0;
+            showToast(
+                "Valid UTR / Transaction ID enter karein",
+                "error"
+            );
 
-        document
-        .querySelectorAll(".amount-options button")
-        .forEach(btn=>btn.classList.remove("selected"));
+            return;
 
-        preview.style.display="none";
+        }
 
-        showToast(
-            "Recharge request submitted. Admin approval pending.",
-            "success"
-        );
 
-        loadRequests();
-
-    }catch(error){
-
-        console.error(error);
-
-        showToast(
-            "Request submit nahi hui: " + error.message,
-            "error"
-        );
-
-    }finally{
-
-        submitBtn.disabled=false;
+        submitBtn.disabled =
+            true;
 
         submitBtn.innerHTML =
-            '<i class="fa fa-paper-plane"></i> Submit Recharge Request';
+            '<i class="fa fa-spinner fa-spin"></i> Submitting...';
+
+
+        try{
+
+            /*
+             * IMPORTANT:
+             * Yahan wallet balance ko
+             * bilkul touch nahi kiya gaya.
+             */
+
+            const requestRef =
+                db.ref(
+                    "rechargeRequests"
+                ).push();
+
+
+            const requestId =
+                requestRef.key;
+
+
+            await requestRef.set({
+
+                id:
+                    requestId,
+
+                userId:
+                    currentUser.uid,
+
+                userEmail:
+                    currentUser.email || "",
+
+                amount:
+                    selectedAmount,
+
+                utr:
+                    utr,
+
+                status:
+                    "pending",
+
+                createdAt:
+                    firebase.database
+                    .ServerValue
+                    .TIMESTAMP,
+
+                updatedAt:
+                    firebase.database
+                    .ServerValue
+                    .TIMESTAMP
+
+            });
+
+
+            utrInput.value =
+                "";
+
+            customAmount.value =
+                "";
+
+            selectedAmount =
+                0;
+
+
+            document
+            .querySelectorAll(
+                ".amount-options button"
+            )
+            .forEach(btn=>{
+
+                btn.classList
+                .remove("selected");
+
+            });
+
+
+            showToast(
+                "Recharge request submit ho gayi. Admin approval pending.",
+                "success"
+            );
+
+
+            loadRequests();
+
+
+        }catch(error){
+
+            console.error(error);
+
+            showToast(
+                "Request submit failed: " +
+                error.message,
+                "error"
+            );
+
+        }finally{
+
+            submitBtn.disabled =
+                false;
+
+            submitBtn.innerHTML =
+                '<i class="fa fa-paper-plane"></i> Submit Recharge Request';
+
+        }
 
     }
+);
 
-});
+
+
+/* REQUEST HISTORY */
 
 function loadRequests(){
-
-    if(!currentUser) return;
 
     db.ref("rechargeRequests")
     .orderByChild("userId")
     .equalTo(currentUser.uid)
     .on("value",snapshot=>{
 
-        const data = snapshot.val();
+        const data =
+            snapshot.val();
+
 
         if(!data){
 
             requestList.innerHTML =
-                '<div style="color:#777;text-align:center;">No recharge requests yet.</div>';
+                `
+                <div style="
+                    text-align:center;
+                    color:#777;
+                    padding:10px;
+                ">
+                    No recharge requests yet.
+                </div>
+                `;
 
             return;
 
         }
 
+
         const requests =
             Object.values(data)
-            .sort((a,b)=>
-                (b.createdAt || 0) -
-                (a.createdAt || 0)
+            .sort(
+                (a,b)=>
+                    (b.createdAt || 0) -
+                    (a.createdAt || 0)
             );
 
+
         requestList.innerHTML =
-            requests.map(item=>{
+            requests
+            .map(item=>{
 
                 const date =
                     item.createdAt
-                    ? new Date(item.createdAt)
-                    .toLocaleString("en-IN")
-                    : "-";
+                    ?
+                    new Date(
+                        item.createdAt
+                    ).toLocaleString("en-IN")
+                    :
+                    "-";
+
 
                 let badgeClass =
                     "pending";
 
-                if(item.status==="approved")
-                    badgeClass="approved";
 
-                if(item.status==="rejected")
-                    badgeClass="rejected";
+                if(
+                    item.status ===
+                    "approved"
+                ){
+
+                    badgeClass =
+                        "approved";
+
+                }
+
+
+                if(
+                    item.status ===
+                    "rejected"
+                ){
+
+                    badgeClass =
+                        "rejected";
+
+                }
+
 
                 return `
 
                 <div class="status-item">
 
-                    <div style="display:flex;justify-content:space-between;gap:10px;">
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        gap:10px;
+                    ">
 
                         <strong>
-                            ₹${Number(item.amount).toLocaleString("en-IN")}
+                            ₹${Number(
+                                item.amount
+                            ).toLocaleString("en-IN")}
                         </strong>
 
-                        <span class="badge ${badgeClass}">
-                            ${String(item.status || "pending").toUpperCase()}
+                        <span class="
+                            badge
+                            ${badgeClass}
+                        ">
+
+                            ${String(
+                                item.status ||
+                                "pending"
+                            ).toUpperCase()}
+
                         </span>
 
                     </div>
 
-                    <div style="font-size:13px;color:#666;margin-top:7px;">
-                        UTR: ${escapeHtml(item.utr || "-")}
+
+                    <div style="
+                        font-size:13px;
+                        color:#666;
+                        margin-top:7px;
+                    ">
+
+                        UTR:
+                        ${escapeHtml(
+                            item.utr || "-"
+                        )}
+
                     </div>
 
-                    <div style="font-size:12px;color:#888;margin-top:5px;">
+
+                    <div style="
+                        font-size:12px;
+                        color:#888;
+                        margin-top:5px;
+                    ">
+
                         ${date}
+
                     </div>
+
 
                     ${
-                        item.status==="rejected" && item.adminNote
+                        item.status ===
+                        "rejected" &&
+                        item.adminNote
                         ?
-                        `<div style="color:#b00000;font-size:13px;margin-top:7px;">
-                            Reason: ${escapeHtml(item.adminNote)}
-                        </div>`
+                        `
+                        <div style="
+                            color:#b00000;
+                            font-size:13px;
+                            margin-top:7px;
+                        ">
+
+                            Reason:
+                            ${escapeHtml(
+                                item.adminNote
+                            )}
+
+                        </div>
+                        `
                         :
                         ""
                     }
@@ -874,11 +1093,16 @@ function loadRequests(){
 
                 `;
 
-            }).join("");
+            })
+            .join("");
 
     });
 
 }
+
+
+
+/* ESCAPE */
 
 function escapeHtml(value){
 
