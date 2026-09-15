@@ -108,11 +108,11 @@ button{cursor:pointer}
     <section class="stats">
       <div class="stat"><small>Last YES</small><b id="lastYes">₹0.00</b></div>
       <div class="stat"><small>Last NO</small><b id="lastNo">₹0.00</b></div>
-      <div class="stat"><small>Your Volume</small><b id="volume">₹0</b></div>
+      <div class="stat"><small>24h Volume</small><b id="volume">₹0</b></div>
     </section>
 
     <section class="book">
-      <div class="book-title"><b>📖 Order Book</b><span style="font-size:11px;color:#888">Live market</span></div>
+      <div class="book-title"><b>📖 Order Book</b><span style="font-size:11px;color:#888">Real live orders</span></div>
       <div class="book-head"><div>PRICE</div><div class="yesc">QTY YES</div><div>PRICE</div><div class="noc">QTY NO</div></div>
       <div id="orderRows"></div>
     </section>
@@ -197,6 +197,7 @@ button{cursor:pointer}
 const firebaseConfig = {
   apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
   authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+  databaseURL: "https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
   projectId: "fantasy-adda-e3b72",
   storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
   messagingSenderId: "882657286194",
@@ -210,7 +211,7 @@ const params = new URLSearchParams(location.search);
 const matchId = params.get('id');
 const FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23eee'/%3E%3Cpath d='M40 15v50M15 40h50' stroke='%23aaa' stroke-width='4'/%3E%3C/svg%3E";
 
-// ⚡ Save referrer so we can return after trade
+// Save referrer so we can return after trade
 if(!sessionStorage.getItem('tradeReturnUrl')){
   if(document.referrer && !document.referrer.includes('trade.html')){
     sessionStorage.setItem('tradeReturnUrl', document.referrer);
@@ -220,12 +221,13 @@ if(!sessionStorage.getItem('tradeReturnUrl')){
 }
 
 let state = {
-  side: 'YES', qty: 5, yesPrice: 0, noPrice: 0,
-  yesAvailable: 0, noAvailable: 0, balance: 0, trades: [],
+  side: 'YES', qty: 5, yesPrice: 5, noPrice: 5,
+  yesAvailable: 1000000, noAvailable: 1000000,
+  balance: 0, myTrades: [], allTrades: [],
   match: null, uid: null, loggedIn: false
 };
 
-let walletRef = null, tradesQuery = null, marketRef = null;
+let walletRef = null, myTradesRef = null, allTradesRef = null, marketRef = null;
 
 function money(n){ return '₹' + Number(n || 0).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 function toast(msg){
@@ -264,20 +266,60 @@ function render(){
   renderTrades();
 }
 
+/* ⚡ REAL ORDER BOOK — from actual trades */
 function renderBook(){
-  const ys = [state.yesPrice, Math.max(1, state.yesPrice - 0.5), Math.max(1, state.yesPrice - 1)];
-  const ns = [state.noPrice, state.noPrice + 0.5, state.noPrice + 1];
-  const rows = ys.map((y, i) => `
-    <div class="book-row">
-      <div>${money(y)}</div>
-      <div class="yesc">${Math.floor(state.yesAvailable / (i + 1)).toLocaleString('en-IN')}</div>
-      <div>${money(ns[i])}</div>
-      <div class="noc">${Math.floor(state.noAvailable / (i + 1)).toLocaleString('en-IN')}</div>
-    </div>`).join('');
-  document.getElementById('orderRows').innerHTML = rows;
+  const sourceTrades = state.allTrades || [];
+  const yesOrders = {}; // { price: totalQty }
+  const noOrders  = {};
+
+  sourceTrades.forEach(t => {
+    const side = (t.side || '').toUpperCase();
+    const p = Number(t.odds || 0);
+    const q = Number(t.qty || 0);
+    if (!p || !q) return;
+    if (side === 'YES') {
+      yesOrders[p] = (yesOrders[p] || 0) + q;
+    } else if (side === 'NO') {
+      noOrders[p] = (noOrders[p] || 0) + q;
+    }
+  });
+
+  // YES: highest price first
+  const yesRows = Object.entries(yesOrders)
+    .map(([price, qty]) => ({ price: Number(price), qty }))
+    .sort((a, b) => b.price - a.price)
+    .slice(0, 5);
+
+  // NO: lowest price first
+  const noRows = Object.entries(noOrders)
+    .map(([price, qty]) => ({ price: Number(price), qty }))
+    .sort((a, b) => a.price - b.price)
+    .slice(0, 5);
+
+  const maxRows = Math.max(yesRows.length, noRows.length);
+
+  if (maxRows === 0) {
+    document.getElementById('orderRows').innerHTML =
+      '<div class="empty" style="padding:14px;font-size:11px">No orders yet. Be the first to trade!</div>';
+  } else {
+    let html = '';
+    for (let i = 0; i < maxRows; i++) {
+      const y = yesRows[i];
+      const n = noRows[i];
+      html += `<div class="book-row">
+        <div>${y ? money(y.price) : '—'}</div>
+        <div class="yesc">${y ? y.qty.toLocaleString('en-IN') : '—'}</div>
+        <div>${n ? money(n.price) : '—'}</div>
+        <div class="noc">${n ? n.qty.toLocaleString('en-IN') : '—'}</div>
+      </div>`;
+    }
+    document.getElementById('orderRows').innerHTML = html;
+  }
+
   document.getElementById('lastYes').textContent = money(state.yesPrice);
-  document.getElementById('lastNo').textContent = money(state.noPrice);
-  document.getElementById('volume').textContent = money(state.trades.reduce((s, t) => s + Number(t.amount || 0), 0));
+  document.getElementById('lastNo').textContent  = money(state.noPrice);
+  const vol = sourceTrades.reduce((s, t) => s + Number(t.amount || 0), 0);
+  document.getElementById('volume').textContent = money(vol);
 }
 
 function openTrade(side){
@@ -299,7 +341,6 @@ function closeTrade(){
 
 function outsideClose(e){ if(e.target.id === 'overlay') closeTrade(); }
 
-// ⚡ EXIT: close sheet and go back to previous page
 function exitTrade(){
   closeTrade();
   setTimeout(exitPage, 200);
@@ -382,13 +423,11 @@ async function confirmTrade(){
   if(!state.loggedIn || !matchId){ toast('Login required'); return; }
 
   try {
-    // 1. Re-check balance
     const w = db.ref('users/' + state.uid + '/wallet/balance');
     const snap = await w.once('value');
     const bal = Number(snap.val() || 0);
     if(inv > bal){ toast('Insufficient balance'); resetSwipe(); return; }
 
-    // 2. Build trade record
     const key = db.ref('trades').push().key;
     const sideLabel = state.side === 'YES' ? (state.match?.teamA || 'Team A') : (state.match?.teamB || 'Team B');
     const trade = {
@@ -406,7 +445,6 @@ async function confirmTrade(){
       createdAt: firebase.database.ServerValue.TIMESTAMP
     };
 
-    // 3. Prepare updates
     const updates = {};
     updates['trades/' + key] = trade;
     updates['users/' + state.uid + '/wallet/balance'] = Number((bal - inv).toFixed(2));
@@ -418,36 +456,32 @@ async function confirmTrade(){
       date: firebase.database.ServerValue.TIMESTAMP
     };
 
-    // 4. ⚡ DYNAMIC PRICE MOVEMENT (market jaisa)
+    // Dynamic price movement
     const oldYes = state.yesPrice;
     const oldNo  = state.noPrice;
-    const shift  = Math.min(0.5, (inv / 1000) * 0.1); // 1000₹ → 0.1 move
+    const shift  = Math.min(0.5, (inv / 1000) * 0.1);
 
-    let newYes = oldYes;
-    let newNo  = oldNo;
-
+    let newYes = oldYes, newNo = oldNo;
     if(state.side === 'YES'){
-      newYes = Math.min(9, oldYes + shift); // YES badha
-      newNo  = Math.max(1, oldNo  - shift); // NO ghata
+      newYes = Math.min(9, oldYes + shift);
+      newNo  = Math.max(1, oldNo  - shift);
     } else {
-      newNo  = Math.min(9, oldNo  + shift); // NO badha
-      newYes = Math.max(1, oldYes - shift); // YES ghata
+      newNo  = Math.min(9, oldNo  + shift);
+      newYes = Math.max(1, oldYes - shift);
     }
-
     newYes = Number(newYes.toFixed(2));
     newNo  = Number(newNo.toFixed(2));
 
-    // 5. Update match prices
     updates['matches/' + matchId + '/oddsA'] = newYes;
     updates['matches/' + matchId + '/oddsB'] = newNo;
     updates['matches/' + matchId + '/market/yes/price'] = newYes;
     updates['matches/' + matchId + '/market/no/price']  = newNo;
 
-    // 6. Update available qty
+    // Available qty update (default 1,000,000)
     const yesSnap = await db.ref('matches/' + matchId + '/market/yes/available').once('value');
     const noSnap  = await db.ref('matches/' + matchId + '/market/no/available').once('value');
-    let yesAvail = Number(yesSnap.val() ?? 10000);
-    let noAvail  = Number(noSnap.val()  ?? 10000);
+    let yesAvail = Number(yesSnap.val() ?? 1000000);
+    let noAvail  = Number(noSnap.val()  ?? 1000000);
 
     if(state.side === 'YES') yesAvail = Math.max(0, yesAvail - state.qty);
     else                     noAvail  = Math.max(0, noAvail  - state.qty);
@@ -455,10 +489,8 @@ async function confirmTrade(){
     updates['matches/' + matchId + '/market/yes/available'] = yesAvail;
     updates['matches/' + matchId + '/market/no/available']  = noAvail;
 
-    // 7. Commit
     await db.ref().update(updates);
 
-    // 8. Success + close + auto-exit
     closeTrade();
     toast('✅ Trade placed! Price updated');
 
@@ -481,13 +513,13 @@ function renderTrades(){
     document.getElementById('tradeCount').textContent = '';
     return;
   }
-  if(!state.trades.length){
+  if(!state.myTrades.length){
     box.innerHTML = '<div class="empty">No trades yet.<br>Choose YES or NO to place one.</div>';
     document.getElementById('tradeCount').textContent = '';
     return;
   }
-  document.getElementById('tradeCount').textContent = state.trades.length + ' trades';
-  box.innerHTML = state.trades.map(t => `
+  document.getElementById('tradeCount').textContent = state.myTrades.length + ' trades';
+  box.innerHTML = state.myTrades.map(t => `
     <div class="book-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
       <div>
         <b>${t.side || '—'}</b>
@@ -513,7 +545,7 @@ auth.onAuthStateChanged(user => {
     state.loggedIn = true;
     state.uid = user.uid;
 
-    // Balance: users/{uid}/wallet/balance
+    // Balance
     if(walletRef) walletRef.off();
     walletRef = db.ref('users/' + user.uid + '/wallet/balance');
     walletRef.on('value', s => {
@@ -525,29 +557,28 @@ auth.onAuthStateChanged(user => {
       toast('Cannot read wallet balance');
     });
 
-    // Trades: trades/{key}
-    if(tradesQuery) tradesQuery.off();
-    tradesQuery = db.ref('trades').orderByChild('userId').equalTo(user.uid);
-    tradesQuery.on('value', s => {
+    // My trades
+    if(myTradesRef) myTradesRef.off();
+    myTradesRef = db.ref('trades').orderByChild('userId').equalTo(user.uid);
+    myTradesRef.on('value', s => {
       const arr = [];
       s.forEach(c => arr.push({ id: c.key, ...c.val() }));
       arr.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
-      state.trades = arr;
+      state.myTrades = arr;
       renderTrades();
-      renderBook();
     });
   } else {
     state.loggedIn = false;
     state.uid = null;
     state.balance = 0;
-    state.trades = [];
+    state.myTrades = [];
     if(walletRef) walletRef.off();
-    if(tradesQuery) tradesQuery.off();
+    if(myTradesRef) myTradesRef.off();
     render();
   }
 });
 
-// Match: matches/{id}
+// Match
 if(matchId){
   marketRef = db.ref('matches/' + matchId);
   marketRef.on('value', s => {
@@ -560,11 +591,20 @@ if(matchId){
     const yes = m.yes || {};
     const no = m.no || {};
     state.yesPrice = Number(yes.price ?? state.match.oddsA ?? 5);
-    state.noPrice = Number(no.price ?? state.match.oddsB ?? 5);
-    state.yesAvailable = Number(yes.available ?? 10000);
-    state.noAvailable = Number(no.available ?? 10000);
+    state.noPrice  = Number(no.price ?? state.match.oddsB ?? 5);
+    state.yesAvailable = Number(yes.available ?? 1000000);
+    state.noAvailable  = Number(no.available  ?? 1000000);
     render();
     updateSheet();
+  });
+
+  // ⚡ ALL trades for this match (public order book)
+  allTradesRef = db.ref('trades').orderByChild('matchId').equalTo(matchId);
+  allTradesRef.on('value', s => {
+    const arr = [];
+    s.forEach(c => arr.push(c.val()));
+    state.allTrades = arr;
+    renderBook();
   });
 } else {
   toast('No match ID in URL');
