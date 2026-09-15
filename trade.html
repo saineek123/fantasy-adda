@@ -60,7 +60,7 @@ button{cursor:pointer}
 <header class="header">
   <button class="back" onclick="history.back()"><i class="fa fa-arrow-left"></i></button>
   <h2 id="pageTitle">AFG vs IND</h2>
-  <div class="wallet" id="walletTop">Demo ₹5,000</div>
+  <div class="wallet" id="walletTop">Paper ₹0</div>
 </header>
 
 <main class="container">
@@ -105,7 +105,7 @@ button{cursor:pointer}
     </section>
 
     <section class="book">
-      <div class="book-title"><b>📖 Order Book</b><span style="font-size:11px;color:#888">Demo market</span></div>
+      <div class="book-title"><b>📖 Order Book</b><span style="font-size:11px;color:#888">Firebase market</span></div>
       <div class="book-head"><div>PRICE</div><div class="yesc">QTY YES</div><div>PRICE</div><div class="noc">QTY NO</div></div>
       <div id="orderRows"></div>
     </section>
@@ -168,13 +168,13 @@ button{cursor:pointer}
 
     <div class="balance">
       <div><small>Virtual Balance</small><b id="sheetBalance">₹5,000.00</b></div>
-      <button class="addcash" onclick="demoTopup()">+ Demo Cash</button>
+      <button class="addcash" onclick="demoTopup()">+ Paper Funds</button>
     </div>
 
     <div class="swipe" id="swipe" onpointerdown="startSwipe(event)" onpointermove="moveSwipe(event)" onpointerup="endSwipe(event)" onpointercancel="endSwipe(event)">
       <span>Swipe To Confirm</span><div class="knob" id="knob">»</div>
     </div>
-    <div class="note">Demo mode: no real-money deposit, withdrawal or cash settlement is performed.</div>
+    <div class="note">Paper-trading mode: market and paper-trade data come from Firebase. No real-money deposit, withdrawal or cash settlement is performed.</div>
   </div>
 </div>
 
@@ -192,16 +192,11 @@ const matchId=params.get('id');
 const FALLBACK="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23eee'/%3E%3Cpath d='M40 15v50M15 40h50' stroke='%23aaa' stroke-width='4'/%3E%3C/svg%3E";
 
 let state={
- side:'YES',
- qty:5,
- yesPrice:8.5,
- noPrice:1.5,
- yesAvailable:53295,
- noAvailable:24635,
- balance:Number(localStorage.getItem('fantasyDemoBalance')||5000),
- trades:JSON.parse(localStorage.getItem('fantasyDemoTrades')||'[]'),
- match:null
+ side:'YES', qty:5, yesPrice:8.5, noPrice:1.5,
+ yesAvailable:0, noAvailable:0, balance:0, trades:[],
+ match:null, market:null, uid:null
 };
+let firebaseReady=false, walletRef=null, tradesQuery=null, marketRef=null;
 
 function money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),2200)}
@@ -244,25 +239,63 @@ function updateSheet(){
  document.getElementById('investment').textContent=money(inv);document.getElementById('winning').textContent=money(ret);document.getElementById('profit').textContent=money(profit);document.getElementById('avgPrice').textContent=money(p);document.getElementById('sheetBalance').textContent=money(state.balance);
  document.getElementById('swipe').classList.toggle('disabled',inv>state.balance);
 }
-function demoTopup(){state.balance+=1000;localStorage.setItem('fantasyDemoBalance',state.balance);updateSheet();render();toast('₹1,000 demo cash added')}
+async function demoTopup(){
+ if(!firebaseReady||!state.uid){toast('Firebase is not ready');return}
+ try{
+  const ref=firebase.database().ref('users/'+state.uid+'/paperWallet/balance');
+  const snap=await ref.once('value');
+  await ref.set(Number(snap.val()||0)+1000);
+  toast('₹1,000 paper funds added');
+ }catch(e){console.error(e);toast('Firebase update failed')}
+}
 let swipe={active:false,start:0,current:0};
-function startSwipe(e){const inv=price()*state.qty;if(inv>state.balance){toast('Insufficient demo balance');return}swipe.active=true;swipe.start=e.clientX;swipe.current=0;e.currentTarget.setPointerCapture?.(e.pointerId)}
+function startSwipe(e){const inv=price()*state.qty;if(inv>state.balance){toast('Insufficient paper balance');return}swipe.active=true;swipe.start=e.clientX;swipe.current=0;e.currentTarget.setPointerCapture?.(e.pointerId)}
 function moveSwipe(e){if(!swipe.active)return;const el=document.getElementById('swipe'),knob=document.getElementById('knob');const max=el.clientWidth-58;swipe.current=Math.max(0,Math.min(max,e.clientX-swipe.start));knob.style.left=(5+swipe.current)+'px'}
 function endSwipe(){if(!swipe.active)return;const el=document.getElementById('swipe');const max=el.clientWidth-58;if(swipe.current>max*.72)confirmTrade();else resetSwipe();swipe.active=false}
 function resetSwipe(){const k=document.getElementById('knob');if(k)k.style.left='5px'}
-function confirmTrade(){
- const inv=price()*state.qty;if(inv>state.balance){toast('Insufficient demo balance');resetSwipe();return}
- const trade={id:Date.now(),side:state.side,qty:state.qty,price:price(),investment:inv,return:state.qty*10,time:new Date().toLocaleString('en-IN'),status:'OPEN',match:(state.match?.teamA||'AFG')+' vs '+(state.match?.teamB||'IND')};
- state.balance=Number((state.balance-inv).toFixed(2));state.trades.unshift(trade);
- localStorage.setItem('fantasyDemoBalance',state.balance);localStorage.setItem('fantasyDemoTrades',JSON.stringify(state.trades.slice(0,100)));
- render();closeTrade();toast('Demo trade placed successfully');
+async function confirmTrade(){
+ const inv=price()*state.qty;
+ if(inv>state.balance){toast('Insufficient paper balance');resetSwipe();return}
+ if(!firebaseReady||!state.uid||!matchId){toast('Firebase is not ready');return}
+ try{
+  const db=firebase.database();
+  const w=db.ref('users/'+state.uid+'/paperWallet/balance');
+  const snap=await w.once('value');
+  const bal=Number(snap.val()||0);
+  if(inv>bal){toast('Insufficient paper balance');return}
+  const key=db.ref('paperTrades').push().key;
+  const trade={
+   userId:state.uid,matchId:matchId,side:state.side,qty:state.qty,
+   price:price(),investment:Number(inv.toFixed(2)),
+   potentialReturn:Number((state.qty*10).toFixed(2)),
+   status:'OPEN',createdAt:firebase.database.ServerValue.TIMESTAMP,
+   teamA:state.match?.teamA||'Team A',teamB:state.match?.teamB||'Team B'
+  };
+  const updates={};
+  updates['paperTrades/'+key]=trade;
+  updates['users/'+state.uid+'/paperWallet/balance']=Number((bal-inv).toFixed(2));
+  await db.ref().update(updates);
+  closeTrade();toast('Paper trade placed successfully');
+ }catch(e){console.error(e);toast('Firebase error: trade not saved')}
 }
 function renderTrades(){
  const box=document.getElementById('tradeList');
- if(!state.trades.length){box.innerHTML='<div class="empty">No demo trades yet.<br>Choose YES or NO to place one.</div>';return}
- box.innerHTML=state.trades.map(t=>`<div class="book-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr"><div><b>${t.side}</b><small style="display:block;color:#888">${t.qty} qty</small></div><div>${money(t.price)}</div><div>${money(t.investment)}</div><div style="color:#159b4c">${t.status}</div></div>`).join('');
+ if(!state.trades.length){box.innerHTML='<div class="empty">No paper trades yet.<br>Choose YES or NO to place one.</div>';return}
+ box.innerHTML=state.trades.map(t=>`<div class="book-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+ <div><b>${t.side||'—'}</b><small style="display:block;color:#888">${Number(t.qty||0)} qty</small></div>
+ <div>${money(t.price)}</div><div>${money(t.investment)}</div>
+ <div style="color:#159b4c">${t.status||'OPEN'}</div></div>`).join('');
 }
-function clearTrades(){if(!confirm('Clear demo trades?'))return;state.trades=[];localStorage.setItem('fantasyDemoTrades','[]');render()}
+async function clearTrades(){
+ if(!firebaseReady||!state.uid){toast('Firebase is not ready');return}
+ if(!confirm('Delete your paper trades?'))return;
+ try{
+  const snap=await firebase.database().ref('paperTrades').orderByChild('userId').equalTo(state.uid).once('value');
+  const updates={}; snap.forEach(c=>updates['paperTrades/'+c.key]=null);
+  await firebase.database().ref().update(updates);
+  toast('Paper trades cleared');
+ }catch(e){console.error(e);toast('Could not clear trades')}
+}
 function switchTab(tab,btn){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById('marketView').style.display=tab==='market'?'block':'none';document.getElementById('activityView').style.display=tab==='activity'?'block':'none'}
 
 /* Optional Firebase read-only integration with the existing project. */
@@ -276,32 +309,59 @@ const firebaseConfig={
 };
 const SCORE_BACKEND_URL='https://asia-south1-fantasy-adda-e3b72.cloudfunctions.net/getLiveScore';
 function loadFirebase(){
- if(!window.firebase||!matchId)return;
+ if(!window.firebase)return;
  try{
-  firebase.initializeApp(firebaseConfig);
-  firebase.database().ref('matches/'+matchId).once('value').then(s=>{
-   if(!s.exists())return;
-   state.match=s.val();render();refreshScore();
-  }).catch(()=>{});
- }catch(e){}
-}
-async function refreshScore(){
- if(!state.match?.teamA||!state.match?.teamB)return;
- try{
-  const r=await fetch(SCORE_BACKEND_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({teamA:state.match.teamA,teamB:state.match.teamB,matchId})});
-  const d=await r.json();
-  if(d.match){
-   const sc=d.match.score||[];
-   const find=(name)=>sc.filter(x=>String(x.team||x.teamName||x.name||'').toLowerCase().includes(String(name).toLowerCase())).pop();
-   const a=find(state.match.teamA),b=find(state.match.teamB);
-   document.getElementById('scoreA').textContent=a?`${a.r??a.runs??0}/${a.w??a.wickets??0}`:'—';
-   document.getElementById('scoreB').textContent=b?`${b.r??b.runs??0}/${b.w??b.wickets??0}`:'—';
-   document.getElementById('overs').textContent=(a?.o??b?.o??'—')+' ov';
+  if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+  const db=firebase.database(); firebaseReady=true;
+
+  firebase.auth().onAuthStateChanged(user=>{
+   if(!user){state.uid=null;toast('Please login first');return}
+   state.uid=user.uid;
+
+   if(walletRef)walletRef.off();
+   walletRef=db.ref('users/'+user.uid+'/paperWallet/balance');
+   walletRef.on('value',s=>{state.balance=Number(s.val()||0);render();updateSheet()});
+
+   if(tradesQuery)tradesQuery.off();
+   tradesQuery=db.ref('paperTrades').orderByChild('userId').equalTo(user.uid);
+   tradesQuery.on('value',s=>{
+    const arr=[];s.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0));
+    state.trades=arr;renderTrades();renderBook();
+   });
+  });
+
+  if(matchId){
+   marketRef=db.ref('matches/'+matchId);
+   marketRef.on('value',s=>{
+    if(!s.exists()){toast('Match not found in Firebase');return}
+    state.match=s.val();
+    const m=state.match.market||{};
+    const yes=m.yes||m.YES||{};
+    const no=m.no||m.NO||{};
+    state.yesPrice=Number(yes.price ?? state.match.yesPrice ?? state.match.oddsA ?? 8.5);
+    state.noPrice=Number(no.price ?? state.match.noPrice ?? state.match.oddsB ?? 1.5);
+    state.yesAvailable=Number(yes.available ?? yes.qty ?? state.match.yesAvailable ?? 0);
+    state.noAvailable=Number(no.available ?? no.qty ?? state.match.noAvailable ?? 0);
+    render();updateSheet();refreshScore();
+   });
   }
- }catch(e){}
+ }catch(e){console.error(e);toast('Firebase connection failed')}
 }
 render();
-const sc=document.createElement('script');sc.src='https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js';sc.onload=()=>{const s=document.createElement('script');s.src='https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js';s.onload=loadFirebase;document.head.appendChild(s)};document.head.appendChild(sc);
+const sc=document.createElement('script');
+sc.src='https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js';
+sc.onload=()=>{
+ const a=document.createElement('script');
+ a.src='https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js';
+ a.onload=()=>{
+  const d=document.createElement('script');
+  d.src='https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js';
+  d.onload=loadFirebase; document.head.appendChild(d);
+ };
+ document.head.appendChild(a);
+};
+document.head.appendChild(sc);
 setInterval(refreshScore,20000);
 </script>
 </body>
