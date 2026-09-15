@@ -16,7 +16,7 @@ button,input{font:inherit}
 button{cursor:pointer}
 .header{position:sticky;top:0;z-index:20;background:#fff;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;border-bottom:1px solid var(--line)}
 .header h2{font-size:18px}.back{border:0;background:transparent;font-size:22px;width:40px;height:40px}
-.wallet{background:#f0fff5;color:#08783b;border:1px solid #ccefd9;padding:8px 11px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer}
+.wallet{background:#f0fff5;color:#08783b;border:1px solid #ccefd9;padding:8px 11px;border-radius:12px;font-size:12px;font-weight:700}
 .container{max-width:560px;margin:auto;padding:10px 12px}
 .match{background:#fff;border-radius:16px;padding:14px;box-shadow:0 2px 10px #00000008;margin-bottom:10px}
 .match-top{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#858a92}
@@ -62,12 +62,12 @@ button{cursor:pointer}
 <header class="header">
   <button class="back" onclick="history.back()"><i class="fa fa-arrow-left"></i></button>
   <h2 id="pageTitle">Loading...</h2>
-  <div class="wallet" id="walletTop" onclick="goToWallet()">₹0.00</div>
+  <div class="wallet" id="walletTop" onclick="location.href='wallet.html'">₹0.00</div>
 </header>
 
 <main class="container">
   <div id="loginBanner" class="login-banner" style="display:none">
-    <span>🔒 Login to place real paper trades</span>
+    <span>🔒 Login to place trades</span>
     <a href="login.html">Login</a>
   </div>
 
@@ -174,14 +174,14 @@ button{cursor:pointer}
     </div>
 
     <div class="balance">
-      <div><small>Paper Balance</small><b id="sheetBalance">₹0.00</b></div>
-      <button class="addcash" onclick="demoTopup()">+ Add Funds</button>
+      <div><small>Wallet Balance</small><b id="sheetBalance">₹0.00</b></div>
+      <button class="addcash" onclick="location.href='wallet.html'">+ Add Funds</button>
     </div>
 
     <div class="swipe" id="swipe" onpointerdown="startSwipe(event)" onpointermove="moveSwipe(event)" onpointerup="endSwipe(event)" onpointercancel="endSwipe(event)">
       <span>Swipe To Confirm</span><div class="knob" id="knob">»</div>
     </div>
-    <div class="note">Paper-trading mode: real market data, virtual currency only. No real-money settlement.</div>
+    <div class="note">Trading mode: real market data, virtual currency only.</div>
   </div>
 </div>
 
@@ -237,7 +237,7 @@ function render(){
   document.getElementById('scoreA').textContent = m.scoreA || '—';
   document.getElementById('scoreB').textContent = m.scoreB || '—';
   document.getElementById('overs').textContent = (m.overs || '—') + ' ov';
-  
+
   document.getElementById('yesPrice').textContent = money(state.yesPrice);
   document.getElementById('noPrice').textContent = money(state.noPrice);
   document.getElementById('bottomYes').textContent = money(state.yesPrice);
@@ -245,9 +245,9 @@ function render(){
   document.getElementById('yesQty').textContent = state.yesAvailable.toLocaleString('en-IN') + ' available';
   document.getElementById('noQty').textContent = state.noAvailable.toLocaleString('en-IN') + ' available';
   document.getElementById('walletTop').textContent = money(state.balance);
-  
+
   document.getElementById('loginBanner').style.display = state.loggedIn ? 'none' : 'flex';
-  
+
   renderBook();
   renderTrades();
 }
@@ -265,7 +265,7 @@ function renderBook(){
   document.getElementById('orderRows').innerHTML = rows;
   document.getElementById('lastYes').textContent = money(state.yesPrice);
   document.getElementById('lastNo').textContent = money(state.noPrice);
-  document.getElementById('volume').textContent = money(state.trades.reduce((s, t) => s + Number(t.investment || 0), 0));
+  document.getElementById('volume').textContent = money(state.trades.reduce((s, t) => s + Number(t.amount || 0), 0));
 }
 
 function openTrade(side){
@@ -322,28 +322,6 @@ function updateSheet(){
   document.getElementById('swipe').classList.toggle('disabled', inv > state.balance || q > available());
 }
 
-async function demoTopup(){
-  if(!state.loggedIn){ toast('Please login first'); return; }
-  if(!confirm('Add ₹1,000 paper funds to your wallet?')) return;
-  try {
-    const ref = db.ref('users/' + state.uid + '/paperWallet/balance');
-    const snap = await ref.once('value');
-    const newBal = Number(snap.val() || 0) + 1000;
-    await ref.set(newBal);
-    await db.ref('transactions').push({
-      userId: state.uid,
-      type: 'TOPUP',
-      amount: 1000,
-      note: 'Paper funds top-up',
-      createdAt: firebase.database.ServerValue.TIMESTAMP
-    });
-    toast('₹1,000 paper funds added');
-  } catch(e) {
-    console.error(e);
-    toast('Top-up failed: ' + e.message);
-  }
-}
-
 let swipe = { active: false, start: 0, current: 0 };
 function startSwipe(e){
   const inv = price() * state.qty;
@@ -379,54 +357,48 @@ async function confirmTrade(){
   if(inv > state.balance){ toast('Insufficient balance'); resetSwipe(); return; }
   if(state.qty > available()){ toast('Not enough quantity available'); resetSwipe(); return; }
   if(!state.loggedIn || !matchId){ toast('Login required'); return; }
-  
+
   try {
-    const w = db.ref('users/' + state.uid + '/paperWallet/balance');
+    // ⚡ TUMHARA ACTUAL PATH: users/{uid}/wallet/balance
+    const w = db.ref('users/' + state.uid + '/wallet/balance');
     const snap = await w.once('value');
     const bal = Number(snap.val() || 0);
     if(inv > bal){ toast('Insufficient balance'); resetSwipe(); return; }
-    
-    const key = db.ref('paperTrades').push().key;
+
+    const key = db.ref('trades').push().key;
+    const sideLabel = state.side === 'YES' ? (state.match?.teamA || 'Team A') : (state.match?.teamB || 'Team B');
     const trade = {
       userId: state.uid,
       matchId: matchId,
-      side: state.side,
-      qty: state.qty,
-      price: price(),
-      investment: Number(inv.toFixed(2)),
-      potentialReturn: Number((state.qty * 10).toFixed(2)),
-      status: 'OPEN',
-      createdAt: firebase.database.ServerValue.TIMESTAMP,
       teamA: state.match?.teamA || 'Team A',
-      teamB: state.match?.teamB || 'Team B'
-    };
-    
-    const updates = {};
-    updates['paperTrades/' + key] = trade;
-    updates['users/' + state.uid + '/paperWallet/balance'] = Number((bal - inv).toFixed(2));
-    updates['transactions/' + key] = {
-      userId: state.uid,
-      type: 'TRADE_DEBIT',
-      amount: -inv,
-      tradeId: key,
-      note: `Trade: ${state.side} x${state.qty} @ ${price()}`,
+      teamB: state.match?.teamB || 'Team B',
+      selectedTeam: sideLabel,
+      side: state.side,
+      amount: Number(inv.toFixed(2)),
+      odds: price(),
+      qty: state.qty,
+      winAmount: Number((state.qty * 10).toFixed(2)),
+      status: 'pending',
       createdAt: firebase.database.ServerValue.TIMESTAMP
     };
-    
+
+    const updates = {};
+    updates['trades/' + key] = trade;
+    updates['users/' + state.uid + '/wallet/balance'] = Number((bal - inv).toFixed(2));
+    updates['transactions/' + key] = {
+      userId: state.uid,
+      type: 'debit',
+      amount: Number(inv.toFixed(2)),
+      description: `Trade ${state.side} x${state.qty} @ ${price()} on ${state.match?.teamA} vs ${state.match?.teamB}`,
+      date: firebase.database.ServerValue.TIMESTAMP
+    };
+
     await db.ref().update(updates);
-    
-    // Decrement available qty in match market
-    const mktRef = db.ref('matches/' + matchId + '/market/' + state.side.toLowerCase());
-    const mktSnap = await mktRef.once('value');
-    const mkt = mktSnap.val() || {};
-    const newAvail = Math.max(0, Number(mkt.available || 0) - state.qty);
-    await mktRef.child('available').set(newAvail);
-    
     closeTrade();
     toast('✅ Trade placed successfully');
   } catch(e) {
     console.error(e);
-    toast('Trade failed: ' + e.message);
+    toast('Trade failed: ' + (e.message || 'Unknown error'));
   }
 }
 
@@ -446,12 +418,12 @@ function renderTrades(){
   box.innerHTML = state.trades.map(t => `
     <div class="book-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
       <div>
-        <b>${t.side || '—'}</b>
+        <b>${t.side || t.selectedTeam || '—'}</b>
         <small style="display:block;color:#888">${Number(t.qty || 0)} qty</small>
       </div>
-      <div>${money(t.price)}</div>
-      <div>${money(t.investment)}</div>
-      <div style="color:#159b4c">${t.status || 'OPEN'}</div>
+      <div>${money(t.odds)}</div>
+      <div>${money(t.amount)}</div>
+      <div style="color:${t.status === 'win' ? '#159b4c' : t.status === 'loss' ? '#d92d20' : '#f39c12'};text-transform:uppercase;font-size:10px;font-weight:700">${t.status || 'pending'}</div>
     </div>`).join('');
 }
 
@@ -462,28 +434,28 @@ function switchTab(tab, btn){
   document.getElementById('activityView').style.display = tab === 'activity' ? 'block' : 'none';
 }
 
-function goToWallet(){
-  if(!state.loggedIn) location.href = 'login.html';
-  else toast('Balance: ' + money(state.balance));
-}
-
 /* ============ FIREBASE LIVE SYNC ============ */
 
 auth.onAuthStateChanged(user => {
   if(user){
     state.loggedIn = true;
     state.uid = user.uid;
-    
+
+    // ⚡ BALANCE from users/{uid}/wallet/balance
     if(walletRef) walletRef.off();
-    walletRef = db.ref('users/' + user.uid + '/paperWallet/balance');
+    walletRef = db.ref('users/' + user.uid + '/wallet/balance');
     walletRef.on('value', s => {
       state.balance = Number(s.val() || 0);
       render();
       updateSheet();
+    }, err => {
+      console.error('Balance read error:', err);
+      toast('Cannot read wallet balance');
     });
-    
+
+    // ⚡ TRADES from 'trades' (not paperTrades)
     if(tradesQuery) tradesQuery.off();
-    tradesQuery = db.ref('paperTrades').orderByChild('userId').equalTo(user.uid);
+    tradesQuery = db.ref('trades').orderByChild('userId').equalTo(user.uid);
     tradesQuery.on('value', s => {
       const arr = [];
       s.forEach(c => arr.push({ id: c.key, ...c.val() }));
@@ -511,13 +483,14 @@ if(matchId){
       return;
     }
     state.match = s.val();
+    // Support both market.yes.price and oddsA
     const m = state.match.market || {};
     const yes = m.yes || {};
     const no = m.no || {};
-    state.yesPrice = Number(yes.price ?? 0);
-    state.noPrice = Number(no.price ?? 0);
-    state.yesAvailable = Number(yes.available ?? 0);
-    state.noAvailable = Number(no.available ?? 0);
+    state.yesPrice = Number(yes.price ?? state.match.oddsA ?? 5);
+    state.noPrice = Number(no.price ?? state.match.oddsB ?? 5);
+    state.yesAvailable = Number(yes.available ?? 10000);
+    state.noAvailable = Number(no.available ?? 10000);
     render();
     updateSheet();
   });
