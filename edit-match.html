@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Match | Fantasy Adda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            padding-bottom: 30px;
+        }
+
+        header {
+            background: #B80000;
+            color: #fff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        header h2 {
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            transition: background 0.3s;
+        }
+
+        .back:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .container {
+            width: 95%;
+            max-width: 700px;
+            margin: 25px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin: 14px 0 7px;
+            color: #444;
+        }
+
+        label .required {
+            color: #d40000;
+            margin-left: 3px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #B80000;
+            box-shadow: 0 0 0 3px rgba(184, 0, 0, .1);
+        }
+
+        input:disabled {
+            background: #f5f5f5;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .preview {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0 5px;
+        }
+
+        .box {
+            flex: 1;
+            text-align: center;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .box img {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #fff;
+            padding: 5px;
+        }
+
+        .box p {
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-group button {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px;
+            border: 0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-group button:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .btn-group button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .update-btn {
+            background: #B80000;
+            color: #fff;
+        }
+
+        .update-btn:hover:not(:disabled) {
+            background: #8B0000;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .delete-btn:hover:not(:disabled) {
+            background: #bd2130;
+        }
+
+        .complete-btn {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .complete-btn:hover:not(:disabled) {
+            background: #1e7e34;
+        }
+
+        .payout-btn {
+            background: #ff8c00;
+            color: #fff;
+        }
+
+        .payout-btn:hover:not(:disabled) {
+            background: #e07b00;
+        }
+
+        .msg {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 9px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 45px;
+            color: #777;
+        }
+
+        .loading i {
+            font-size: 40px;
+            color: #B80000;
+            display: block;
+            margin-bottom: 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 2px dashed #e0e0e0;
+            margin: 25px 0;
+        }
+
+        .trade-summary {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .trade-summary h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .trade-summary .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .trade-summary .stats span {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .trade-summary .stats strong {
+            color: #B80000;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.4s ease;
+            max-width: 350px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+        .toast.error {
+            background: #d40000;
+        }
+        .toast.info {
+            background: #17a2b8;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .row,
+            .preview {
+                grid-template-columns: 1fr;
+                flex-direction: column;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn-group button {
+                min-width: unset;
+            }
+
+            header h2 {
+                font-size: 18px;
+            }
+
+            .container {
+                padding: 18px;
+            }
+
+            .trade-summary .stats {
+                gap: 10px;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2><i class="fa-solid fa-pen-to-square"></i> Edit Match</h2>
+        <a class="back" href="matches.html"><i class="fa fa-arrow-left"></i> Back to Matches</a>
+    </header>
+
+    <div id="loading" class="loading">
+        <i class="fa fa-spinner fa-spin"></i>
+        Checking admin access...
+    </div>
+
+    <div id="formBox" class="container" style="display:none">
+
+        <label>League Name <span class="required">*</span></label>
+        <input id="league" placeholder="League name">
+
+        <label>Sport <span class="required">*</span></label>
+        <select id="sport">
+            <option value="Cricket">🏏 Cricket</option>
+            <option value="Football">⚽ Football</option>
+            <option value="Kabaddi">🤼 Kabaddi</option>
+            <option value="Badminton">🏸 Badminton</option>
+            <option value="Tennis">🎾 Tennis</option>
+        </select>
+
+        <label>Team Names <span class="required">*</span></label>
+        <div class="row">
+            <input id="teamA" placeholder="Team A">
+            <input id="teamB" placeholder="Team B">
+        </div>
+
+        <label>Team Logo URLs</label>
+        <div class="row">
+            <input id="teamALogo" placeholder="Team A Logo URL">
+            <input id="teamBLogo" placeholder="Team B Logo URL">
+        </div>
+
+        <div class="preview">
+            <div class="box">
+                <img id="teamAImg" alt="Team A">
+                <p id="teamALabel">Team A</p>
+            </div>
+            <div class="box">
+                <img id="teamBImg" alt="Team B">
+                <p id="teamBLabel">Team B</p>
+            </div>
+        </div>
+
+        <label>Venue <span class="required">*</span></label>
+        <input id="venue" placeholder="Venue">
+
+        <label>Match Date & Time <span class="required">*</span></label>
+        <input type="datetime-local" id="matchTime">
+
+        <label>Status <span class="required">*</span></label>
+        <select id="status">
+            <option value="Upcoming">Upcoming</option>
+            <option value="Live">Live</option>
+            <option value="Completed">Completed</option>
+            <option value="Finished">Finished</option>
+        </select>
+
+        <label>Match Banner URL</label>
+        <input id="matchBanner" placeholder="https://...">
+
+        <label>Odds</label>
+        <div class="row">
+            <input type="number" id="oddsA" step="0.01" placeholder="Team A Odds">
+            <input type="number" id="oddsB" step="0.01" placeholder="Team B Odds">
+        </div>
+
+        <hr class="section-divider">
+
+        <h3 style="color:#B80000;margin-bottom:10px;">
+            <i class="fa fa-trophy"></i> Result & Payout
+        </h3>
+
+        <label>Winner Team</label>
+        <input id="winner" placeholder="Winner team name">
+
+        <label>Score (optional)</label>
+        <input id="score" placeholder="e.g. 185/6 - 182/8">
+
+        <!-- Trade Summary -->
+        <div id="tradeSummary" class="trade-summary" style="display:none;">
+            <h4><i class="fa fa-chart-line"></i> Trades Summary</h4>
+            <div class="stats">
+                <span>Total Trades: <strong id="totalTrades">0</strong></span>
+                <span>Pending: <strong id="pendingTrades">0</strong></span>
+                <span>Won: <strong id="wonTrades" style="color:#28a745;">0</strong></span>
+                <span>Lost: <strong id="lostTrades" style="color:#d40000;">0</strong></span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="update-btn" id="updateBtn">
+                <i class="fa fa-save"></i> Update Match
+            </button>
+            <button class="complete-btn" id="completeBtn">
+                <i class="fa fa-check-circle"></i> Complete & Payout
+            </button>
+            <button class="payout-btn" id="payoutBtn">
+                <i class="fa fa-money-bill-wave"></i> Process Payout
+            </button>
+            <button class="delete-btn" id="deleteBtn">
+                <i class="fa fa-trash"></i> Delete
+            </button>
+        </div>
+
+        <div id="successMsg" class="msg success"></div>
+        <div id="errorMsg" class="msg error"></div>
+        <div id="infoMsg" class="msg info"></div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+
+    <script>
+        // ======================================
+        // Firebase Config
+        // ======================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+            authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            projectId: "fantasy-adda-e3b72",
+            storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+            messagingSenderId: "882657286194",
+            appId: "1:882657286194:web:284e818359de2363f0442b",
+            measurementId: "G-8HJX9NRL1B"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // ======================================
+        // Get Match ID from URL
+        // ======================================
+        const params = new URLSearchParams(window.location.search);
+        const matchId = params.get("id");
+
+        // ======================================
+        // DOM Elements
+        // ======================================
+        const loading = document.getElementById("loading");
+        const formBox = document.getElementById("formBox");
+        const updateBtn = document.getElementById("updateBtn");
+        const deleteBtn = document.getElementById("deleteBtn");
+        const completeBtn = document.getElementById("completeBtn");
+        const payoutBtn = document.getElementById("payoutBtn");
+
+        const DEFAULT_LOGO = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" rx="100" fill="#eeeeee"/><text x="100" y="120" text-anchor="middle" font-size="80">🏏</text></svg>`
+        );
+
+        let currentUser = null;
+        let isAdmin = false;
+        let matchData = null;
+        let toastTimeout;
+
+        // ======================================
+        // Toast
+        // ======================================
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.className = 'toast ' + type;
+            document.getElementById('toastMessage').textContent = msg;
+            toast.style.display = 'block';
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+
+        // ======================================
+        // Show Messages
+        // ======================================
+        function showError(text) {
+            document.getElementById("errorMsg").textContent = "❌ " + text;
+            document.getElementById("errorMsg").style.display = "block";
+            document.getElementById("successMsg").style.display = "none";
+            document.getElementById("infoMsg").style.display = "none";
+        }
+
+        function showSuccess(text) {
+            document.getElementById("successMsg").textContent = "✅ " + text;
+            document.getElementById("successMsg").style.display = "block";
+            document.getElementById("errorMsg").style.display = "none";
+            document.getElementById("infoMsg").style.display = "none";
+        }
+
+        function showInfo(text) {
+            document.getElementById("infoMsg").textContent = "ℹ️ " + text;
+            document.getElementById("infoMsg").style.display = "block";
+            document.getElementById("errorMsg").style.display = "none";
+            document.getElementById("successMsg").style.display = "none";
+        }
+
+        function hideMessages() {
+            document.getElementById("successMsg").style.display = "none";
+            document.getElementById("errorMsg").style.display = "none";
+            document.getElementById("infoMsg").style.display = "none";
+        }
+
+        // ======================================
+        // Date Helper
+        // ======================================
+        function localDateTime(value) {
+            if (!value) return "";
+            const d = new Date(value);
+            if (Number.isNaN(d.getTime())) return value;
+            return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+        }
+
+        // ======================================
+        // Set Form Data
+        // ======================================
+        function setForm(m) {
+            matchData = m;
+            document.getElementById("league").value = m.league || "";
+            document.getElementById("sport").value = m.sport || "Cricket";
+            document.getElementById("teamA").value = m.teamA || "";
+            document.getElementById("teamB").value = m.teamB || "";
+            document.getElementById("teamALogo").value = (m.teamALogo || "").startsWith("data:") ? "" : (m.teamALogo || "");
+            document.getElementById("teamBLogo").value = (m.teamBLogo || "").startsWith("data:") ? "" : (m.teamBLogo || "");
+            document.getElementById("venue").value = m.venue || "";
+            document.getElementById("matchTime").value = localDateTime(m.matchTime);
+            document.getElementById("status").value = m.status || "Upcoming";
+            document.getElementById("matchBanner").value = m.banner || "";
+            document.getElementById("oddsA").value = m.oddsA ?? 1.95;
+            document.getElementById("oddsB").value = m.oddsB ?? 1.95;
+            document.getElementById("winner").value = m.result?.winner || "";
+            document.getElementById("score").value = m.result?.score || "";
+            updatePreview();
+
+            // Load trade summary - FIXED: Check if matchId exists
+            if (matchId) {
+                loadTradeSummary(matchId);
+            }
+        }
+
+        // ======================================
+        // Update Preview
+        // ======================================
+        function updatePreview() {
+            const a = document.getElementById("teamA").value.trim();
+            const b = document.getElementById("teamB").value.trim();
+            const al = document.getElementById("teamALogo").value.trim();
+            const bl = document.getElementById("teamBLogo").value.trim();
+            document.getElementById("teamALabel").textContent = a || "Team A";
+            document.getElementById("teamBLabel").textContent = b || "Team B";
+            document.getElementById("teamAImg").src = al || DEFAULT_LOGO;
+            document.getElementById("teamBImg").src = bl || DEFAULT_LOGO;
+        }
+
+        document.getElementById("teamA").addEventListener("input", updatePreview);
+        document.getElementById("teamB").addEventListener("input", updatePreview);
+        document.getElementById("teamALogo").addEventListener("input", updatePreview);
+        document.getElementById("teamBLogo").addEventListener("input", updatePreview);
+
+        // ======================================
+        // Load Trade Summary - FIXED
+        // ======================================
+        function loadTradeSummary(matchId) {
+            const summary = document.getElementById('tradeSummary');
+
+            // FIX: Check if matchId is valid
+            if (!matchId) {
+                summary.style.display = 'none';
+                return;
+            }
+
+            // Use query with proper orderByChild
+            db.ref('trades').orderByChild('matchId').equalTo(matchId).on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    summary.style.display = 'none';
+                    return;
+                }
+
+                summary.style.display = 'block';
+                const trades = snapshot.val();
+                let total = 0,
+                    pending = 0,
+                    won = 0,
+                    lost = 0;
+
+                Object.values(trades).forEach(t => {
+                    total++;
+                    if (t.status === 'win') won++;
+                    else if (t.status === 'loss') lost++;
+                    else pending++;
+                });
+
+                document.getElementById('totalTrades').textContent = total;
+                document.getElementById('pendingTrades').textContent = pending;
+                document.getElementById('wonTrades').textContent = won;
+                document.getElementById('lostTrades').textContent = lost;
+            }, (error) => {
+                console.error('Trade summary error:', error);
+                summary.style.display = 'none';
+            });
+        }
+
+        // ======================================
+        // Auth & Admin Check
+        // ======================================
+        if (!matchId) {
+            loading.innerHTML = '❌ Match ID missing.<br><br>Open edit page like: edit-match.html?id=MATCH_ID';
+        } else {
+            auth.onAuthStateChanged(async user => {
+                if (!user) {
+                    loading.innerHTML =
+                        '❌ Please login as admin first.<br><br><a href="login.html" style="color:#B80000;font-weight:600;">Go to Login</a>';
+                    return;
+                }
+
+                currentUser = user;
+
+                try {
+                    const adminSnap = await db.ref("admins/" + user.uid).once("value");
+                    if (!adminSnap.exists() || adminSnap.val() !== true) {
+                        loading.innerHTML = "❌ Access denied. This account is not an admin.";
+                        return;
+                    }
+                    isAdmin = true;
+
+                    const matchSnap = await db.ref("matches/" + matchId).once("value");
+                    if (!matchSnap.exists()) {
+                        loading.innerHTML = "❌ Match not found.";
+                        return;
+                    }
+
+                    setForm(matchSnap.val());
+                    loading.style.display = "none";
+                    formBox.style.display = "block";
+
+                } catch (e) {
+                    console.error(e);
+                    loading.innerHTML = "❌ " + (e.message || "Unable to load match.");
+                }
+            });
+        }
+
+        // ======================================
+        // Update Match
+        // ======================================
+        updateBtn.addEventListener("click", async () => {
+            if (!currentUser || !isAdmin) {
+                showError("Admin login required.");
+                return;
+            }
+
+            const league = document.getElementById("league").value.trim();
+            const teamA = document.getElementById("teamA").value.trim();
+            const teamB = document.getElementById("teamB").value.trim();
+
+            if (!league || !teamA || !teamB) {
+                showError("League, Team A aur Team B required hain.");
+                return;
+            }
+            if (teamA.toLowerCase() === teamB.toLowerCase()) {
+                showError("Team A aur Team B same nahi ho sakti.");
+                return;
+            }
+
+            updateBtn.disabled = true;
+            updateBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Updating...';
+
+            try {
+                const updates = {
+                    league: league,
+                    sport: document.getElementById("sport").value,
+                    teamA: teamA,
+                    teamB: teamB,
+                    teamALogo: document.getElementById("teamALogo").value.trim() || DEFAULT_LOGO,
+                    teamBLogo: document.getElementById("teamBLogo").value.trim() || DEFAULT_LOGO,
+                    venue: document.getElementById("venue").value.trim(),
+                    matchTime: document.getElementById("matchTime").value,
+                    status: document.getElementById("status").value,
+                    banner: document.getElementById("matchBanner").value.trim(),
+                    oddsA: Number(document.getElementById("oddsA").value) || 1.95,
+                    oddsB: Number(document.getElementById("oddsB").value) || 1.95,
+                    updatedAt: Date.now()
+                };
+
+                const winner = document.getElementById("winner").value.trim();
+                const score = document.getElementById("score").value.trim();
+
+                if (winner || score) {
+                    updates.result = {
+                        winner: winner,
+                        score: score,
+                        updatedAt: Date.now()
+                    };
+                }
+
+                await db.ref("matches/" + matchId).update(updates);
+                showSuccess("Match successfully updated!");
+                updateBtn.innerHTML = '<i class="fa fa-check"></i> Updated';
+
+                setTimeout(() => {
+                    updateBtn.disabled = false;
+                    updateBtn.innerHTML = '<i class="fa fa-save"></i> Update Match';
+                }, 1000);
+
+            } catch (e) {
+                console.error(e);
+                showError(e.message || "Match update failed.");
+                updateBtn.disabled = false;
+                updateBtn.innerHTML = '<i class="fa fa-save"></i> Update Match';
+            }
+        });
+
+        // ======================================
+        // 🔥 Complete & Auto Payout 🔥
+        // ======================================
+        completeBtn.addEventListener("click", async () => {
+            if (!currentUser || !isAdmin) {
+                showError("Admin login required.");
+                return;
+            }
+
+            const winner = document.getElementById("winner").value.trim();
+            if (!winner) {
+                showError("Please enter winner team name first.");
+                document.getElementById("winner").focus();
+                return;
+            }
+
+            if (!confirm(`⚠️ Complete match and process AUTO PAYOUT?\n\nWinner: ${winner}\nAll winning trades will be credited.`)) {
+                return;
+            }
+
+            completeBtn.disabled = true;
+            completeBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                // Update match status to Completed
+                await db.ref("matches/" + matchId).update({
+                    status: "Completed",
+                    result: {
+                        winner: winner,
+                        score: document.getElementById("score").value.trim() || "",
+                        declaredAt: Date.now()
+                    },
+                    updatedAt: Date.now()
+                });
+
+                showInfo("Match completed! Processing payouts...");
+
+                // Process payout
+                await processPayout(matchId);
+
+                completeBtn.innerHTML = '<i class="fa fa-check"></i> Done';
+
+                setTimeout(() => {
+                    completeBtn.disabled = false;
+                    completeBtn.innerHTML = '<i class="fa fa-check-circle"></i> Complete & Payout';
+                }, 1500);
+
+            } catch (e) {
+                console.error(e);
+                showError(e.message || "Failed to complete match.");
+                completeBtn.disabled = false;
+                completeBtn.innerHTML = '<i class="fa fa-check-circle"></i> Complete & Payout';
+            }
+        });
+
+        // ======================================
+        // 🔥 Process Payout Only 🔥
+        // ======================================
+        payoutBtn.addEventListener("click", async () => {
+            if (!currentUser || !isAdmin) {
+                showError("Admin login required.");
+                return;
+            }
+
+            const winner = document.getElementById("winner").value.trim();
+            if (!winner) {
+                showError("Please enter winner team name first.");
+                document.getElementById("winner").focus();
+                return;
+            }
+
+            if (!confirm(`💰 Process PAYOUT for this match?\nWinner: ${winner}\nThis will credit all winning trades.`)) {
+                return;
+            }
+
+            payoutBtn.disabled = true;
+            payoutBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                await processPayout(matchId);
+                payoutBtn.innerHTML = '<i class="fa fa-check"></i> Done';
+
+                setTimeout(() => {
+                    payoutBtn.disabled = false;
+                    payoutBtn.innerHTML = '<i class="fa fa-money-bill-wave"></i> Process Payout';
+                }, 1500);
+
+            } catch (e) {
+                console.error('Payout error:', e);
+                const message = String(e && e.message || e || 'Payout failed.');
+                if (message.includes('permission_denied')) {
+                    showError('Firebase Rules wallet access deny kar rahe hain. Admin wallet rule add karo.');
+                } else {
+                    showError(message);
+                }
+                payoutBtn.disabled = false;
+                payoutBtn.innerHTML = '<i class="fa fa-money-bill-wave"></i> Process Payout';
+            }
+        });
+
+        // ======================================
+        // 🔥 Core Payout Function 🔥
+        // ======================================
+        async function processPayout(matchId) {
+            if (!currentUser || !isAdmin) throw new Error('Admin login required.');
+            if (!matchId) throw new Error('Match ID missing.');
+
+            // Get match data
+            const matchSnap = await db.ref("matches/" + matchId).once("value");
+            if (!matchSnap.exists()) throw new Error("Match not found");
+
+            const match = matchSnap.val();
+            if (!match.result || !match.result.winner) {
+                throw new Error("No winner declared for this match");
+            }
+
+            if (match.payoutProcessed === true) {
+                showInfo('Payout has already been processed for this match.');
+                return;
+            }
+
+            // Get all trades for this match
+            const tradesSnap = await db.ref('trades')
+                .orderByChild('matchId')
+                .equalTo(matchId)
+                .once('value');
+
+            if (!tradesSnap.exists()) {
+                showInfo("No trades found for this match");
+                return;
+            }
+
+            const trades = tradesSnap.val();
+            let totalPayout = 0;
+            let winningTrades = 0;
+            let losingTrades = 0;
+            let processedCount = 0;
+
+            // Process each trade
+            for (const [tradeId, trade] of Object.entries(trades)) {
+                // Skip already processed
+                if (trade.status === 'win' || trade.status === 'loss') continue;
+
+                const isWin = trade.selectedTeam === match.result.winner;
+                const winAmount = isWin ? Math.round(trade.amount * trade.odds) : 0;
+
+                // Update trade status
+                await db.ref('trades/' + tradeId).update({
+                    status: isWin ? 'win' : 'loss',
+                    winAmount: winAmount,
+                    settledAt: Date.now(),
+                    matchResult: match.result.winner,
+                    payoutMatchId: matchId
+                });
+                // If win, credit user's wallet safely using a Firebase transaction.
+                // Firebase Rules must allow authenticated admins to write this wallet.
+                if (isWin && winAmount > 0) {
+                    const userRef = db.ref('users/' + trade.userId + '/wallet');
+
+                    const walletResult = await userRef.transaction((wallet) => {
+                        wallet = wallet || {};
+
+                        const currentBalance = Number(wallet.balance || 0);
+                        const currentWinning = Number(wallet.winning || 0);
+                        const currentTotalWon = Number(wallet.totalWon || 0);
+
+                        // wallet.html displays the "winning" field.
+                        // Keep balance and winning synchronized for existing pages.
+                        wallet.balance = currentBalance + winAmount;
+                        wallet.winning = currentWinning + winAmount;
+                        wallet.totalWon = currentTotalWon + winAmount;
+
+                        return wallet;
+                    });
+
+                    if (!walletResult.committed) {
+                        throw new Error('Wallet payout transaction was not committed.');
+                    }
+
+                    await db.ref('transactions').push({
+                        userId: trade.userId,
+                        type: 'credit',
+                        amount: winAmount,
+                        description: '💰 Payout for ' + match.teamA + ' vs ' + match.teamB + ' (Won)',
+                        matchId: matchId,
+                        tradeId: tradeId,
+                        date: Date.now()
+                    });
+
+                    totalPayout += winAmount;
+                    winningTrades++;
+                } else {
+                    losingTrades++;
+                }
+
+                processedCount++;
+            }
+
+            // Update match status to Finished
+            await db.ref('matches/' + matchId).update({
+                status: 'Finished',
+                payoutProcessed: true,
+                payoutAmount: totalPayout,
+                payoutAt: Date.now(),
+                updatedAt: Date.now()
+            });
+
+            showSuccess(
+                `✅ Payout Complete!\n💰 ₹${totalPayout} distributed\n🏆 ${winningTrades} winners\n📉 ${losingTrades} losers`
+            );
+
+            showToast(`💰 ₹${totalPayout} paid to ${winningTrades} winners`, 'success');
+        }
+
+        // ======================================
+        // Delete Match
+        // ======================================
+        deleteBtn.addEventListener("click", async () => {
+            if (!currentUser || !isAdmin) {
+                showError("Admin login required.");
+                return;
+            }
+
+            const ok = confirm("⚠️ Kya tum ye match permanently delete karna chahte ho?\nAll trades will also be deleted.");
+            if (!ok) return;
+
+            const confirm2 = confirm("Are you sure? This cannot be undone!");
+            if (!confirm2) return;
+
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Deleting...';
+
+            try {
+                // Delete all trades for this match
+                const tradesSnap = await db.ref('trades')
+                    .orderByChild('matchId')
+                    .equalTo(matchId)
+                    .once('value');
+
+                if (tradesSnap.exists()) {
+                    const trades = tradesSnap.val();
+                    for (const tradeId of Object.keys(trades)) {
+                        await db.ref('trades/' + tradeId).remove();
+                    }
+                }
+
+                // Delete match
+                await db.ref("matches/" + matchId).remove();
+                showToast("Match deleted successfully", 'success');
+                setTimeout(() => {
+                    window.location.href = "matches.html";
+                }, 800);
+
+            } catch (e) {
+                console.error(e);
+                showError(e.message || "Match delete failed.");
+                deleteBtn.disabled = false;
+                deleteBtn.innerHTML = '<i class="fa fa-trash"></i> Delete';
+            }
+        });
+
+        // ======================================
+        // Console error handling
+        // ======================================
+        console.log('Edit Match page loaded successfully!');
+        console.log('Match ID:', matchId);
+    </script>
+
+</body>
+</html>
