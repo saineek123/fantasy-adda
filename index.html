@@ -3,672 +3,525 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Fantasy Adda</title>
-
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
-body{
-    background:#f5f6fa;
-    color:#222;
-    padding-bottom:85px;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#f5f6fa;color:#222;padding-bottom:85px}
 
 /* ================= HEADER ================= */
-
 header{
-    background:#B80000;
-    color:#fff;
-    height:64px;
-    padding:0 20px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    box-shadow:0 3px 10px rgba(0,0,0,.15);
+  background:#B80000;color:#fff;height:64px;padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 3px 10px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:100;
 }
+.logo{font-size:23px;font-weight:700}
+.profile a{color:white;text-decoration:none;font-size:23px}
 
-.logo{
-    font-size:23px;
-    font-weight:700;
+/* ================= BONUS BANNER ================= */
+.bonus-wrap{
+  margin:14px 15px 4px;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 6px 20px rgba(184,0,0,.25);
+  position:relative;
+  background:linear-gradient(135deg,#B80000,#ff4d4d);
 }
-
-.profile a{
-    color:white;
-    text-decoration:none;
-    font-size:23px;
+.bonus-track{
+  display:flex;
+  transition:transform .5s ease;
 }
-
-/* ================= MATCH SECTION ================= */
-
-.section{
-    margin:18px 15px;
+.bonus-slide{
+  min-width:100%;
+  padding:16px 18px;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:14px;
 }
+.bonus-slide .icon{
+  font-size:32px;
+  flex-shrink:0;
+  width:52px;height:52px;
+  background:rgba(255,255,255,.2);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  animation:bounce 2s infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.bonus-slide .txt{flex:1}
+.bonus-slide .txt b{font-size:16px;display:block;margin-bottom:3px}
+.bonus-slide .txt small{font-size:12px;opacity:.9}
+.bonus-slide .cta{
+  background:#fff;color:#B80000;border:0;
+  padding:9px 14px;border-radius:10px;
+  font-weight:bold;font-size:12px;
+  cursor:pointer;white-space:nowrap;
+}
+.bonus-dots{
+  position:absolute;bottom:8px;left:50%;
+  transform:translateX(-50%);
+  display:flex;gap:5px;
+}
+.bonus-dots span{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.4);
+  transition:.3s;
+}
+.bonus-dots span.active{background:#fff;width:18px;border-radius:3px}
 
+/* ================= SECTION ================= */
+.section{margin:18px 15px}
 .section-title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
 }
-
-.section-title h2{
-    font-size:22px;
-    color:#222;
-}
-
+.section-title h2{font-size:22px;color:#222}
 .view-all{
-    color:#B80000;
-    text-decoration:none;
-    font-size:13px;
-    font-weight:bold;
+  color:#B80000;text-decoration:none;
+  font-size:13px;font-weight:bold;
 }
 
 /* ================= MATCH CARD ================= */
-
 .match-card{
-    background:#fff;
-    padding:17px;
-    border-radius:17px;
-    margin-bottom:15px;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.09);
-
-    border:1px solid #eee;
+  background:#fff;padding:17px;border-radius:17px;
+  margin-bottom:15px;
+  box-shadow:0 4px 12px rgba(0,0,0,.09);
+  border:1px solid #eee;
+  transition:.2s;
 }
-
+.match-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(0,0,0,.12);
+}
 .match-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:15px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:15px;
 }
-
-.league{
-    font-size:13px;
-    color:#777;
-    font-weight:600;
-}
-
+.league{font-size:13px;color:#777;font-weight:600}
 .status{
-    font-size:11px;
-    font-weight:bold;
-    padding:5px 9px;
-    border-radius:20px;
-    background:#ffeaea;
-    color:#B80000;
+  font-size:11px;font-weight:bold;
+  padding:5px 9px;border-radius:20px;
+  text-transform:uppercase;
 }
-
-.status.upcoming{
-    background:#fff3cd;
-    color:#9a6900;
+.status.live{
+  background:#ffeaea;color:#B80000;
+  animation:pulse 1.5s infinite;
 }
+.status.upcoming{background:#fff3cd;color:#9a6900}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 
-.teams{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.team{
-    width:38%;
-    text-align:center;
-}
-
+.teams{display:flex;align-items:center;justify-content:space-between}
+.team{width:38%;text-align:center}
 .team img{
-    width:58px;
-    height:58px;
-    object-fit:contain;
-    border-radius:50%;
-    margin-bottom:7px;
+  width:58px;height:58px;object-fit:contain;
+  border-radius:50%;margin-bottom:7px;
+  background:#f4f4f4;
 }
-
-.team p{
-    font-size:15px;
-    font-weight:600;
-    color:#222;
-}
-
+.team p{font-size:15px;font-weight:600;color:#222}
 .vs{
-    width:24%;
-    text-align:center;
-    font-size:17px;
-    font-weight:800;
-    color:#B80000;
+  width:24%;text-align:center;
+  font-size:17px;font-weight:800;color:#B80000;
+}
+.match-info{
+  text-align:center;color:#777;
+  font-size:13px;margin-top:12px;
 }
 
-.match-info{
-    text-align:center;
-    color:#777;
-    font-size:13px;
-    margin-top:12px;
+/* LIVE SCORE BAR */
+.score-bar{
+  background:#151a20;color:#fff;
+  border-radius:11px;
+  padding:9px 12px;
+  margin-top:11px;
+  display:flex;align-items:center;justify-content:center;
+  gap:9px;font-size:13px;
 }
+.score-bar .dot{
+  width:7px;height:7px;background:#19c463;
+  border-radius:50%;animation:pulse 1s infinite;
+}
+.score-bar b{font-weight:800}
 
 .tradeBtn{
-    display:block;
-    width:100%;
-
-    margin-top:14px;
-    padding:12px;
-
-    background:#B80000;
-    color:white;
-
-    border:none;
-    border-radius:11px;
-
-    font-size:16px;
-    font-weight:bold;
-
-    cursor:pointer;
-    transition:.2s;
+  display:block;width:100%;
+  margin-top:14px;padding:12px;
+  background:#B80000;color:white;
+  border:none;border-radius:11px;
+  font-size:16px;font-weight:bold;
+  cursor:pointer;transition:.2s;
 }
-
-.tradeBtn:active{
-    transform:scale(.98);
-}
-
-.tradeBtn:hover{
-    background:#990000;
-}
+.tradeBtn:active{transform:scale(.98)}
+.tradeBtn:hover{background:#990000}
 
 /* ================= EMPTY ================= */
-
 .empty{
-    background:#fff;
-    border-radius:15px;
-    padding:40px 20px;
-
-    text-align:center;
-    color:#777;
-
-    box-shadow:0 3px 10px rgba(0,0,0,.06);
+  background:#fff;border-radius:15px;
+  padding:40px 20px;text-align:center;color:#777;
+  box-shadow:0 3px 10px rgba(0,0,0,.06);
 }
-
-.empty i{
-    font-size:38px;
-    color:#B80000;
-    margin-bottom:12px;
-}
-
-.empty h3{
-    margin-bottom:6px;
-    color:#333;
-}
-
-.empty p{
-    font-size:13px;
-}
+.empty i{font-size:38px;color:#B80000;margin-bottom:12px}
+.empty h3{margin-bottom:6px;color:#333}
+.empty p{font-size:13px}
 
 /* ================= BOTTOM NAV ================= */
-
 nav{
-    position:fixed;
-    left:0;
-    bottom:0;
-
-    width:100%;
-
-    background:#fff;
-
-    display:flex;
-    justify-content:space-around;
-
-    padding:10px 0 9px;
-
-    box-shadow:0 -3px 12px rgba(0,0,0,.12);
-
-    z-index:999;
+  position:fixed;left:0;bottom:0;width:100%;
+  background:#fff;display:flex;justify-content:space-around;
+  padding:10px 0 9px;
+  box-shadow:0 -3px 12px rgba(0,0,0,.12);
+  z-index:999;
 }
-
 nav a{
-    flex:1;
-
-    text-decoration:none;
-    color:#777;
-
-    font-size:11px;
-    text-align:center;
+  flex:1;text-decoration:none;color:#777;
+  font-size:11px;text-align:center;
 }
-
-nav i{
-    display:block;
-
-    font-size:20px;
-    margin-bottom:4px;
-
-    color:#B80000;
-}
-
-nav a.active{
-    color:#B80000;
-    font-weight:bold;
-}
-
-/* ================= MOBILE ================= */
+nav i{display:block;font-size:20px;margin-bottom:4px;color:#B80000}
+nav a.active{color:#B80000;font-weight:bold}
 
 @media(max-width:600px){
-
-    .logo{
-        font-size:21px;
-    }
-
-    .section{
-        margin:18px 12px;
-    }
-
-    .section-title h2{
-        font-size:20px;
-    }
-
-    .match-card{
-        padding:15px;
-    }
-
-    .team img{
-        width:55px;
-        height:55px;
-    }
-
-    .team p{
-        font-size:14px;
-    }
+  .logo{font-size:21px}
+  .section{margin:18px 12px}
+  .section-title h2{font-size:20px}
+  .match-card{padding:15px}
+  .team img{width:55px;height:55px}
+  .team p{font-size:14px}
+  .bonus-slide{padding:14px}
+  .bonus-slide .icon{width:44px;height:44px;font-size:26px}
+  .bonus-slide .txt b{font-size:14px}
 }
-
 </style>
 </head>
 
 <body>
 
 <!-- ================= HEADER ================= -->
-
 <header>
-
-    <div class="logo">
-        🏏 Fantasy Adda
-    </div>
-
-    <div class="profile">
-        <a href="profile.html">
-            <i class="fa-solid fa-user"></i>
-        </a>
-    </div>
-
+  <div class="logo">🏏 Fantasy Adda</div>
+  <div class="profile">
+    <a href="profile.html"><i class="fa-solid fa-user"></i></a>
+  </div>
 </header>
 
 
+<!-- ================= BONUS BANNER ================= -->
+<div class="bonus-wrap" id="bonusWrap">
+  <div class="bonus-track" id="bonusTrack">
+
+    <!-- Default slides - Firebase se override ho jayenge -->
+    <div class="bonus-slide">
+      <div class="icon">🎁</div>
+      <div class="txt">
+        <b>Welcome Bonus ₹100</b>
+        <small>Sign up and get ₹100 free in wallet</small>
+      </div>
+      <button class="cta" onclick="location.href='wallet.html'">Claim</button>
+    </div>
+
+    <div class="bonus-slide">
+      <div class="icon">💰</div>
+      <div class="txt">
+        <b>Refer & Earn ₹50</b>
+        <small>Invite friend, both get ₹50 bonus</small>
+      </div>
+      <button class="cta" onclick="location.href='profile.html'">Refer</button>
+    </div>
+
+    <div class="bonus-slide">
+      <div class="icon">🔥</div>
+      <div class="txt">
+        <b>Live Match Bonus</b>
+        <small>Trade on live match, win big prizes</small>
+      </div>
+      <button class="cta" onclick="location.href='matches.html'">Play</button>
+    </div>
+
+  </div>
+
+  <div class="bonus-dots" id="bonusDots">
+    <span class="active"></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+
 <!-- ================= LIVE / UPCOMING MATCHES ================= -->
-
 <section class="section">
+  <div class="section-title">
+    <h2>🔥 Live & Upcoming</h2>
+    <a href="matches.html" class="view-all">View All →</a>
+  </div>
 
-    <div class="section-title">
-
-        <h2>🔥 Live Matches</h2>
-
-        <a href="matches.html" class="view-all">
-            View All
-        </a>
-
+  <div id="liveMatches">
+    <div class="empty">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <h3>Loading Matches...</h3>
+      <p>Please wait</p>
     </div>
-
-    <div id="liveMatches">
-
-        <div class="empty">
-
-            <i class="fa-solid fa-spinner fa-spin"></i>
-
-            <h3>Loading Matches...</h3>
-
-            <p>Please wait</p>
-
-        </div>
-
-    </div>
-
+  </div>
 </section>
 
 
 <!-- ================= BOTTOM NAV ================= -->
-
 <nav>
-
-    <a href="index.html" class="active">
-
-        <i class="fa fa-home"></i>
-
-        Home
-
-    </a>
-
-
-    <a href="matches.html">
-
-        <i class="fa fa-trophy"></i>
-
-        Matches
-
-    </a>
-
-
-    <a href="wallet.html">
-
-        <i class="fa fa-wallet"></i>
-
-        Wallet
-
-    </a>
-
-
-    <a href="profile.html">
-
-        <i class="fa fa-user"></i>
-
-        Profile
-
-    </a>
-
+  <a href="index.html" class="active">
+    <i class="fa fa-home"></i>Home
+  </a>
+  <a href="matches.html">
+    <i class="fa fa-trophy"></i>Matches
+  </a>
+  <a href="wallet.html">
+    <i class="fa fa-wallet"></i>Wallet
+  </a>
+  <a href="profile.html">
+    <i class="fa fa-user"></i>Profile
+  </a>
 </nav>
 
 
 <!-- ================= FIREBASE ================= -->
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
 
-
 <script>
-
 /* =========================================
    FIREBASE CONFIG
 ========================================= */
-
 const firebaseConfig = {
-
-    apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
-
-    authDomain: "fantasy-adda-e3b72.firebaseapp.com",
-
-    projectId: "fantasy-adda-e3b72",
-
-    storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
-
-    messagingSenderId: "882657286194",
-
-    appId: "1:882657286194:web:284e818359de2363f0442b",
-
-    measurementId: "G-8HJX9NRL1B"
-
+  apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+  authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+  databaseURL: "https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
+  projectId: "fantasy-adda-e3b72",
+  storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+  messagingSenderId: "882657286194",
+  appId: "1:882657286194:web:284e818359de2363f0442b",
+  measurementId: "G-8HJX9NRL1B"
 };
 
-
-/* =========================================
-   INITIALIZE FIREBASE
-========================================= */
-
 firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
-
 const database = firebase.database();
 
+const liveMatches = document.getElementById("liveMatches");
 
 /* =========================================
-   ELEMENTS
+   STATUS NORMALIZE (case-insensitive)
 ========================================= */
-
-const liveMatches =
-    document.getElementById("liveMatches");
-
+function normStatus(s){
+  const x = String(s || "").toLowerCase().trim();
+  if(x === "live" || x === "inprogress" || x === "in-progress") return "live";
+  if(x === "completed" || x === "finished" || x === "ended") return "completed";
+  if(x === "cancelled" || x === "canceled") return "cancelled";
+  return "upcoming";
+}
 
 /* =========================================
-   USER AUTH CHECK
+   AUTH CHECK
 ========================================= */
-
 auth.onAuthStateChanged((user)=>{
-
-    if(!user){
-
-        window.location.href = "login.html";
-
-        return;
-
-    }
-
+  if(!user){
+    window.location.href = "login.html";
+    return;
+  }
+  loadMatches();
 });
 
-
 /* =========================================
-   LOAD MATCHES FROM FIREBASE
+   LOAD MATCHES
 ========================================= */
-
-const matchesRef = database.ref("matches");
-
-
-matchesRef.on("value",(snapshot)=>{
+function loadMatches(){
+  database.ref("matches").on("value",(snapshot)=>{
 
     liveMatches.innerHTML = "";
 
-
     if(!snapshot.exists()){
-
-        liveMatches.innerHTML = `
-
-            <div class="empty">
-
-                <i class="fa-solid fa-trophy"></i>
-
-                <h3>No Matches Available</h3>
-
-                <p>New matches will appear here.</p>
-
-            </div>
-
-        `;
-
-        return;
-
+      liveMatches.innerHTML = `
+        <div class="empty">
+          <i class="fa-solid fa-trophy"></i>
+          <h3>No Matches Available</h3>
+          <p>New matches will appear here.</p>
+        </div>
+      `;
+      return;
     }
-
 
     const matches = snapshot.val();
 
-    let found = false;
-
-
+    // Collect live + upcoming only
+    const list = [];
     Object.keys(matches).forEach((id)=>{
-
-        const match = matches[id];
-
-
-        /*
-          ONLY LIVE AND UPCOMING
-        */
-
-        if(
-            match.status === "Live" ||
-            match.status === "Upcoming"
-        ){
-
-            found = true;
-
-            createMatchCard(id,match);
-
-        }
-
+      const m = matches[id];
+      const st = normStatus(m.status);
+      if(st === "live" || st === "upcoming"){
+        list.push({ id, match:m, st });
+      }
     });
 
-
-    if(!found){
-
-        liveMatches.innerHTML = `
-
-            <div class="empty">
-
-                <i class="fa-solid fa-trophy"></i>
-
-                <h3>No Live Matches</h3>
-
-                <p>There are no live or upcoming matches right now.</p>
-
-            </div>
-
-        `;
-
+    if(!list.length){
+      liveMatches.innerHTML = `
+        <div class="empty">
+          <i class="fa-solid fa-trophy"></i>
+          <h3>No Live or Upcoming Matches</h3>
+          <p>New matches will appear here soon.</p>
+        </div>
+      `;
+      return;
     }
 
-});
+    // Sort: LIVE first, then upcoming; within each, newest first
+    list.sort((a,b)=>{
+      if(a.st === "live" && b.st !== "live") return -1;
+      if(a.st !== "live" && b.st === "live") return 1;
+      const ta = a.match.createdAt || 0;
+      const tb = b.match.createdAt || 0;
+      return tb - ta;
+    });
 
+    list.forEach(item => createMatchCard(item.id, item.match, item.st));
+  });
+}
 
 /* =========================================
    CREATE MATCH CARD
 ========================================= */
+function createMatchCard(id, match, status){
+  const card = document.createElement("div");
+  card.className = "match-card";
 
-function createMatchCard(id,match){
+  const statusClass = status === "live" ? "live" : "upcoming";
+  const statusLabel = status === "live" ? "LIVE" : "UPCOMING";
 
-    const card =
-        document.createElement("div");
-
-
-    card.className = "match-card";
-
-
-    const statusClass =
-        match.status === "Upcoming"
-        ? "upcoming"
-        : "";
-
-
-    card.innerHTML = `
-
-        <div class="match-top">
-
-            <div class="league">
-
-                ${escapeHTML(match.league || "Sports Match")}
-
-            </div>
-
-            <div class="status ${statusClass}">
-
-                ${escapeHTML(match.status || "Live")}
-
-            </div>
-
-        </div>
-
-
-        <div class="teams">
-
-            <div class="team">
-
-                <img
-
-                    src="${match.teamALogo || "assets/default-team.png"}"
-
-                    alt="${escapeHTML(match.teamA || "Team A")}"
-
-                    onerror="this.src='assets/default-team.png'"
-
-                >
-
-                <p>
-
-                    ${escapeHTML(match.teamA || "Team A")}
-
-                </p>
-
-            </div>
-
-
-            <div class="vs">
-
-                VS
-
-            </div>
-
-
-            <div class="team">
-
-                <img
-
-                    src="${match.teamBLogo || "assets/default-team.png"}"
-
-                    alt="${escapeHTML(match.teamB || "Team B")}"
-
-                    onerror="this.src='assets/default-team.png'"
-
-                >
-
-                <p>
-
-                    ${escapeHTML(match.teamB || "Team B")}
-
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="match-info">
-
-            ${escapeHTML(match.matchTime || match.date || "")}
-
-        </div>
-
-
-        <button class="tradeBtn">
-
-            Trade Now
-
-        </button>
-
+  // Score bar for live matches
+  let scoreBar = "";
+  if(status === "live" && (match.scoreA || match.scoreB)){
+    scoreBar = `
+      <div class="score-bar">
+        <span class="dot"></span>
+        <b>${escapeHTML(match.scoreA || "0")}</b>
+        <span>•</span>
+        <b>${escapeHTML(match.scoreB || "0")}</b>
+        ${match.overs ? `<small>(${escapeHTML(match.overs)} ov)</small>` : ""}
+      </div>
     `;
+  }
 
+  card.innerHTML = `
+    <div class="match-top">
+      <div class="league">${escapeHTML(match.league || "Sports Match")}</div>
+      <div class="status ${statusClass}">${statusLabel}</div>
+    </div>
 
-    card
-        .querySelector(".tradeBtn")
-        .addEventListener("click",()=>{
+    <div class="teams">
+      <div class="team">
+        <img
+          src="${match.teamALogo || ''}"
+          alt="${escapeHTML(match.teamA || 'Team A')}"
+          onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2250%22 fill=%22%23eee%22/%3E%3Ctext x=%2250%22 y=%2265%22 text-anchor=%22middle%22 font-size=%2240%22%3E🏏%3C/text%3E%3C/svg%3E'">
+        <p>${escapeHTML(match.teamA || "Team A")}</p>
+      </div>
 
-            window.location.href =
-                "trade.html?id=" + encodeURIComponent(id);
+      <div class="vs">VS</div>
 
-        });
+      <div class="team">
+        <img
+          src="${match.teamBLogo || ''}"
+          alt="${escapeHTML(match.teamB || 'Team B')}"
+          onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2250%22 fill=%22%23eee%22/%3E%3Ctext x=%2250%22 y=%2265%22 text-anchor=%22middle%22 font-size=%2240%22%3E🏏%3C/text%3E%3C/svg%3E'">
+        <p>${escapeHTML(match.teamB || "Team B")}</p>
+      </div>
+    </div>
 
+    <div class="match-info">
+      ${escapeHTML(match.matchTime || match.dateTime || match.date || "")}
+    </div>
 
-    liveMatches.appendChild(card);
+    ${scoreBar}
 
+    <button class="tradeBtn">
+      ${status === "live" ? "⚡ Trade Now" : "📅 Trade Now"}
+    </button>
+  `;
+
+  card.querySelector(".tradeBtn").addEventListener("click",()=>{
+    window.location.href = "trade.html?id=" + encodeURIComponent(id);
+  });
+
+  liveMatches.appendChild(card);
+}
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+function escapeHTML(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
 
 /* =========================================
-   SECURITY / TEXT CLEANING
+   BONUS BANNER SLIDER
 ========================================= */
+(function(){
+  const track = document.getElementById("bonusTrack");
+  const dotsBox = document.getElementById("bonusDots");
+  let slides = track.children.length;
+  let idx = 0;
 
-function escapeHTML(value){
+  function renderDots(){
+    dotsBox.innerHTML = "";
+    for(let i=0;i<slides;i++){
+      const s = document.createElement("span");
+      if(i === idx) s.classList.add("active");
+      dotsBox.appendChild(s);
+    }
+  }
 
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+  function go(i){
+    idx = (i + slides) % slides;
+    track.style.transform = `translateX(-${idx*100}%)`;
+    renderDots();
+  }
 
-}
+  renderDots();
+  setInterval(()=>go(idx+1), 3500);
+
+  // Load bonus slides from Firebase (optional)
+  database.ref("settings/banners").on("value",(snap)=>{
+    if(!snap.exists()) return;
+    const arr = [];
+    snap.forEach(c=>{
+      const b = c.val();
+      if(b && b.active !== false){
+        arr.push(b);
+      }
+    });
+    if(!arr.length) return;
+
+    track.innerHTML = arr.map(b=>`
+      <div class="bonus-slide" style="${b.bg ? 'background:'+escapeHTML(b.bg) : ''}">
+        <div class="icon">${escapeHTML(b.icon || "🎁")}</div>
+        <div class="txt">
+          <b>${escapeHTML(b.title || "")}</b>
+          <small>${escapeHTML(b.subtitle || "")}</small>
+        </div>
+        ${b.cta ? `<button class="cta" onclick="location.href='${escapeHTML(b.link || "#")}'">${escapeHTML(b.cta)}</button>` : ""}
+      </div>
+    `).join("");
+
+    slides = track.children.length;
+    idx = 0;
+    go(0);
+  });
+})();
 
 </script>
 
