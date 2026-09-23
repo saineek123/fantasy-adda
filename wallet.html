@@ -2,537 +2,109 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Fantasy Adda • Trade</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wallet • Fantasy Adda</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --green:#0aa84f;--green2:#08b85a;--red:#d92d20;
-  --bg:#f4f6f8;--text:#16181d;--muted:#777d87;
-  --line:#e7e9ed;--orange:#f59e0b;--blue:#2563eb;
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f4f6f8;padding-bottom:80px}
+.header{background:#B80000;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.header h2{font-size:18px}
+.container{max-width:600px;margin:auto;padding:15px}
+
+.balance-card{
+  background:linear-gradient(135deg,#B80000,#ff4d4d);color:#fff;
+  border-radius:20px;padding:22px;margin-bottom:16px;
+  box-shadow:0 8px 25px rgba(184,0,0,.3);
 }
-html,body{width:100%;min-height:100%}
-body{
-  font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);
-  padding-bottom:84px;overflow-x:hidden;
+.balance-card small{font-size:11px;opacity:.85;text-transform:uppercase;letter-spacing:.5px}
+.balance-card h1{font-size:34px;font-weight:800;margin:8px 0}
+.balance-card .row{display:flex;gap:10px;margin-top:16px}
+.balance-card .btn{
+  flex:1;background:rgba(255,255,255,.2);color:#fff;border:0;
+  padding:11px;border-radius:11px;font-weight:700;font-size:12px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;
 }
-button,input,select{font:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.balance-card .btn:hover{background:rgba(255,255,255,.3)}
 
-.header{
-  position:sticky;top:0;z-index:20;background:#fff;height:62px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 15px;border-bottom:1px solid var(--line);
+.stats-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;
 }
-.header h2{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
-.back{border:0;background:transparent;font-size:22px;width:40px;height:40px}
-.wallet{background:#f0fff5;color:#08783b;border:1px solid #ccefd9;
-  padding:8px 11px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer}
+.stat-card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 10px #0001}
+.stat-card small{font-size:10px;color:#888;text-transform:uppercase;font-weight:700}
+.stat-card b{display:block;font-size:20px;margin-top:6px;font-weight:800}
+.stat-card.green b{color:#0aa84f}
+.stat-card.red b{color:#d92d20}
+.stat-card.blue b{color:#2563eb}
+.stat-card.orange b{color:#f59e0b}
 
-.container{max-width:560px;margin:auto;padding:10px 12px}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px #0001}
+.card h3{font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3 i{color:#B80000}
 
-.match{background:#fff;border-radius:16px;padding:14px;box-shadow:0 2px 10px #00000008;margin-bottom:10px}
-.match-top{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#858a92}
-.teams{display:flex;justify-content:center;align-items:center;gap:18px;margin:10px 0 8px}
-.team{text-align:center;min-width:90px}
-.team img{width:45px;height:45px;object-fit:contain;border-radius:50%;background:#f4f4f4}
-.team b{display:block;font-size:13px;margin-top:4px}
-.vs{font-weight:800;color:#999;font-size:13px}
-
-.live{background:#151a20;color:#fff;border-radius:13px;padding:10px 12px;
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.live .score{font-weight:800}
-.live small{color:#aeb5bf}
-.dot{width:7px;height:7px;background:#19c463;border-radius:50%;display:inline-block}
-
-.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;background:#e9ecef;
-  border-radius:11px;padding:3px;margin:10px 0}
-.tab{border:0;background:transparent;padding:10px;border-radius:9px;font-weight:700;font-size:13px}
-.tab.active{background:#fff;box-shadow:0 1px 5px #00000012}
-
-.market{background:#fff;border-radius:16px;padding:13px;margin-bottom:10px}
-.market-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.market-head b{font-size:15px}
-.market-head span{font-size:11px;color:#858a92}
-
-.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.choice{border:1px solid #e3e5e8;background:#fafbfc;border-radius:12px;
-  padding:12px;text-align:left;transition:.2s}
-.choice:hover{transform:translateY(-1px)}
-.choice.yes{border-color:#bde9ce;background:#effcf4}
-.choice.no{border-color:#f0c1bd;background:#fff3f2}
-.choice .top{display:flex;justify-content:space-between;align-items:center}
-.choice strong{font-size:14px}
-.choice .price{font-size:20px;font-weight:800;margin-top:4px}
-.choice small{color:#7c828b;font-size:10px}
-
-.book{background:#fff;border-radius:16px;padding:13px;margin-bottom:10px}
-.book-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.book-title b{font-size:14px}
-.book-head,.book-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;
-  font-size:11px;align-items:center;text-align:right;padding:7px 2px}
-.book-head{color:#8b9098;font-weight:600}
-.book-row{border-top:1px solid #f0f1f3}
-.yesc{color:#159b4c}
-.noc{color:#c52c25}
-.book-row div:first-child{text-align:left}
-
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
-.stat{background:#fff;border-radius:13px;padding:11px}
-.stat small{display:block;color:#8b9098;font-size:10px}
-.stat b{font-size:14px;display:block;margin-top:4px}
-
-/* POSITION CARD */
-.position-card{
-  background:#fff;border-radius:16px;padding:14px;margin-bottom:10px;
-  border-left:4px solid var(--green);
-  box-shadow:0 2px 10px #00000008;
+.tx-row{
+  display:grid;grid-template-columns:1fr auto;gap:10px;
+  padding:11px 0;border-bottom:1px solid #f0f1f3;font-size:12px;
 }
-.position-card.loss{border-left-color:var(--red)}
-.position-card.pending{border-left-color:var(--orange)}
+.tx-row:last-child{border-bottom:0}
+.tx-row b{font-size:13px;display:block}
+.tx-row small{color:#888;font-size:10px}
 
-.position-head{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:10px;
-}
-.position-side{
-  padding:5px 12px;border-radius:20px;font-weight:800;font-size:11px;
-  text-transform:uppercase;
-}
-.position-side.yes{background:#ecfff4;color:#078a40}
-.position-side.no{background:#fff0ef;color:#c32820}
-
-.position-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-  font-size:11px;margin-bottom:11px;
-}
-.position-grid div small{display:block;color:#8b9098;margin-bottom:3px}
-.position-grid div b{font-size:13px}
-
-.position-pnl{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px;background:#f8f9fa;border-radius:10px;margin-bottom:10px;
-}
-.position-pnl b{font-size:18px;font-weight:800}
-.position-pnl .positive{color:#0aa84f}
-.position-pnl .negative{color:#d92d20}
-
-.exit-btn{
-  width:100%;padding:11px;border:0;border-radius:10px;
-  background:var(--red);color:#fff;font-weight:800;font-size:13px;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-}
-.exit-btn:hover{background:#b8241a}
-.exit-btn:disabled{background:#ccc;cursor:not-allowed}
-
-/* LIMIT ORDER BADGE */
-.limit-badge{
-  display:inline-block;padding:3px 8px;background:#fff3cd;color:#856404;
-  border-radius:6px;font-size:9px;font-weight:800;margin-left:6px;
-}
-.market-badge{
-  display:inline-block;padding:3px 8px;background:#d1fae5;color:#065f46;
-  border-radius:6px;font-size:9px;font-weight:800;margin-left:6px;
-}
-
-/* BOTTOM */
-.bottom-trade{position:fixed;left:0;right:0;bottom:0;z-index:30;
-  background:#fff;border-top:1px solid var(--line);padding:10px 12px 12px;
-  box-shadow:0 -5px 20px #00000010}
-.bottom-inner{max-width:560px;margin:auto;display:flex;gap:8px}
-.trade-btn{flex:1;border:0;border-radius:13px;padding:13px;color:#fff;
-  font-weight:800;font-size:14px}
-.trade-btn.yes{background:var(--green)}
-.trade-btn.no{background:var(--red)}
-
-/* SHEET */
-.overlay{position:fixed;inset:0;background:#0007;z-index:50;
-  opacity:0;pointer-events:none;transition:.25s}
-.overlay.show{opacity:1;pointer-events:auto}
-.sheet{position:absolute;left:50%;bottom:0;transform:translate(-50%,105%);
-  width:min(560px,100%);max-height:92vh;overflow:auto;-webkit-overflow-scrolling:touch;
-  background:#fff;border-radius:22px 22px 0 0;padding:10px 15px 20px;
-  transition:.3s cubic-bezier(.2,.8,.2,1)}
-.overlay.show .sheet{transform:translate(-50%,0)}
-.handle{width:42px;height:4px;background:#d9dce1;border-radius:20px;margin:0 auto 12px}
-.sheet-head{display:flex;justify-content:space-between;align-items:center}
-.sheet-head h3{font-size:17px}
-.close{border:0;background:#f1f2f4;border-radius:50%;width:32px;height:32px}
-
-.selected-pill{display:flex;gap:8px;margin:12px 0}
-.pill{flex:1;border-radius:11px;border:1px solid var(--line);padding:10px;
-  text-align:center;font-weight:700;font-size:13px}
-.pill.active.y{background:#ecfff4;color:#078a40;border-color:#bde9ce}
-.pill.active.n{background:#fff0ef;color:#c32820;border-color:#f0c1bd}
-
-/* ORDER TYPE TABS */
-.order-type-tabs{
-  display:grid;grid-template-columns:1fr 1fr;gap:6px;
-  background:#eef0f3;border-radius:11px;padding:3px;margin-bottom:12px;
-}
-.order-type-tab{
-  border:0;background:transparent;padding:9px;
-  border-radius:9px;font-weight:700;font-size:12px;color:#666;
-}
-.order-type-tab.active{background:#fff;color:#B80000;box-shadow:0 1px 5px #00000012}
-
-.price-line{display:flex;justify-content:space-between;align-items:end;margin:10px 0}
-.price-big{font-size:27px;font-weight:800}
-.price-big small{font-size:11px;color:#8a9098;font-weight:500}
-.available{color:#159b4c;font-size:10px}
-
-.qty-box{border:1px solid var(--line);border-radius:14px;padding:11px;margin-bottom:10px}
-.qty-row{display:flex;align-items:center;justify-content:space-between}
-.qty-row span{font-size:12px;color:#7d828a}
-.qty-control{display:flex;align-items:center;border:1px solid #dfe2e6;
-  border-radius:10px;overflow:hidden}
-.qty-control button{width:39px;height:38px;border:0;background:#f5f6f7;font-size:20px}
-.qty-control input{width:70px;height:38px;border:0;text-align:center;outline:0;font-weight:800}
-
-/* LIMIT PRICE INPUT */
-.limit-row{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-top:11px;padding-top:11px;border-top:1px dashed #e5e7eb;
-}
-.limit-row span{font-size:12px;color:#7d828a}
-.limit-input{
-  display:flex;align-items:center;border:1px solid #dfe2e6;
-  border-radius:10px;overflow:hidden;background:#fff;
-}
-.limit-input input{
-  width:90px;height:38px;border:0;text-align:center;
-  outline:0;font-weight:800;font-size:14px;color:#B80000;
-}
-
-.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
-.quick button{border:1px solid #dfe2e6;background:#fff;
-  border-radius:8px;padding:8px 2px;font-size:11px;font-weight:700}
-
-.summary{background:linear-gradient(110deg,#edf3ff,#eafaff);
-  border-radius:13px;padding:13px;display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;margin-bottom:10px}
-.summary small{font-size:10px}
-.summary b{display:block;font-size:17px;margin-top:4px}
-.summary .win{color:#0aa84f}
-
-.balance{display:flex;justify-content:space-between;align-items:center;
-  background:#fff7ed;border-radius:12px;padding:11px;margin-bottom:10px}
-.balance small{font-size:10px;color:#777}
-.balance b{font-size:14px}
-.addcash{border:0;background:#12a94f;color:#fff;border-radius:9px;
-  padding:8px 11px;font-weight:700;font-size:11px}
-
-/* SWIPE */
-.swipe{height:58px;background:#10a94f;color:#fff;border-radius:30px;
-  position:relative;display:flex;align-items:center;justify-content:center;
-  font-weight:800;margin-top:7px;overflow:hidden;
-  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
-  touch-action:none;-ms-touch-action:none;cursor:grab}
-.swipe:active{cursor:grabbing}
-.swipe .knob{position:absolute;left:5px;top:5px;width:48px;height:48px;
-  background:#fff;color:#0a9c46;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;box-shadow:0 2px 7px #0002;
-  transform:translateX(0);transition:transform .15s ease;
-  will-change:transform;pointer-events:none}
-.swipe.disabled{background:#a7abb1}
-.swipe.disabled .knob{display:none}
-
-.note{font-size:9px;color:#8b9098;text-align:center;margin-top:8px;line-height:1.4}
-
-.toast{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-15px);
-  z-index:100;display:none;background:#20242a;color:#fff;padding:10px 15px;
-  border-radius:10px;font-size:12px;font-weight:600;box-shadow:0 5px 20px #0003;
-  max-width:90%;text-align:center}
-.toast.show{display:block;animation:toast .25s forwards}
-.toast.success{background:#0aa84f}
-.toast.error{background:#d92d20}
-@keyframes toast{to{transform:translateX(-50%) translateY(0)}}
-
-.empty{padding:20px;text-align:center;color:#8a9098;font-size:12px}
-
-.login-banner{background:#fff3cd;border:1px solid #ffeaa7;border-radius:12px;
-  padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;
-  align-items:center;font-size:12px}
-.login-banner a{background:var(--green);color:#fff;padding:7px 14px;
-  border-radius:9px;text-decoration:none;font-weight:700;font-size:12px}
-
-@media(max-width:380px){
-  .team{min-width:75px}
-  .stats{grid-template-columns:1fr 1fr}
-  .stats .stat:last-child{grid-column:span 2}
-  .quick button{font-size:10px}
-  .sheet{padding-left:12px;padding-right:12px}
-  .position-grid{grid-template-columns:1fr 1fr}
-}
+.empty{text-align:center;padding:30px 20px;color:#999;font-size:12px}
+.empty i{font-size:36px;color:#ccc;margin-bottom:8px;display:block}
 </style>
 </head>
-
 <body>
 
-<header class="header">
-  <button class="back" onclick="exitPage()">
-    <i class="fa fa-arrow-left"></i>
-  </button>
-  <h2 id="pageTitle">Loading...</h2>
-  <div class="wallet" id="walletTop" onclick="location.href='wallet.html'">₹0.00</div>
-</header>
-
-<main class="container">
-
-  <div id="loginBanner" class="login-banner" style="display:none">
-    <span>🔒 Login to place trades</span>
-    <a href="login.html">Login</a>
-  </div>
-
-  <!-- MATCH INFO -->
-  <section class="match">
-    <div class="match-top">
-      <span id="league">Cricket</span>
-      <span id="statusText">UPCOMING</span>
-    </div>
-    <div class="teams">
-      <div class="team">
-        <img id="logoA" alt="">
-        <b id="nameA">Team A</b>
-      </div>
-      <div class="vs">VS</div>
-      <div class="team">
-        <img id="logoB" alt="">
-        <b id="nameB">Team B</b>
-      </div>
-    </div>
-    <div class="live">
-      <span class="dot"></span>
-      <small>LIVE SCORE</small>
-      <span class="score" id="scoreA">—</span>
-      <span>•</span>
-      <span class="score" id="scoreB">—</span>
-      <small id="overs">— ov</small>
-    </div>
-  </section>
-
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('market',this)">📊 Market</button>
-    <button class="tab" onclick="switchTab('positions',this)">💼 Positions</button>
-    <button class="tab" onclick="switchTab('history',this)">📜 History</button>
-  </div>
-
-  <!-- ================= MARKET VIEW ================= -->
-  <div id="marketView">
-
-    <section class="market">
-      <div class="market-head">
-        <b id="question">Who will win?</b>
-        <span>Virtual trading</span>
-      </div>
-
-      <div class="choice-grid">
-        <button class="choice yes" onclick="openTrade('YES')">
-          <div class="top">
-            <strong>YES</strong>
-            <small id="yesQty">0 available</small>
-          </div>
-          <div class="price" id="yesPrice">₹0.00</div>
-          <small>Tap to buy</small>
-        </button>
-        <button class="choice no" onclick="openTrade('NO')">
-          <div class="top">
-            <strong>NO</strong>
-            <small id="noQty">0 available</small>
-          </div>
-          <div class="price" id="noPrice">₹0.00</div>
-          <small>Tap to buy</small>
-        </button>
-      </div>
-    </section>
-
-    <section class="stats">
-      <div class="stat">
-        <small>Last YES</small>
-        <b id="lastYes">₹0.00</b>
-      </div>
-      <div class="stat">
-        <small>Last NO</small>
-        <b id="lastNo">₹0.00</b>
-      </div>
-      <div class="stat">
-        <small>24h Volume</small>
-        <b id="volume">₹0</b>
-      </div>
-    </section>
-
-    <section class="book">
-      <div class="book-title">
-        <b>📖 Order Book</b>
-        <span style="font-size:11px;color:#888">Real live orders</span>
-      </div>
-      <div class="book-head">
-        <div>PRICE</div>
-        <div class="yesc">QTY YES</div>
-        <div>PRICE</div>
-        <div class="noc">QTY NO</div>
-      </div>
-      <div id="orderRows"></div>
-    </section>
-  </div>
-
-  <!-- ================= POSITIONS VIEW ================= -->
-  <div id="positionsView" style="display:none">
-    <div id="positionsList"></div>
-  </div>
-
-  <!-- ================= HISTORY VIEW ================= -->
-  <div id="historyView" style="display:none">
-    <section class="book">
-      <div class="book-title">
-        <b>📜 Trade History</b>
-        <span id="historyCount" style="font-size:11px;color:#888"></span>
-      </div>
-      <div id="historyList"></div>
-    </section>
-  </div>
-
-</main>
-
-<!-- BOTTOM TRADE BUTTONS -->
-<div class="bottom-trade">
-  <div class="bottom-inner">
-    <button class="trade-btn yes" onclick="openTrade('YES')">
-      BUY YES <span id="bottomYes">₹0.00</span>
-    </button>
-    <button class="trade-btn no" onclick="openTrade('NO')">
-      BUY NO <span id="bottomNo">₹0.00</span>
-    </button>
-  </div>
+<div class="header">
+  <h2><i class="fa fa-wallet"></i> Wallet</h2>
+  <a href="index.html" style="color:#fff"><i class="fa fa-home"></i></a>
 </div>
 
-<!-- ================= TRADE SHEET ================= -->
-<div class="overlay" id="overlay" onclick="outsideClose(event)">
-  <div class="sheet">
-    <div class="handle"></div>
+<div class="container">
 
-    <div class="sheet-head">
-      <h3 id="sheetQuestion">Who will win?</h3>
-      <div style="display:flex;gap:6px">
-        <button onclick="exitTrade()"
-          style="border:0;background:#fff3cd;color:#856404;padding:0 12px;height:32px;border-radius:9px;font-size:12px;font-weight:700">
-          Exit
-        </button>
-        <button class="close" onclick="closeTrade()">
-          <i class="fa fa-times"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- ORDER TYPE -->
-    <div class="order-type-tabs">
-      <button class="order-type-tab active" id="typeMarket" onclick="setOrderType('market')">
-        ⚡ Market
+  <div class="balance-card">
+    <small>Total Balance</small>
+    <h1 id="totalBalance">₹0.00</h1>
+    <div class="row">
+      <button class="btn" onclick="location.href='recharge.html'">
+        <i class="fa fa-plus"></i> Add Money
       </button>
-      <button class="order-type-tab" id="typeLimit" onclick="setOrderType('limit')">
-        🎯 Limit
+      <button class="btn" onclick="location.href='withdraw.html'">
+        <i class="fa fa-arrow-up"></i> Withdraw
       </button>
-    </div>
-
-    <div class="selected-pill">
-      <button class="pill y active" id="pillYes" onclick="setSide('YES')">
-        YES <span id="pillYesPrice">₹0.00</span>
-      </button>
-      <button class="pill n" id="pillNo" onclick="setSide('NO')">
-        NO <span id="pillNoPrice">₹0.00</span>
-      </button>
-    </div>
-
-    <div class="price-line">
-      <div>
-        <small style="font-size:11px;color:#777">Market Price</small>
-        <div class="price-big" id="sheetPrice">₹0.00</div>
-      </div>
-      <div style="text-align:right">
-        <b class="available" id="sheetAvailable">0 qty available</b>
-      </div>
-    </div>
-
-    <div class="qty-box">
-      <div class="qty-row">
-        <span>Quantity (shares)</span>
-        <div class="qty-control">
-          <button onclick="changeQty(-1)">−</button>
-          <input id="qtyInput" type="number" min="1" value="5" oninput="syncQty()">
-          <button onclick="changeQty(1)">+</button>
-        </div>
-      </div>
-
-      <!-- LIMIT PRICE -->
-      <div class="limit-row" id="limitRow" style="display:none">
-        <span>Limit Price (₹1 - ₹9)</span>
-        <div class="limit-input">
-          <span style="padding-left:10px;color:#B80000;font-weight:800">₹</span>
-          <input id="limitPriceInput" type="number" min="1" max="9" step="0.1" value="5" oninput="updateSheet()">
-        </div>
-      </div>
-
-      <div class="quick">
-        <button onclick="setQty(20)">20+</button>
-        <button onclick="setQty(100)">100+</button>
-        <button onclick="setQty(500)">500+</button>
-        <button onclick="setQty(1000)">1000+</button>
-      </div>
-    </div>
-
-    <div class="summary">
-      <div>
-        <small>Investment</small>
-        <b id="investment">₹0.00</b>
-      </div>
-      <div>
-        <small>Potential Return</small>
-        <b class="win" id="winning">₹0.00</b>
-      </div>
-      <div>
-        <small>Potential Profit</small>
-        <b class="win" id="profit">₹0.00</b>
-      </div>
-      <div>
-        <small>Order Price</small>
-        <b id="avgPrice">₹0.00</b>
-      </div>
-    </div>
-
-    <div class="balance">
-      <div>
-        <small>Wallet Balance</small>
-        <b id="sheetBalance">₹0.00</b>
-      </div>
-      <button class="addcash" onclick="location.href='wallet.html'">+ Add Funds</button>
-    </div>
-
-    <div class="swipe" id="swipe">
-      <span>Swipe To Confirm</span>
-      <div class="knob" id="knob">»</div>
-    </div>
-
-    <div class="note">
-      Market order → instant fill at current price.<br>
-      Limit order → fills when price matches your target.
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <div class="stats-grid">
+    <div class="stat-card green">
+      <small>Total Won</small>
+      <b id="totalWon">₹0.00</b>
+    </div>
+    <div class="stat-card red">
+      <small>Total Invested</small>
+      <b id="totalInvested">₹0.00</b>
+    </div>
+    <div class="stat-card blue">
+      <small>Open Positions</small>
+      <b id="openPositions">0</b>
+    </div>
+    <div class="stat-card orange">
+      <small>Total P&L</small>
+      <b id="totalPnl">₹0.00</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><i class="fa fa-list"></i> Recent Transactions</h3>
+    <div id="txList"><div class="empty">Loading...</div></div>
+  </div>
+
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
-
 <script>
 const firebaseConfig = {
   apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
@@ -544,723 +116,64 @@ const firebaseConfig = {
   appId:"1:882657286194:web:284e818359de2363f0442b"
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
 const auth = firebase.auth();
+const db = firebase.database();
 
-const params = new URLSearchParams(location.search);
-const matchId = params.get('id');
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
 
-const FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23eee'/%3E%3Cpath d='M40 15v50M15 40h50' stroke='%23aaa' stroke-width='4'/%3E%3C/svg%3E";
+auth.onAuthStateChanged(user=>{
+  if(!user){ location.href='login.html'; return; }
 
-/* RETURN URL */
-if(!sessionStorage.getItem('tradeReturnUrl')){
-  if(document.referrer && !document.referrer.includes('trade.html')){
-    sessionStorage.setItem('tradeReturnUrl', document.referrer);
-  }else{
-    sessionStorage.setItem('tradeReturnUrl', 'wallet.html');
-  }
-}
-
-/* STATE */
-let state = {
-  side:'YES',
-  qty:5,
-  yesPrice:5,
-  noPrice:5,
-  yesAvailable:1000000,
-  noAvailable:1000000,
-  balance:0,
-  myTrades:[],
-  allTrades:[],
-  match:null,
-  uid:null,
-  loggedIn:false,
-  orderType:'market',  // market | limit
-  limitPrice:5
-};
-
-let walletRef=null, myTradesRef=null, allTradesRef=null, marketRef=null;
-
-function money(n){
-  return '₹' + Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-
-function toast(msg, type=''){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast show ' + type;
-  clearTimeout(window.tt);
-  window.tt=setTimeout(()=>{ t.className='toast'; }, 2800);
-}
-
-/* ==================== RENDER MATCH ==================== */
-function render(){
-  const m=state.match || {};
-  const a=m.teamA || 'Team A';
-  const b=m.teamB || 'Team B';
-
-  document.getElementById('nameA').textContent=a;
-  document.getElementById('nameB').textContent=b;
-  document.getElementById('pageTitle').textContent = a + ' vs ' + b;
-  document.getElementById('league').textContent = m.league || 'Cricket';
-  document.getElementById('statusText').textContent = String(m.status || 'UPCOMING').toUpperCase();
-  document.getElementById('logoA').src = m.teamALogo || FALLBACK;
-  document.getElementById('logoB').src = m.teamBLogo || FALLBACK;
-  document.getElementById('scoreA').textContent = m.scoreA || '—';
-  document.getElementById('scoreB').textContent = m.scoreB || '—';
-  document.getElementById('overs').textContent = (m.overs || '—') + ' ov';
-
-  document.getElementById('yesPrice').textContent = money(state.yesPrice);
-  document.getElementById('noPrice').textContent = money(state.noPrice);
-  document.getElementById('bottomYes').textContent = money(state.yesPrice);
-  document.getElementById('bottomNo').textContent = money(state.noPrice);
-  document.getElementById('yesQty').textContent = state.yesAvailable.toLocaleString('en-IN') + ' available';
-  document.getElementById('noQty').textContent = state.noAvailable.toLocaleString('en-IN') + ' available';
-  document.getElementById('walletTop').textContent = money(state.balance);
-  document.getElementById('loginBanner').style.display = state.loggedIn ? 'none' : 'flex';
-
-  renderBook();
-  renderPositions();
-  renderHistory();
-}
-
-/* ==================== ORDER BOOK ==================== */
-function renderBook(){
-  const sourceTrades=state.allTrades || [];
-  const yesOrders={}, noOrders={};
-
-  sourceTrades.forEach(t=>{
-    if(t.status && t.status !== 'pending' && t.status !== 'open') return;
-    const side=(t.side || '').toUpperCase();
-    const p=Number(t.odds || t.limitPrice || 0);
-    const q=Number(t.qty || 0);
-    if(!p || !q) return;
-    if(side==='YES') yesOrders[p]=(yesOrders[p]||0)+q;
-    else if(side==='NO') noOrders[p]=(noOrders[p]||0)+q;
+  // Balance
+  db.ref('users/'+user.uid+'/wallet/balance').on('value', s=>{
+    document.getElementById('totalBalance').textContent = money(s.val()||0);
   });
 
-  const yesRows=Object.entries(yesOrders).map(([price,qty])=>({price:Number(price),qty}))
-    .sort((a,b)=>b.price-a.price).slice(0,5);
-  const noRows=Object.entries(noOrders).map(([price,qty])=>({price:Number(price),qty}))
-    .sort((a,b)=>a.price-b.price).slice(0,5);
-
-  const maxRows=Math.max(yesRows.length, noRows.length);
-
-  if(maxRows===0){
-    document.getElementById('orderRows').innerHTML='<div class="empty" style="padding:14px;font-size:11px">No orders yet. Be the first to trade!</div>';
-  }else{
-    let html='';
-    for(let i=0;i<maxRows;i++){
-      const y=yesRows[i], n=noRows[i];
-      html+=`<div class="book-row">
-        <div>${y ? money(y.price) : '—'}</div>
-        <div class="yesc">${y ? y.qty.toLocaleString('en-IN') : '—'}</div>
-        <div>${n ? money(n.price) : '—'}</div>
-        <div class="noc">${n ? n.qty.toLocaleString('en-IN') : '—'}</div>
-      </div>`;
-    }
-    document.getElementById('orderRows').innerHTML=html;
-  }
-
-  document.getElementById('lastYes').textContent = money(state.yesPrice);
-  document.getElementById('lastNo').textContent = money(state.noPrice);
-  const vol=sourceTrades.reduce((s,t)=>s+Number(t.amount || 0),0);
-  document.getElementById('volume').textContent = money(vol);
-}
-
-/* ==================== MY POSITIONS ==================== */
-function renderPositions(){
-  const box=document.getElementById('positionsList');
-
-  if(!state.loggedIn){
-    box.innerHTML='<div class="empty">Login to see your positions.</div>';
-    return;
-  }
-
-  const open = state.myTrades.filter(t => t.status === 'pending' || t.status === 'open');
-  const settled = state.myTrades.filter(t => t.status === 'win' || t.status === 'loss' || t.status === 'closed');
-
-  if(!open.length && !settled.length){
-    box.innerHTML='<div class="empty"><i class="fa fa-briefcase fa-2x" style="color:#ccc;margin-bottom:10px"></i><br>No positions yet.<br>Place your first trade!</div>';
-    return;
-  }
-
-  let html = '';
-
-  // OPEN POSITIONS
-  if(open.length){
-    html += `<div style="font-size:12px;font-weight:800;color:#666;margin:8px 4px 8px;text-transform:uppercase;letter-spacing:.5px">🟢 Open Positions (${open.length})</div>`;
-    html += open.map(t => positionCardHTML(t, true)).join('');
-  }
-
-  // SETTLED
-  if(settled.length){
-    html += `<div style="font-size:12px;font-weight:800;color:#666;margin:18px 4px 8px;text-transform:uppercase;letter-spacing:.5px">📁 Settled (${settled.length})</div>`;
-    html += settled.map(t => positionCardHTML(t, false)).join('');
-  }
-
-  box.innerHTML = html;
-}
-
-function positionCardHTML(t, isOpen){
-  const side = (t.side||'YES').toUpperCase();
-  const currentPrice = side==='YES' ? state.yesPrice : state.noPrice;
-  const buyPrice = Number(t.odds || 0);
-  const qty = Number(t.qty || 0);
-  const invested = Number(t.amount || 0);
-
-  // Current value = qty * currentPrice
-  const currentValue = qty * currentPrice;
-  const pnl = currentValue - invested;
-  const pnlPct = invested > 0 ? (pnl / invested * 100) : 0;
-  const isProfit = pnl >= 0;
-
-  const orderType = t.orderType || 'market';
-  const typeBadge = orderType === 'limit'
-    ? '<span class="limit-badge">LIMIT</span>'
-    : '<span class="market-badge">MARKET</span>';
-
-  let statusBadge = '';
-  if(!isOpen){
-    const stColor = t.status==='win' ? '#0aa84f' : t.status==='loss' ? '#d92d20' : '#666';
-    statusBadge = `<span style="color:${stColor};font-weight:800;font-size:10px;text-transform:uppercase">${t.status}</span>`;
-  }
-
-  const exitBtn = isOpen ? `
-    <button class="exit-btn" onclick="exitPosition('${t.id}')">
-      <i class="fa fa-sign-out-alt"></i> Exit Position (${isProfit?'+':''}${money(pnl)})
-    </button>
-  ` : `
-    <div style="text-align:center;font-size:12px;color:#666;padding:6px">
-      ${t.status==='win' ? `🏆 Won: ${money(t.winAmount||0)}` : `❌ Lost: ${money(invested)}`}
-    </div>
-  `;
-
-  return `
-    <div class="position-card ${isOpen?(isProfit?'':'loss'):'pending'}">
-      <div class="position-head">
-        <div>
-          <span class="position-side ${side.toLowerCase()}">${side}</span>
-          ${typeBadge}
-        </div>
-        ${statusBadge}
-      </div>
-
-      <div class="position-grid">
-        <div>
-          <small>Qty</small>
-          <b>${qty}</b>
-        </div>
-        <div>
-          <small>Buy Price</small>
-          <b>${money(buyPrice)}</b>
-        </div>
-        <div>
-          <small>Now</small>
-          <b>${money(currentPrice)}</b>
-        </div>
-        <div>
-          <small>Invested</small>
-          <b>${money(invested)}</b>
-        </div>
-        <div>
-          <small>Current Value</small>
-          <b>${money(currentValue)}</b>
-        </div>
-        <div>
-          <small>P&L</small>
-          <b class="${isProfit?'positive':'negative'}">${isProfit?'+':''}${money(pnl)}</b>
-        </div>
-      </div>
-
-      <div class="position-pnl">
-        <small style="font-size:10px;color:#777">Unrealized P&L</small>
-        <b class="${isProfit?'positive':'negative'}">${isProfit?'+':''}${money(pnl)} (${pnlPct.toFixed(1)}%)</b>
-      </div>
-
-      ${exitBtn}
-    </div>
-  `;
-}
-
-/* ==================== HISTORY ==================== */
-function renderHistory(){
-  const box = document.getElementById('historyList');
-
-  if(!state.loggedIn){
-    box.innerHTML = '<div class="empty">Login to see history.</div>';
-    return;
-  }
-
-  if(!state.myTrades.length){
-    box.innerHTML = '<div class="empty">No trades yet.</div>';
-    document.getElementById('historyCount').textContent = '';
-    return;
-  }
-
-  document.getElementById('historyCount').textContent = state.myTrades.length + ' trades';
-
-  box.innerHTML = state.myTrades.map(t=>{
-    const stColor = t.status==='win' ? '#159b4c' : t.status==='loss' ? '#d92d20' : t.status==='closed' ? '#2563eb' : '#f39c12';
-    return `
-      <div class="book-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
-        <div>
-          <b>${(t.side||'—').toUpperCase()}</b>
-          <small style="display:block;color:#888">${Number(t.qty||0)} qty</small>
-        </div>
-        <div>${money(t.odds)}</div>
-        <div>${money(t.amount)}</div>
-        <div style="color:${stColor};text-transform:uppercase;font-size:10px;font-weight:700">
-          ${t.status || 'pending'}
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-/* ==================== OPEN TRADE ==================== */
-function openTrade(side){
-  if(!state.loggedIn){
-    toast('Please login to trade');
-    setTimeout(()=>{ location.href='login.html?redirect='+encodeURIComponent(location.href); }, 1200);
-    return;
-  }
-  if(!state.match){ toast('Match not loaded'); return; }
-
-  state.side = side;
-  document.getElementById('overlay').classList.add('show');
-  document.body.style.overflow='hidden';
-  document.getElementById('sheetQuestion').textContent = (state.match?.teamA||'Team A') + ' to win?';
-  setSide(side);
-  setQty(state.qty || 5);
-}
-
-function closeTrade(){
-  document.getElementById('overlay').classList.remove('show');
-  document.body.style.overflow='';
-  resetSwipe();
-}
-
-function outsideClose(e){ if(e.target.id==='overlay') closeTrade(); }
-
-function exitTrade(){
-  closeTrade();
-  setTimeout(exitPage, 200);
-}
-
-function exitPage(){
-  const returnUrl = sessionStorage.getItem('tradeReturnUrl') || 'wallet.html';
-  location.href = returnUrl;
-}
-
-/* ==================== ORDER TYPE ==================== */
-function setOrderType(type){
-  state.orderType = type;
-  document.getElementById('typeMarket').classList.toggle('active', type==='market');
-  document.getElementById('typeLimit').classList.toggle('active', type==='limit');
-  document.getElementById('limitRow').style.display = type==='limit' ? 'flex' : 'none';
-  if(type==='limit'){
-    const p = state.side==='YES' ? state.yesPrice : state.noPrice;
-    document.getElementById('limitPriceInput').value = p.toFixed(1);
-    state.limitPrice = p;
-  }
-  updateSheet();
-}
-
-/* ==================== SIDE ==================== */
-function setSide(side){
-  state.side = side;
-  document.getElementById('pillYes').classList.toggle('active', side==='YES');
-  document.getElementById('pillNo').classList.toggle('active', side==='NO');
-  updateSheet();
-}
-
-function marketPrice(){
-  return state.side==='YES' ? state.yesPrice : state.noPrice;
-}
-
-function orderPrice(){
-  if(state.orderType === 'limit'){
-    const lp = Number(document.getElementById('limitPriceInput')?.value || 0);
-    return lp || marketPrice();
-  }
-  return marketPrice();
-}
-
-function available(){
-  return state.side==='YES' ? state.yesAvailable : state.noAvailable;
-}
-
-/* ==================== QTY ==================== */
-function setQty(q){
-  state.qty = Math.max(1, Math.floor(Number(q) || 1));
-  document.getElementById('qtyInput').value = state.qty;
-  updateSheet();
-}
-
-function changeQty(d){ setQty(state.qty + d); }
-
-function syncQty(){ setQty(document.getElementById('qtyInput').value); }
-
-/* ==================== SHEET UPDATE ==================== */
-function updateSheet(){
-  const mp = marketPrice();
-  const p = orderPrice();
-  const q = state.qty;
-  const inv = p * q;
-  const ret = q * 10;
-  const profit = ret - inv;
-
-  document.getElementById('sheetPrice').textContent = money(mp);
-  document.getElementById('sheetAvailable').textContent = available().toLocaleString('en-IN') + ' qty available';
-  document.getElementById('pillYesPrice').textContent = money(state.yesPrice);
-  document.getElementById('pillNoPrice').textContent = money(state.noPrice);
-  document.getElementById('investment').textContent = money(inv);
-  document.getElementById('winning').textContent = money(ret);
-  document.getElementById('profit').textContent = money(profit);
-  document.getElementById('avgPrice').textContent = money(p);
-  document.getElementById('sheetBalance').textContent = money(state.balance);
-
-  // Disable swipe if not enough balance or qty
-  document.getElementById('swipe').classList.toggle('disabled', inv > state.balance || q > available());
-}
-
-/* ==================== SWIPE ==================== */
-const swipeState = { active:false, startX:0, currentX:0, maxX:0, pointerId:null };
-const swipeEl = document.getElementById('swipe');
-const knobEl = document.getElementById('knob');
-
-function getSwipeMax(){
-  if(!swipeEl) return 0;
-  return Math.max(0, swipeEl.clientWidth - knobEl.offsetWidth - 10);
-}
-
-function setKnobPosition(x, animate=false){
-  if(!knobEl) return;
-  x = Math.max(0, Math.min(x, swipeState.maxX));
-  knobEl.style.transition = animate ? 'transform .18s ease' : 'none';
-  knobEl.style.transform = `translateX(${x}px)`;
-  swipeState.currentX = x;
-}
-
-function startSwipe(e){
-  if(!swipeEl || swipeEl.classList.contains('disabled')) return;
-
-  const inv = orderPrice() * state.qty;
-  if(inv > state.balance){ toast('Insufficient balance'); return; }
-  if(state.qty > available()){ toast('Not enough quantity'); return; }
-
-  swipeState.active = true;
-  swipeState.pointerId = e.pointerId;
-  swipeState.maxX = getSwipeMax();
-
-  const rect = swipeEl.getBoundingClientRect();
-  const fingerX = e.clientX - rect.left;
-  swipeState.startX = fingerX - Math.min(swipeState.maxX, Math.max(0, swipeState.currentX));
-
-  try { swipeEl.setPointerCapture(e.pointerId); } catch(err){}
-  e.preventDefault();
-}
-
-function moveSwipe(e){
-  if(!swipeState.active) return;
-  if(e.pointerId !== swipeState.pointerId) return;
-  const rect = swipeEl.getBoundingClientRect();
-  const fingerX = e.clientX - rect.left;
-  let newX = fingerX - swipeState.startX;
-  newX = Math.max(0, Math.min(newX, swipeState.maxX));
-  setKnobPosition(newX, false);
-  e.preventDefault();
-}
-
-function endSwipe(e){
-  if(!swipeState.active) return;
-  if(e && e.pointerId !== swipeState.pointerId) return;
-  const max = swipeState.maxX;
-  const current = swipeState.currentX;
-  swipeState.active = false;
-  try { if(e) swipeEl.releasePointerCapture(e.pointerId); } catch(err){}
-
-  if(max > 0 && current >= max*0.75){
-    setKnobPosition(max, true);
-    setTimeout(()=>{ confirmTrade(); }, 120);
-  } else {
-    resetSwipe();
-  }
-}
-
-function resetSwipe(){
-  swipeState.active = false;
-  swipeState.currentX = 0;
-  if(knobEl){
-    knobEl.style.transition = 'transform .18s ease';
-    knobEl.style.transform = 'translateX(0)';
-  }
-}
-
-swipeEl.addEventListener('pointerdown', startSwipe, {passive:false});
-swipeEl.addEventListener('pointermove', moveSwipe, {passive:false});
-swipeEl.addEventListener('pointerup', endSwipe, {passive:false});
-swipeEl.addEventListener('pointercancel', endSwipe, {passive:false});
-swipeEl.addEventListener('lostpointercapture', ()=>{ if(swipeState.active) resetSwipe(); });
-
-window.addEventListener('resize', ()=>{
-  if(!swipeState.active){
-    swipeState.maxX = getSwipeMax();
-    setKnobPosition(0, false);
-  }
-});
-
-/* ==================== CONFIRM TRADE ==================== */
-async function confirmTrade(){
-  const p = orderPrice();
-  const q = state.qty;
-  const inv = p * q;
-  const mp = marketPrice();
-
-  if(inv > state.balance){ toast('Insufficient balance'); resetSwipe(); return; }
-  if(q > available()){ toast('Not enough quantity'); resetSwipe(); return; }
-  if(!state.loggedIn || !matchId){ toast('Login required'); resetSwipe(); return; }
-
-  try{
-    // 1. Re-check balance
-    const balSnap = await db.ref('users/' + state.uid + '/wallet/balance').once('value');
-    const bal = Number(balSnap.val() || 0);
-    if(inv > bal){ toast('Insufficient balance'); resetSwipe(); return; }
-
-    // 2. Create trade
-    const key = db.ref('trades').push().key;
-    const sideLabel = state.side==='YES'
-      ? (state.match?.teamA || 'Team A')
-      : (state.match?.teamB || 'Team B');
-
-    const trade = {
-      userId: state.uid,
-      matchId: matchId,
-      teamA: state.match?.teamA || 'Team A',
-      teamB: state.match?.teamB || 'Team B',
-      selectedTeam: sideLabel,
-      side: state.side,
-      amount: Number(inv.toFixed(2)),
-      odds: Number(p.toFixed(2)),
-      buyPrice: Number(p.toFixed(2)),
-      qty: state.qty,
-      winAmount: Number((state.qty * 10).toFixed(2)),
-      orderType: state.orderType,
-      limitPrice: state.orderType === 'limit' ? Number(p.toFixed(2)) : null,
-      status: 'pending',
-      createdAt: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    const updates = {};
-    updates['trades/' + key] = trade;
-    updates['users/' + state.uid + '/wallet/balance'] = Number((bal - inv).toFixed(2));
-    updates['transactions/' + key] = {
-      userId: state.uid,
-      type: 'debit',
-      amount: Number(inv.toFixed(2)),
-      description: `${state.orderType === 'limit' ? 'Limit' : 'Market'} Buy ${state.side} x${state.qty} @ ₹${p.toFixed(2)} on ${state.match?.teamA} vs ${state.match?.teamB}`,
-      matchId: matchId,
-      tradeId: key,
-      date: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    // 3. Only market orders shift the price instantly
-    if(state.orderType === 'market'){
-      const shift = Math.min(0.5, (inv / 1000) * 0.1);
-      let newYes = state.yesPrice;
-      let newNo = state.noPrice;
-      if(state.side === 'YES'){
-        newYes = Math.min(9, state.yesPrice + shift);
-        newNo = Math.max(1, state.noPrice - shift);
-      } else {
-        newNo = Math.min(9, state.noPrice + shift);
-        newYes = Math.max(1, state.yesPrice - shift);
+  // Trades
+  db.ref('trades').orderByChild('userId').equalTo(user.uid).on('value', s=>{
+    let invested=0, won=0, open=0, pnl=0;
+    s.forEach(c=>{
+      const t = c.val();
+      invested += Number(t.amount||0);
+      if(t.status === 'pending' || t.status === 'open'){
+        open++;
+      } else if(t.status === 'win'){
+        won += Number(t.winAmount||0);
+        pnl += Number(t.pnl || (Number(t.winAmount||0) - Number(t.amount||0)));
+      } else if(t.status === 'loss'){
+        pnl -= Number(t.amount||0);
       }
-      newYes = Number(newYes.toFixed(2));
-      newNo = Number(newNo.toFixed(2));
-
-      updates['matches/' + matchId + '/oddsA'] = newYes;
-      updates['matches/' + matchId + '/oddsB'] = newNo;
-      updates['matches/' + matchId + '/market/yes/price'] = newYes;
-      updates['matches/' + matchId + '/market/no/price'] = newNo;
-    }
-
-    // 4. Available qty update (only market orders)
-    if(state.orderType === 'market'){
-      const yesSnap = await db.ref('matches/' + matchId + '/market/yes/available').once('value');
-      const noSnap = await db.ref('matches/' + matchId + '/market/no/available').once('value');
-      let yesAvail = Number(yesSnap.val() ?? 1000000);
-      let noAvail = Number(noSnap.val() ?? 1000000);
-      if(state.side === 'YES') yesAvail = Math.max(0, yesAvail - state.qty);
-      else noAvail = Math.max(0, noAvail - state.qty);
-      updates['matches/' + matchId + '/market/yes/available'] = yesAvail;
-      updates['matches/' + matchId + '/market/no/available'] = noAvail;
-    }
-
-    await db.ref().update(updates);
-
-    closeTrade();
-    toast('✅ Trade placed successfully!', 'success');
-
-  } catch(e){
-    console.error(e);
-    resetSwipe();
-    toast('Trade failed: ' + (e.message || 'Unknown error'), 'error');
-  }
-}
-
-/* ==================== EXIT POSITION ==================== */
-async function exitPosition(tradeId){
-  const trade = state.myTrades.find(t => t.id === tradeId);
-  if(!trade){
-    toast('Position not found', 'error');
-    return;
-  }
-
-  const side = (trade.side || 'YES').toUpperCase();
-  const currentPrice = side === 'YES' ? state.yesPrice : state.noPrice;
-  const qty = Number(trade.qty || 0);
-  const invested = Number(trade.amount || 0);
-  const currentValue = qty * currentPrice;
-  const pnl = currentValue - invested;
-
-  const confirmMsg = `Exit this ${side} position?\n\n` +
-    `Qty: ${qty}\n` +
-    `Buy Price: ₹${Number(trade.odds||0).toFixed(2)}\n` +
-    `Current Price: ₹${currentPrice.toFixed(2)}\n` +
-    `Invested: ₹${invested.toFixed(2)}\n` +
-    `Current Value: ₹${currentValue.toFixed(2)}\n` +
-    `P&L: ${pnl>=0?'+':''}₹${pnl.toFixed(2)}\n\n` +
-    `Wallet will receive ₹${currentValue.toFixed(2)}`;
-
-  if(!confirm(confirmMsg)) return;
-
-  try{
-    const balSnap = await db.ref('users/' + state.uid + '/wallet/balance').once('value');
-    const bal = Number(balSnap.val() || 0);
-    const newBal = Number((bal + currentValue).toFixed(2));
-
-    const updates = {};
-
-    // Update trade status
-    updates['trades/' + tradeId + '/status'] = pnl >= 0 ? 'win' : 'loss';
-    updates['trades/' + tradeId + '/exitPrice'] = Number(currentPrice.toFixed(2));
-    updates['trades/' + tradeId + '/exitValue'] = Number(currentValue.toFixed(2));
-    updates['trades/' + tradeId + '/pnl'] = Number(pnl.toFixed(2));
-    updates['trades/' + tradeId + '/settledAt'] = firebase.database.ServerValue.TIMESTAMP;
-    updates['trades/' + tradeId + '/settledBy'] = 'user_exit';
-
-    // Credit wallet
-    updates['users/' + state.uid + '/wallet/balance'] = newBal;
-
-    // Transaction log
-    const txKey = db.ref('transactions').push().key;
-    updates['transactions/' + txKey] = {
-      userId: state.uid,
-      type: 'credit',
-      amount: Number(currentValue.toFixed(2)),
-      description: `Exit ${side} position (${pnl>=0?'Profit':'Loss'}: ₹${pnl.toFixed(2)})`,
-      matchId: matchId,
-      tradeId: tradeId,
-      date: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    await db.ref().update(updates);
-
-    toast(`✅ Position exited! ${pnl>=0?'+':''}₹${pnl.toFixed(2)}`, pnl>=0?'success':'error');
-
-  } catch(e){
-    console.error(e);
-    toast('Exit failed: ' + (e.message || 'Unknown error'), 'error');
-  }
-}
-
-/* ==================== TABS ==================== */
-function switchTab(tab, btn){
-  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-  btn.classList.add('active');
-
-  document.getElementById('marketView').style.display = tab==='market' ? 'block' : 'none';
-  document.getElementById('positionsView').style.display = tab==='positions' ? 'block' : 'none';
-  document.getElementById('historyView').style.display = tab==='history' ? 'block' : 'none';
-}
-
-/* ==================== AUTH ==================== */
-auth.onAuthStateChanged(user => {
-  if(user){
-    state.loggedIn = true;
-    state.uid = user.uid;
-
-    if(walletRef) walletRef.off();
-    walletRef = db.ref('users/' + user.uid + '/wallet/balance');
-    walletRef.on('value', s => {
-      state.balance = Number(s.val() || 0);
-      render();
-      updateSheet();
-    }, err => {
-      console.error('Balance read error:', err);
-      toast('Cannot read wallet balance', 'error');
     });
-
-    if(myTradesRef) myTradesRef.off();
-    myTradesRef = db.ref('trades').orderByChild('userId').equalTo(user.uid);
-    myTradesRef.on('value', s => {
-      const arr = [];
-      s.forEach(c => {
-        arr.push({ id: c.key, ...c.val() });
-      });
-      arr.sort((a,b) => Number(b.createdAt||0) - Number(a.createdAt||0));
-      state.myTrades = arr;
-      renderPositions();
-      renderHistory();
-    });
-
-  } else {
-    state.loggedIn = false;
-    state.uid = null;
-    state.balance = 0;
-    state.myTrades = [];
-    if(walletRef) walletRef.off();
-    if(myTradesRef) myTradesRef.off();
-    render();
-  }
-});
-
-/* ==================== MATCH SYNC ==================== */
-if(matchId){
-  marketRef = db.ref('matches/' + matchId);
-  marketRef.on('value', s => {
-    if(!s.exists()){ toast('Match not found', 'error'); return; }
-    state.match = s.val();
-
-    const m = state.match.market || {};
-    const yes = m.yes || {};
-    const no = m.no || {};
-
-    state.yesPrice = Number(yes.price ?? state.match.oddsA ?? 5);
-    state.noPrice = Number(no.price ?? state.match.oddsB ?? 5);
-    state.yesAvailable = Number(yes.available ?? 1000000);
-    state.noAvailable = Number(no.available ?? 1000000);
-
-    render();
-    updateSheet();
+    document.getElementById('totalInvested').textContent = money(invested);
+    document.getElementById('totalWon').textContent = money(won);
+    document.getElementById('openPositions').textContent = open;
+    document.getElementById('totalPnl').textContent = (pnl>=0?'+':'') + money(pnl);
   });
 
-  allTradesRef = db.ref('trades').orderByChild('matchId').equalTo(matchId);
-  allTradesRef.on('value', s => {
+  // Transactions
+  db.ref('transactions').orderByChild('userId').equalTo(user.uid).on('value', s=>{
     const arr = [];
     s.forEach(c => arr.push(c.val()));
-    state.allTrades = arr;
-    renderBook();
+    arr.sort((a,b)=>(b.date||0)-(a.date||0));
+
+    const box = document.getElementById('txList');
+    if(!arr.length){ box.innerHTML = '<div class="empty">No transactions yet</div>'; return; }
+
+    box.innerHTML = arr.slice(0,20).map(t=>`
+      <div class="tx-row">
+        <div>
+          <b style="color:${t.type==='credit'?'#0aa84f':'#d92d20'}">
+            ${t.type==='credit'?'+':'-'}${money(t.amount)}
+          </b>
+          <small>${t.description||''}</small>
+        </div>
+        <div style="text-align:right">
+          <small>${new Date(t.date).toLocaleDateString('en-IN')}</small>
+        </div>
+      </div>
+    `).join('');
   });
-
-} else {
-  toast('No match ID in URL', 'error');
-  render();
-}
-
-render();
+});
 </script>
 
 </body>
