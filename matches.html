@@ -8,37 +8,55 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#f5f6fa;padding-bottom:80px}
-header{background:#b80000;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+header{background:#b80000;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
 header h2{font-size:20px}.back{color:#fff;text-decoration:none;font-size:22px}
 .container{max-width:600px;margin:20px auto;padding:0 15px}
-.tabs{display:flex;gap:8px;background:#fff;padding:7px;border-radius:12px;margin-bottom:20px}
-.tab{flex:1;padding:11px;border:0;border-radius:8px;background:#f1f1f1;font-weight:bold;cursor:pointer}
+.tabs{display:flex;gap:8px;background:#fff;padding:7px;border-radius:12px;margin-bottom:20px;position:sticky;top:60px;z-index:9;box-shadow:0 2px 8px #0001}
+.tab{flex:1;padding:11px;border:0;border-radius:8px;background:#f1f1f1;font-weight:bold;cursor:pointer;font-size:13px;transition:.2s}
 .tab.active{background:#b80000;color:#fff}
-.card{background:#fff;padding:17px;border-radius:15px;margin-bottom:15px;box-shadow:0 3px 12px #0001}
+.card{background:#fff;padding:17px;border-radius:15px;margin-bottom:15px;box-shadow:0 3px 12px #0001;transition:.2s}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 20px #0002}
 .teams{display:flex;align-items:center;justify-content:space-between;text-align:center}
-.team{width:40%}.team img{width:60px;height:60px;object-fit:contain;border-radius:50%}
-.team p{font-weight:bold;margin-top:6px}.vs{font-weight:bold;color:#b80000}
+.team{width:40%}
+.team img{width:60px;height:60px;object-fit:contain;border-radius:50%;background:#f4f4f4}
+.team p{font-weight:bold;margin-top:6px;font-size:13px}
+.vs{font-weight:bold;color:#b80000}
 .info{text-align:center;margin-top:12px;color:#777;font-size:13px}
-.status{display:inline-block;margin-top:7px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:bold}
-.live{background:#ff4d4d;color:#fff}.upcoming{background:#ffd700;color:#222}.completed{background:#28a745;color:#fff}
-.trade{width:100%;margin-top:13px;padding:11px;border:0;border-radius:9px;background:#b80000;color:#fff;font-weight:bold;font-size:15px}
+.info>div{margin-bottom:3px}
+.status{display:inline-block;margin-top:7px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:bold;text-transform:uppercase}
+.status.live{background:#ff4d4d;color:#fff;animation:pulse 1.5s infinite}
+.status.upcoming{background:#ffd700;color:#222}
+.status.completed,.status.finished{background:#28a745;color:#fff}
+.status.cancelled{background:#6b7280;color:#fff}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.trade{width:100%;margin-top:13px;padding:11px;border:0;border-radius:9px;background:#b80000;color:#fff;font-weight:bold;font-size:15px;cursor:pointer;transition:.2s}
+.trade:not(:disabled):hover{background:#a00000}
+.trade:disabled{background:#ccc;cursor:not-allowed}
 .empty{text-align:center;padding:50px 10px;color:#777}
+.empty i{color:#ccc;margin-bottom:12px;display:inline-block}
 .loading{text-align:center;padding:40px;color:#777}
-nav{position:fixed;bottom:0;left:0;width:100%;background:#fff;display:flex;justify-content:space-around;padding:12px;box-shadow:0 -3px 10px #0002}
-nav a{color:#666;text-decoration:none;text-align:center;font-size:12px}nav i{display:block;font-size:20px;margin-bottom:4px}
+.score-line{background:#151a20;color:#fff;border-radius:10px;padding:8px 12px;margin-top:10px;font-size:12px;display:flex;justify-content:center;gap:10px;align-items:center}
+.score-line b{font-weight:800}
+nav{position:fixed;bottom:0;left:0;width:100%;background:#fff;display:flex;justify-content:space-around;padding:12px;box-shadow:0 -3px 10px #0002;z-index:10}
+nav a{color:#666;text-decoration:none;text-align:center;font-size:12px}
+nav i{display:block;font-size:20px;margin-bottom:4px}
+.refresh-btn{background:#ffffff33;color:#fff;border:0;padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:bold}
 </style>
 </head>
 <body>
 <header>
 <h2><i class="fa fa-trophy"></i> Matches</h2>
-<a class="back" href="index.html"><i class="fa fa-home"></i></a>
+<div style="display:flex;gap:8px;align-items:center">
+  <button class="refresh-btn" onclick="load()"><i class="fa fa-sync"></i></button>
+  <a class="back" href="index.html"><i class="fa fa-home"></i></a>
+</div>
 </header>
 
 <div class="container">
 <div class="tabs">
-<button class="tab active" data-tab="live">Live</button>
-<button class="tab" data-tab="upcoming">Upcoming</button>
-<button class="tab" data-tab="completed">Completed</button>
+<button class="tab active" data-tab="live">🔴 Live</button>
+<button class="tab" data-tab="upcoming">📅 Upcoming</button>
+<button class="tab" data-tab="completed">✅ Completed</button>
 </div>
 <div id="container" class="loading">Loading matches...</div>
 </div>
@@ -55,97 +73,154 @@ nav a{color:#666;text-decoration:none;text-align:center;font-size:12px}nav i{dis
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
 <script>
 const firebaseConfig={
-apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
-authDomain:"fantasy-adda-e3b72.firebaseapp.com",
-projectId:"fantasy-adda-e3b72",
-storageBucket:"fantasy-adda-e3b72.firebasestorage.app",
-messagingSenderId:"882657286194",
-appId:"1:882657286194:web:284e818359de2363f0442b",
-measurementId:"G-8HJX9NRL1B"
+  apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+  authDomain:"fantasy-adda-e3b72.firebaseapp.com",
+  databaseURL:"https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
+  projectId:"fantasy-adda-e3b72",
+  storageBucket:"fantasy-adda-e3b72.firebasestorage.app",
+  messagingSenderId:"882657286194",
+  appId:"1:882657286194:web:284e818359de2363f0442b",
+  measurementId:"G-8HJX9NRL1B"
 };
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.database();
 const box=document.getElementById("container");
 let tab="live";
 
+/* TAB SWITCH */
 document.querySelectorAll(".tab").forEach(b=>{
-b.onclick=()=>{
-document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-b.classList.add("active");
-tab=b.dataset.tab;
-load();
-};
+  b.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    tab=b.dataset.tab;
+    load();
+  };
 });
 
+/* AUTH */
 auth.onAuthStateChanged(user=>{
-if(!user){
-box.innerHTML='<div class="empty">Please login first.</div>';
-return;
-}
-load();
+  if(!user){
+    box.innerHTML='<div class="empty"><i class="fa fa-lock fa-3x"></i><br><br>Please login first.<br><br><a href="login.html" style="color:#b80000;font-weight:bold">Login Now</a></div>';
+    return;
+  }
+  load();
 });
 
+/* NORMALIZE STATUS - ye hi main fix hai */
+function normStatus(s){
+  if(!s) return "upcoming";
+  const x = String(s).toLowerCase().trim();
+  if(x === "live" || x === "inprogress" || x === "in-progress") return "live";
+  if(x === "completed" || x === "finished" || x === "ended") return "completed";
+  if(x === "cancelled" || x === "canceled") return "cancelled";
+  return "upcoming";
+}
+
+/* LOAD */
 function load(){
-box.innerHTML='<div class="loading">Loading matches...</div>';
+  box.innerHTML='<div class="loading"><i class="fa fa-spinner fa-spin"></i> Loading matches...</div>';
 
-db.ref("matches").once("value").then(snap=>{
-box.innerHTML="";
-if(!snap.exists()){
-box.innerHTML='<div class="empty"><i class="fa fa-trophy fa-3x"></i><br><br>No matches available</div>';
-return;
+  db.ref("matches").once("value").then(snap=>{
+    box.innerHTML="";
+    if(!snap.exists()){
+      box.innerHTML='<div class="empty"><i class="fa fa-trophy fa-3x"></i><br><br>No matches available</div>';
+      return;
+    }
+
+    const data=snap.val();
+    const list=Object.entries(data).filter(([id,m])=>{
+      const st = normStatus(m.status);
+      if(tab==="live") return st==="live";
+      if(tab==="upcoming") return st==="upcoming";
+      return st==="completed";
+    });
+
+    if(!list.length){
+      box.innerHTML=`<div class="empty"><i class="fa fa-inbox fa-3x"></i><br><br>No ${tab} matches right now</div>`;
+      return;
+    }
+
+    // sort: live first (by createdAt desc), upcoming by time asc
+    list.sort((a,b)=>{
+      const ta = a[1].createdAt || 0;
+      const tb = b[1].createdAt || 0;
+      return tb - ta;
+    });
+
+    list.forEach(([id,m])=>render(id,m));
+  }).catch(e=>{
+    console.error(e);
+    box.innerHTML='<div class="empty">❌ '+e.message+'</div>';
+  });
 }
 
-const data=snap.val();
-const list=Object.entries(data).filter(([id,m])=>{
-if(tab==="live")return m.status==="Live";
-if(tab==="upcoming")return m.status==="Upcoming";
-return m.status==="Completed"||m.status==="Finished";
-});
-
-if(!list.length){
-box.innerHTML=`<div class="empty">No ${tab} matches</div>`;
-return;
-}
-
-list.sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
-list.forEach(([id,m])=>render(id,m));
-}).catch(e=>{
-console.error(e);
-box.innerHTML='<div class="empty">❌ '+e.message+'</div>';
-});
-}
-
+/* RENDER */
 function render(id,m){
-const status=(m.status||"Upcoming").toLowerCase();
-const card=document.createElement("div");
-card.className="card";
+  const statusRaw = m.status || "Upcoming";
+  const status = normStatus(statusRaw);
 
-const defaultLogo="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(
-`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" rx="100" fill="#eeeeee"/><text x="100" y="120" text-anchor="middle" font-size="80">🏏</text></svg>`);
+  const card=document.createElement("div");
+  card.className="card";
 
-card.innerHTML=`
-<div class="teams">
-<div class="team"><img src="${escapeAttr(m.teamALogo||defaultLogo)}"><p>${escapeHtml(m.teamA||"Team A")}</p></div>
-<div class="vs">VS</div>
-<div class="team"><img src="${escapeAttr(m.teamBLogo||defaultLogo)}"><p>${escapeHtml(m.teamB||"Team B")}</p></div>
-</div>
-<div class="info">
-<div>${escapeHtml(m.league||"")}</div>
-<div>${escapeHtml(m.venue||"")}</div>
-<div>🕐 ${escapeHtml(m.matchTime||"")}</div>
-<span class="status ${status}">${escapeHtml(m.status||"Upcoming")}</span>
-</div>
-<button class="trade">${m.status==="Live"?"⚡ Trade Now":m.status==="Completed"||m.status==="Finished"?"Match Ended":"📅 Trade Now"}</button>`;
+  const defaultLogo="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" rx="100" fill="#eeeeee"/><text x="100" y="130" text-anchor="middle" font-size="90">🏏</text></svg>`);
 
-const btn=card.querySelector(".trade");
-if(m.status==="Completed"||m.status==="Finished")btn.disabled=true;
-else btn.onclick=()=>location.href="trade.html?id="+encodeURIComponent(id);
+  // score display
+  let scoreHtml = "";
+  if(status === "live" && (m.scoreA || m.scoreB)){
+    scoreHtml = `
+      <div class="score-line">
+        <span>🔴 LIVE</span>
+        <b>${escapeHtml(m.scoreA||"0")}</b>
+        <span>•</span>
+        <b>${escapeHtml(m.scoreB||"0")}</b>
+        ${m.overs ? `<small>(${escapeHtml(m.overs)} ov)</small>` : ""}
+      </div>
+    `;
+  }
 
-box.appendChild(card);
+  const btnText = 
+    status==="live" ? "⚡ Trade Now" :
+    status==="completed" ? "Match Ended" :
+    status==="cancelled" ? "Cancelled" :
+    "📅 Trade Now";
+
+  card.innerHTML=`
+    <div class="teams">
+      <div class="team">
+        <img src="${escapeAttr(m.teamALogo||defaultLogo)}" onerror="this.src='${defaultLogo}'">
+        <p>${escapeHtml(m.teamA||"Team A")}</p>
+      </div>
+      <div class="vs">VS</div>
+      <div class="team">
+        <img src="${escapeAttr(m.teamBLogo||defaultLogo)}" onerror="this.src='${defaultLogo}'">
+        <p>${escapeHtml(m.teamB||"Team B")}</p>
+      </div>
+    </div>
+    <div class="info">
+      ${m.league ? `<div><i class="fa fa-trophy"></i> ${escapeHtml(m.league)}</div>` : ""}
+      ${m.venue ? `<div><i class="fa fa-map-marker-alt"></i> ${escapeHtml(m.venue)}</div>` : ""}
+      ${m.matchTime ? `<div><i class="fa fa-clock"></i> ${escapeHtml(m.matchTime)}</div>` : ""}
+      ${m.dateTime ? `<div><i class="fa fa-calendar"></i> ${escapeHtml(m.dateTime)}</div>` : ""}
+      <span class="status ${status}">${escapeHtml(statusRaw)}</span>
+    </div>
+    ${scoreHtml}
+    <button class="trade">${btnText}</button>
+  `;
+
+  const btn=card.querySelector(".trade");
+  if(status==="completed" || status==="cancelled"){
+    btn.disabled=true;
+  } else {
+    btn.onclick=()=>location.href="trade.html?id="+encodeURIComponent(id);
+  }
+
+  box.appendChild(card);
 }
 
+/* HELPERS */
 function escapeHtml(v){
-return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
 function escapeAttr(v){return escapeHtml(v)}
 
