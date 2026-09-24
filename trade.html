@@ -106,7 +106,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   <button class="wallet-btn" onclick="location.href='wallet.html'">▣</button>
 </header>
 
-<!-- LIVE SCORE -->
 <section class="score-box">
   <div class="score-top">
     <div class="team">
@@ -128,7 +127,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   <div class="balls" id="ballStrip"></div>
 </section>
 
-<!-- TABS -->
 <div class="tabs">
   <button class="tab active" data-tab="all">All</button>
   <button class="tab" data-tab="match">Match</button>
@@ -136,7 +134,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   <button class="tab" data-tab="wickets">Wickets</button>
 </div>
 
-<!-- WALLET -->
 <section class="wallet">
   <div class="wallet-row">
     <div>
@@ -153,14 +150,12 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
     ⚠️ Please <a href="login.html" style="color:#805500;font-weight:bold">Login</a> to place real trades.
   </div>
 
-  <!-- LIQUIDITY INFO -->
   <div class="notice" id="liquidityNotice" style="background:#e5f7eb;color:#0a6b3a">
     💧 Admin Liquidity: <b id="liqYes">0</b> YES • <b id="liqNo">0</b> NO
   </div>
 
-  <!-- MAIN MARKET -->
   <section class="card" id="mainMarketCard">
-    <div class="trade-count" id="mainTradeCount">👤 0 trades</div>
+    <div class="trade-count" id="mainTradeCount">👤 0 open orders</div>
     <div class="question-row">
       <h3 id="mainQuestion">Who will win?</h3>
       <div class="market-img">🏏</div>
@@ -175,7 +170,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
     </div>
   </section>
 
-  <!-- MY TRADES -->
   <section class="card">
     <div class="order-title">
       <h3>My Trades</h3>
@@ -186,7 +180,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 </main>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button onclick="scrollToTop()">🏠<br>Home</button>
   <button onclick="document.getElementById('mainMarketCard').scrollIntoView({behavior:'smooth'})">📊<br>Market</button>
@@ -196,7 +189,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 </div>
 
-<!-- TRADE MODAL -->
 <div class="modal-bg" id="tradeModal">
   <div class="modal">
     <button class="close-btn" onclick="closeTrade()">✕</button>
@@ -214,7 +206,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
       </div>
     </div>
 
-    <!-- LIVE ORDER BOOK -->
     <div class="field">
       <label>📖 Live Order Book (P2P)</label>
       <div class="book-grid" style="background:#f9fafb;border-radius:12px;padding:12px">
@@ -302,7 +293,7 @@ let state = {
   myTrades: [],
   orderbook: { yes: { buys: {}, sells: {} }, no: { buys: {}, sells: {} } },
   selectedSide: 'YES',
-  tradeMode: 'BUY'  // BUY or SELL
+  tradeMode: 'BUY'
 };
 
 let walletRef = null;
@@ -324,6 +315,7 @@ function toast(msg, type=''){
 }
 function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent = val; }
 function setDisplay(id, val){ const el=document.getElementById(id); if(el) el.style.display = val; }
+function nowTs(){ return Date.now(); }
 
 /* ================= AUTH ================= */
 auth.onAuthStateChanged(user => {
@@ -377,6 +369,7 @@ if(matchId){
     state.orderbook = s.val() || { yes:{buys:{},sells:{}}, no:{buys:{},sells:{}} };
     renderOrderBook();
     renderTradeCount();
+    renderMatch();
   });
 
   liquidityRef = db.ref('matches/' + matchId + '/liquidity');
@@ -403,9 +396,8 @@ function renderMatch(){
   setText('teamBOvers', '(' + (m.oversB || m.overs || '0.0') + ')');
   setText('scoreInfo', m.venue || m.league || 'Live match');
 
-  // Best available price from orderbook (lowest sell price)
-  const yesAsks = Object.values(state.orderbook?.yes?.sells || {}).filter(o => o.status==='open' && o.qty>o.filled);
-  const noAsks  = Object.values(state.orderbook?.no?.sells || {}).filter(o => o.status==='open' && o.qty>o.filled);
+  const yesAsks = Object.values(state.orderbook?.yes?.sells || {}).filter(o => o.status==='open' && (o.qty-(o.filled||0))>0);
+  const noAsks  = Object.values(state.orderbook?.no?.sells || {}).filter(o => o.status==='open' && (o.qty-(o.filled||0))>0);
 
   state.yesPrice = yesAsks.length ? Math.min(...yesAsks.map(o=>o.price)) : (state.liquidity.yes?.price || 5);
   state.noPrice  = noAsks.length  ? Math.min(...noAsks.map(o=>o.price))  : (state.liquidity.no?.price || 5);
@@ -444,7 +436,7 @@ function renderTradeCount(){
   setText('mainTradeCount', '👤 ' + total.toLocaleString('en-IN') + ' open orders');
 }
 
-/* ================= ORDER BOOK (SELLS only - jo buy kar sakte hain) ================= */
+/* ================= ORDER BOOK (SELLS only) ================= */
 function renderOrderBook(){
   const ob = state.orderbook || { yes:{buys:{},sells:{}}, no:{buys:{},sells:{}} };
 
@@ -507,7 +499,7 @@ function renderPortfolio(){
     if(isOpen){
       const matchedBadge = t.matchedWith === 'admin'
         ? '<span class="badge admin">ADMIN</span>'
-        : (t.matchedWith ? '<span class="badge p2p">P2P</span>' : '<span class="badge pending">PENDING</span>');
+        : (t.matchedWith && t.matchedWith !== 'pending' ? '<span class="badge p2p">P2P</span>' : '<span class="badge pending">PENDING</span>');
 
       return `
         <div class="portfolio-row">
@@ -623,65 +615,55 @@ function updateSummary(){
   }
 }
 
-/* ================= MATCHING ENGINE (P2P + Admin Liquidity) ================= */
+/* ================= MATCHING ENGINE ================= */
 async function matchBuyOrder(side, price, qty, userId, matchId){
   const sideKey = side.toLowerCase();
   const updates = {};
   let remainingQty = qty;
   let matchedWith = [];
   let totalCost = 0;
+  let matchedQtyTotal = 0;
 
-  // 1) Existing SELL orders se match karo (same side ke)
+  // 1) Existing SELL orders se match karo
   const obRef = db.ref(`matches/${matchId}/orderbook/${sideKey}/sells`);
   const sellsSnap = await obRef.once('value');
   const sellOrders = [];
   sellsSnap.forEach(c => {
     const o = c.val();
-    if(o.status === 'open' && (o.qty - (o.filled||0)) > 0 && o.price <= price){
+    if(o && o.status === 'open' && (o.qty - (o.filled||0)) > 0 && Number(o.price) <= price){
       sellOrders.push({ id: c.key, ...o });
     }
   });
-  sellOrders.sort((a,b) => a.price - b.price);
+  sellOrders.sort((a,b) => Number(a.price) - Number(b.price));
 
   for(const order of sellOrders){
     if(remainingQty <= 0) break;
     const available = order.qty - (order.filled || 0);
     const matchQty = Math.min(remainingQty, available);
-    const matchPrice = order.price;
+    const matchPrice = Number(order.price);
 
-    // Seller ko paisa do
+    // Seller ko paisa credit karo
     const sellerBalSnap = await db.ref('users/' + order.userId + '/wallet/balance').once('value');
     const sellerBal = Number(sellerBalSnap.val() || 0);
     updates['users/' + order.userId + '/wallet/balance'] = Number((sellerBal + matchQty * matchPrice).toFixed(2));
 
-    // Seller ka trade update karo (jo usne kharida tha, ab becha)
-    // Find seller's open trade for this match + side
-    const sellerTradesSnap = await db.ref('trades').orderByChild('userId').equalTo(order.userId).once('value');
-    let foundSellerTrade = null;
-    sellerTradesSnap.forEach(c => {
-      const t = c.val();
-      if(!foundSellerTrade && t.matchId === matchId && t.side === side && (t.status === 'pending' || t.status === 'open') && Number(t.qty) >= matchQty){
-        foundSellerTrade = { id: c.key, ...t };
-      }
-    });
-
-    if(foundSellerTrade){
-      updates['trades/' + foundSellerTrade.id + '/status'] = 'win';
-      updates['trades/' + foundSellerTrade.id + '/exitPrice'] = matchPrice;
-      updates['trades/' + foundSellerTrade.id + '/exitValue'] = Number((matchQty * matchPrice).toFixed(2));
-      updates['trades/' + foundSellerTrade.id + '/settledAt'] = firebase.database.ServerValue.TIMESTAMP;
-      updates['trades/' + foundSellerTrade.id + '/settledBy'] = 'p2p_sell';
-      updates['trades/' + foundSellerTrade.id + '/buyerId'] = userId;
+    // Seller ke trade ko settle karo
+    if(order.tradeId){
+      updates['trades/' + order.tradeId + '/status'] = 'win';
+      updates['trades/' + order.tradeId + '/exitPrice'] = matchPrice;
+      updates['trades/' + order.tradeId + '/exitValue'] = Number((matchQty * matchPrice).toFixed(2));
+      updates['trades/' + order.tradeId + '/settledAt'] = nowTs();
+      updates['trades/' + order.tradeId + '/settledBy'] = 'p2p_sell';
+      updates['trades/' + order.tradeId + '/buyerId'] = userId;
     }
 
-    // Sell order update
     const newFilled = (order.filled || 0) + matchQty;
     updates[`matches/${matchId}/orderbook/${sideKey}/sells/${order.id}/filled`] = newFilled;
     if(newFilled >= order.qty){
       updates[`matches/${matchId}/orderbook/${sideKey}/sells/${order.id}/status`] = 'filled';
     }
 
-    // Seller ka credit transaction
+    // Seller credit transaction
     const txKey = db.ref('transactions').push().key;
     updates['transactions/' + txKey] = {
       userId: order.userId,
@@ -689,15 +671,16 @@ async function matchBuyOrder(side, price, qty, userId, matchId){
       amount: Number((matchQty * matchPrice).toFixed(2)),
       description: `Sold ${side} x${matchQty} @ ₹${matchPrice} (P2P)`,
       matchId: matchId,
-      date: firebase.database.ServerValue.TIMESTAMP
+      date: nowTs()
     };
 
     remainingQty -= matchQty;
+    matchedQtyTotal += matchQty;
     totalCost += matchQty * matchPrice;
-    matchedWith.push('user:' + order.userId);
+    matchedWith.push('p2p');
   }
 
-  // 2) Admin liquidity se match karo
+  // 2) Admin liquidity se match
   if(remainingQty > 0){
     const liqSnap = await db.ref(`matches/${matchId}/liquidity/${sideKey}`).once('value');
     const liq = liqSnap.val();
@@ -706,12 +689,13 @@ async function matchBuyOrder(side, price, qty, userId, matchId){
       const adminQty = Math.min(remainingQty, liq.qty);
       updates[`matches/${matchId}/liquidity/${sideKey}/qty`] = liq.qty - adminQty;
       remainingQty -= adminQty;
+      matchedQtyTotal += adminQty;
       totalCost += adminQty * adminPrice;
       matchedWith.push('admin');
     }
   }
 
-  // 3) Baaki remaining → orderbook me BUY order pending rakho
+  // 3) Baaki remaining → BUY order book me pending (paisa HOLD hoga escrow me)
   if(remainingQty > 0){
     const buyOrderKey = db.ref(`matches/${matchId}/orderbook/${sideKey}/buys`).push().key;
     updates[`matches/${matchId}/orderbook/${sideKey}/buys/${buyOrderKey}`] = {
@@ -720,7 +704,8 @@ async function matchBuyOrder(side, price, qty, userId, matchId){
       qty: remainingQty,
       filled: 0,
       status: 'open',
-      createdAt: firebase.database.ServerValue.TIMESTAMP
+      escrow: Number((remainingQty * price).toFixed(2)),
+      createdAt: nowTs()
     };
   }
 
@@ -728,9 +713,10 @@ async function matchBuyOrder(side, price, qty, userId, matchId){
 
   return {
     success: true,
-    matchedQty: qty - remainingQty,
+    matchedQty: matchedQtyTotal,
     pendingQty: remainingQty,
     totalCost: Number(totalCost.toFixed(2)),
+    pendingCost: Number((remainingQty * price).toFixed(2)),
     matchedWith: matchedWith.length ? matchedWith.join(', ') : 'pending'
   };
 }
@@ -753,23 +739,24 @@ async function confirmTrade(){
   btn.textContent = 'Matching...';
 
   try{
-    // 1) Balance verify
     const balSnap = await db.ref('users/' + state.uid + '/wallet/balance').once('value');
     const bal = Number(balSnap.val() || 0);
     if(p * q > bal){ toast('Insufficient balance', 'error'); btn.disabled=false; btn.textContent='Confirm Buy'; return; }
 
-    // 2) Matching engine
     const result = await matchBuyOrder(side, p, q, state.uid, matchId);
     if(!result.success){ toast(result.message || 'Match failed', 'error'); btn.disabled=false; btn.textContent='Confirm Buy'; return; }
 
-    const spent = result.totalCost;
+    // Pura paisa deduct (matched + pending escrow)
+    const totalDeduct = Number((result.totalCost + result.pendingCost).toFixed(2));
+    await db.ref('users/' + state.uid + '/wallet/balance').set(Number((bal - totalDeduct).toFixed(2)));
 
-    // 3) User balance deduct
-    await db.ref('users/' + state.uid + '/wallet/balance').set(Number((bal - spent).toFixed(2)));
-
-    // 4) Trade record (user)
-    const tradeKey = db.ref('trades').push().key;
     const m = state.match || {};
+    const finalQty = (result.matchedQty > 0 ? result.matchedQty : result.pendingQty) || 1;
+    const finalAmount = (result.matchedQty > 0 ? result.totalCost : result.pendingCost) || 0.01;
+    const avgP = result.matchedQty > 0 ? Number((result.totalCost / result.matchedQty).toFixed(2)) : p;
+
+    // Trade record
+    const tradeKey = db.ref('trades').push().key;
     await db.ref('trades/' + tradeKey).set({
       userId: state.uid,
       matchId: matchId,
@@ -777,28 +764,28 @@ async function confirmTrade(){
       teamB: m.teamB || 'Team B',
       selectedTeam: side === 'YES' ? (m.teamA||'YES') : (m.teamB||'NO'),
       side: side,
-      amount: spent,
+      amount: finalAmount,
       odds: p,
       buyPrice: p,
-      avgPrice: result.matchedQty > 0 ? Number((spent / result.matchedQty).toFixed(2)) : p,
-      qty: result.matchedQty,
-      winAmount: result.matchedQty * 10,
+      avgPrice: avgP,
+      qty: finalQty,
+      winAmount: finalQty * 10,
       status: result.matchedQty > 0 ? 'pending' : 'open',
-      matchedWith: result.matchedWith,
-      pendingQty: result.pendingQty,
-      createdAt: firebase.database.ServerValue.TIMESTAMP
+      matchedWith: result.matchedWith || 'pending',
+      pendingQty: result.pendingQty || 0,
+      createdAt: nowTs()
     });
 
-    // 5) Debit transaction
+    // Debit transaction
     const txKey = db.ref('transactions').push().key;
     await db.ref('transactions/' + txKey).set({
       userId: state.uid,
       type: 'debit',
-      amount: spent,
-      description: `Bought ${side} x${result.matchedQty} @ avg ₹${(spent/Math.max(1,result.matchedQty)).toFixed(2)}`,
+      amount: totalDeduct,
+      description: `Bought ${side} x${finalQty} @ avg ₹${avgP}`,
       matchId: matchId,
       tradeId: tradeKey,
-      date: firebase.database.ServerValue.TIMESTAMP
+      date: nowTs()
     });
 
     closeTrade();
@@ -855,25 +842,26 @@ async function executeSell(tradeId, sellPrice, qty){
     let remaining = qty;
     let matchedWith = [];
     let totalEarned = 0;
+    let matchedQty = 0;
 
-    // 1) Existing BUY orders se match karo (jo is side ke buy kar rahe hain)
+    // 1) Existing BUY orders se match karo
     const buysSnap = await db.ref(`matches/${matchId}/orderbook/${sideKey}/buys`).once('value');
     const buyOrders = [];
     buysSnap.forEach(c => {
       const o = c.val();
-      if(o.status === 'open' && (o.qty - (o.filled||0)) > 0 && o.price >= sellPrice){
+      if(o && o.status === 'open' && (o.qty - (o.filled||0)) > 0 && Number(o.price) >= sellPrice){
         buyOrders.push({ id: c.key, ...o });
       }
     });
-    buyOrders.sort((a,b) => b.price - a.price);
+    buyOrders.sort((a,b) => Number(b.price) - Number(a.price));
 
     for(const order of buyOrders){
       if(remaining <= 0) break;
       const available = order.qty - (order.filled || 0);
       const matchQty = Math.min(remaining, available);
-      const matchPrice = order.price;
+      const matchPrice = Number(order.price);
 
-      // Buyer ko shares "de do" — uske trade ko pending me daalo
+      // Buyer ka escrow already hold hai, ab buyer ko trade record do
       const buyerTradeKey = db.ref('trades').push().key;
       updates['trades/' + buyerTradeKey] = {
         userId: order.userId,
@@ -881,19 +869,14 @@ async function executeSell(tradeId, sellPrice, qty){
         side: side,
         amount: matchQty * matchPrice,
         odds: matchPrice,
+        buyPrice: matchPrice,
+        avgPrice: matchPrice,
         qty: matchQty,
         winAmount: matchQty * 10,
         status: 'pending',
-        matchedWith: 'p2p:' + t.userId,
-        createdAt: firebase.database.ServerValue.TIMESTAMP
+        matchedWith: 'p2p',
+        createdAt: nowTs()
       };
-
-      // Buyer ke wallet se paisa already hold tha (jab buy order place kiya tha)
-      // Actually humne buyer se paisa nahi kaata jab pending order tha... 
-      // Simplification: buyer ka paisa abhi charge karo
-      const buyerBalSnap = await db.ref('users/' + order.userId + '/wallet/balance').once('value');
-      const buyerBal = Number(buyerBalSnap.val() || 0);
-      updates['users/' + order.userId + '/wallet/balance'] = Number((buyerBal - matchQty * matchPrice).toFixed(2));
 
       const newFilled = (order.filled || 0) + matchQty;
       updates[`matches/${matchId}/orderbook/${sideKey}/buys/${order.id}/filled`] = newFilled;
@@ -902,18 +885,15 @@ async function executeSell(tradeId, sellPrice, qty){
       }
 
       remaining -= matchQty;
+      matchedQty += matchQty;
       totalEarned += matchQty * matchPrice;
-      matchedWith.push('user:' + order.userId);
+      matchedWith.push('p2p');
     }
 
-    // 2) Admin liquidity se match karo (admin BUY karega)
+    // 2) Admin liquidity se match (admin BUY karega)
     if(remaining > 0){
       const liqSnap = await db.ref(`matches/${matchId}/liquidity/${sideKey}`).once('value');
       const liq = liqSnap.val();
-      // Admin ke paas is side ki qty hai to admin buy karega? 
-      // Actually admin buy karega tab jab admin ke paas us side ka inventory ho... 
-      // Simple: admin hamesha buy kar sakta hai (admin liquidity me paisa nahi, sirf qty)
-      // Yahan logic: admin ke paas opposite side ki qty hai tabhi wo buy karega
       const oppSide = side === 'YES' ? 'no' : 'yes';
       const oppLiqSnap = await db.ref(`matches/${matchId}/liquidity/${oppSide}`).once('value');
       const oppLiq = oppLiqSnap.val();
@@ -921,8 +901,9 @@ async function executeSell(tradeId, sellPrice, qty){
         const adminQty = Math.min(remaining, oppLiq.qty);
         const adminPrice = sellPrice;
         updates[`matches/${matchId}/liquidity/${oppSide}/qty`] = oppLiq.qty - adminQty;
-        updates[`matches/${matchId}/liquidity/${sideKey}/qty`] = (liq?.qty || 0) + adminQty;
+        updates[`matches/${matchId}/liquidity/${sideKey}/qty`] = Number(((liq?.qty || 0) + adminQty).toFixed(0));
         remaining -= adminQty;
+        matchedQty += adminQty;
         totalEarned += adminQty * adminPrice;
         matchedWith.push('admin');
       }
@@ -938,7 +919,7 @@ async function executeSell(tradeId, sellPrice, qty){
         qty: remaining,
         filled: 0,
         status: 'open',
-        createdAt: firebase.database.ServerValue.TIMESTAMP
+        createdAt: nowTs()
       };
     }
 
@@ -949,9 +930,10 @@ async function executeSell(tradeId, sellPrice, qty){
     updates['trades/' + tradeId + '/exitPrice'] = sellPrice;
     updates['trades/' + tradeId + '/exitValue'] = Number(totalEarned.toFixed(2));
     updates['trades/' + tradeId + '/pnl'] = Number(pnl.toFixed(2));
-    updates['trades/' + tradeId + '/settledAt'] = firebase.database.ServerValue.TIMESTAMP;
+    updates['trades/' + tradeId + '/settledAt'] = nowTs();
     updates['trades/' + tradeId + '/settledBy'] = 'p2p_sell';
     updates['trades/' + tradeId + '/matchedWith'] = matchedWith.join(', ') || 'pending';
+    updates['trades/' + tradeId + '/qty'] = matchedQty > 0 ? matchedQty : qty;
 
     // 5) Seller wallet credit
     if(totalEarned > 0){
@@ -964,18 +946,18 @@ async function executeSell(tradeId, sellPrice, qty){
         userId: t.userId,
         type: 'credit',
         amount: Number(totalEarned.toFixed(2)),
-        description: `Sold ${side} x${qty - remaining} @ ₹${sellPrice} (${pnl>=0?'Profit':'Loss'}: ₹${pnl.toFixed(2)})`,
+        description: `Sold ${side} x${matchedQty} @ ₹${sellPrice} (${pnl>=0?'Profit':'Loss'}: ₹${pnl.toFixed(2)})`,
         matchId: matchId,
         tradeId: tradeId,
-        date: firebase.database.ServerValue.TIMESTAMP
+        date: nowTs()
       };
     }
 
     await db.ref().update(updates);
 
-    if(totalEarned > 0 && remaining > 0){
-      toast(`✅ ${qty - remaining} sold, ${remaining} pending`, 'success');
-    } else if(totalEarned > 0){
+    if(matchedQty > 0 && remaining > 0){
+      toast(`✅ ${matchedQty} sold, ${remaining} pending`, 'success');
+    } else if(matchedQty > 0){
       toast(`✅ Sold! ${pnl>=0?'+':''}₹${pnl.toFixed(2)}`, pnl>=0?'success':'error');
     } else {
       toast('⏳ Sell order placed in book', '');
@@ -998,7 +980,7 @@ document.querySelectorAll('.tab').forEach(tab => {
 /* ================= NAV ================= */
 function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
 
-/* ================= ADMIN LIQUIDITY SETUP (call from console) ================= */
+/* ================= ADMIN LIQUIDITY SETUP ================= */
 window.setupLiquidity = async function(mId, yesQty, noQty, yesPrice = 5, noPrice = 5){
   await db.ref(`matches/${mId}/liquidity`).set({
     yes: { price: yesPrice, qty: yesQty },
