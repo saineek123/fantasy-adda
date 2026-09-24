@@ -58,6 +58,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .book-row{display:flex;justify-content:space-between;padding:10px 4px;border-bottom:1px solid #eee;font-size:13px}
 .yes-price{color:#0aa948}
 .no-price{color:#db2630}
+.user-count{font-size:11px;color:#888;margin-top:6px;text-align:center;font-weight:600}
 .portfolio-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee;font-size:13px;gap:10px}
 .exit-btn{border:0;background:#ffd8da;color:#c51e2b;border-radius:9px;padding:8px 12px;font-weight:bold}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:auto;display:flex;background:#fff;border-top:1px solid #ddd;z-index:10}
@@ -164,24 +165,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
     </div>
   </section>
 
-  <!-- ORDER BOOK -->
-  <section class="card">
-    <div class="order-title">
-      <h3>📖 Order Book</h3>
-      <button onclick="renderOrderBook()">↻</button>
-    </div>
-    <div class="book-grid">
-      <div class="book-col yes">
-        <h4>PRICE &nbsp; QTY YES</h4>
-        <div id="yesBook"></div>
-      </div>
-      <div class="book-col no">
-        <h4>PRICE &nbsp; QTY NO</h4>
-        <div id="noBook"></div>
-      </div>
-    </div>
-  </section>
-
   <!-- MY TRADES -->
   <section class="card">
     <div class="order-title">
@@ -218,6 +201,26 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
         <button id="noSelect" class="no-btn" onclick="selectSide('NO')">
           NO ₹<span id="modalNoPrice">5.00</span>
         </button>
+      </div>
+    </div>
+
+    <!-- LIVE ORDER BOOK (inside modal) -->
+    <div class="field">
+      <label>📖 Live Order Book</label>
+      <div class="book-grid" style="background:#f9fafb;border-radius:12px;padding:12px">
+        <div class="book-col yes">
+          <h4 style="color:#0aaf4b">PRICE &nbsp; QTY YES</h4>
+          <div id="yesBook"></div>
+          <div class="user-count" id="yesUsers">👤 0 users</div>
+        </div>
+        <div class="book-col no">
+          <h4 style="color:#df2330">PRICE &nbsp; QTY NO</h4>
+          <div id="noBook"></div>
+          <div class="user-count" id="noUsers">👤 0 users</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:8px;text-align:center">
+        🔴 Real-time • Kitne users ne kis price pe liya
       </div>
     </div>
 
@@ -290,7 +293,7 @@ let state = {
   myTrades: [],
   allTrades: [],
   selectedSide: 'YES',
-  currentTradeType: 'main'   // 'main' or 'overs' etc (future)
+  currentTradeType: 'main'
 };
 
 let walletRef = null;
@@ -320,7 +323,6 @@ auth.onAuthStateChanged(user => {
     state.uid = user.uid;
     setDisplay('loginNotice', 'none');
 
-    // Wallet listener
     if(walletRef) walletRef.off();
     walletRef = db.ref('users/' + user.uid + '/wallet/balance');
     walletRef.on('value', s => {
@@ -328,14 +330,12 @@ auth.onAuthStateChanged(user => {
       updateBalance();
     });
 
-    // My trades listener
     if(myTradesRef) myTradesRef.off();
     myTradesRef = db.ref('trades').orderByChild('userId').equalTo(user.uid);
     myTradesRef.on('value', s => {
       const arr = [];
       s.forEach(c => {
         const t = c.val();
-        // only this match
         if(t.matchId === matchId){
           arr.push({ id: c.key, ...t });
         }
@@ -395,7 +395,6 @@ function renderMatch(){
   setText('teamBOvers', '(' + (m.oversB || m.overs || '0.0') + ')');
   setText('scoreInfo', m.venue || m.league || 'Live match');
 
-  // Market prices
   const mkt = m.market || {};
   state.yesPrice = Number(mkt.yes?.price ?? m.oddsA ?? 5);
   state.noPrice = Number(mkt.no?.price ?? m.oddsB ?? 5);
@@ -408,13 +407,11 @@ function renderMatch(){
   setText('modalNoPrice', state.noPrice.toFixed(2));
   setText('mainQuestion', m.question || ((m.teamA||'Team A') + ' to win the match?'));
 
-  // Disable if no availability
   const yb = document.getElementById('yesBtn');
   const nb = document.getElementById('noBtn');
   if(yb) yb.disabled = state.yesAvail <= 0;
   if(nb) nb.disabled = state.noAvail <= 0;
 
-  // Ball by ball
   renderBallStrip(m.lastBalls || []);
 }
 
@@ -439,9 +436,10 @@ function renderTradeCount(){
   setText('mainTradeCount', '👤 ' + c.toLocaleString('en-IN') + ' trades');
 }
 
-/* ================= ORDER BOOK ================= */
+/* ================= ORDER BOOK (MODAL ONLY) ================= */
 function renderOrderBook(){
   const yesOrders = {}, noOrders = {};
+  const yesUsersSet = new Set(), noUsersSet = new Set();
 
   (state.allTrades || []).forEach(t => {
     if(t.status && t.status !== 'pending' && t.status !== 'open') return;
@@ -449,8 +447,14 @@ function renderOrderBook(){
     const p = Number(t.odds || 0);
     const q = Number(t.qty || 0);
     if(!p || !q) return;
-    if(side === 'YES') yesOrders[p] = (yesOrders[p]||0) + q;
-    else if(side === 'NO') noOrders[p] = (noOrders[p]||0) + q;
+
+    if(side === 'YES'){
+      yesOrders[p] = (yesOrders[p]||0) + q;
+      if(t.userId) yesUsersSet.add(t.userId);
+    } else if(side === 'NO'){
+      noOrders[p] = (noOrders[p]||0) + q;
+      if(t.userId) noUsersSet.add(t.userId);
+    }
   });
 
   const yesRows = Object.entries(yesOrders).map(([p,q])=>({p:Number(p),q}))
@@ -477,6 +481,9 @@ function renderOrderBook(){
       `<div class="book-row"><span class="no-price">₹${r.p.toFixed(2)}</span><strong>${r.q.toLocaleString('en-IN')}</strong></div>`
     ).join('');
   }
+
+  setText('yesUsers', '👤 ' + yesUsersSet.size + ' users');
+  setText('noUsers', '👤 ' + noUsersSet.size + ' users');
 }
 
 /* ================= MY TRADES / PORTFOLIO ================= */
@@ -567,6 +574,9 @@ function openTrade(side){
   document.getElementById('qtyInput').value = 5;
 
   selectSide(side);
+
+  // 👇 ORDER BOOK RENDER KARO MODAL KHULTE HI
+  renderOrderBook();
 }
 
 function closeTrade(){
@@ -582,7 +592,6 @@ function selectSide(side){
   if(yb) yb.classList.toggle('selected', side === 'YES');
   if(nb) nb.classList.toggle('selected', side === 'NO');
 
-  // Default price
   const defaultPrice = side === 'YES' ? state.yesPrice : state.noPrice;
   const pi = document.getElementById('priceInput');
   if(pi) pi.value = defaultPrice.toFixed(2);
@@ -645,12 +654,10 @@ async function confirmTrade(){
   btn.textContent = 'Placing...';
 
   try{
-    // Re-verify balance
     const balSnap = await db.ref('users/' + state.uid + '/wallet/balance').once('value');
     const bal = Number(balSnap.val() || 0);
     if(inv > bal){ toast('Insufficient balance', 'error'); btn.disabled=false; btn.textContent='Confirm Trade'; return; }
 
-    // Re-verify availability
     const side = state.selectedSide;
     const availSnap = await db.ref('matches/' + matchId + '/market/' + side.toLowerCase() + '/available').once('value');
     const curAvail = Number(availSnap.val() ?? 1000000);
@@ -695,7 +702,6 @@ async function confirmTrade(){
       date: firebase.database.ServerValue.TIMESTAMP
     };
 
-    // Price shift
     const shift = Math.min(0.5, (inv / 1000) * 0.1);
     let newYes = state.yesPrice;
     let newNo = state.noPrice;
@@ -714,7 +720,6 @@ async function confirmTrade(){
     updates['matches/' + matchId + '/market/yes/price'] = newYes;
     updates['matches/' + matchId + '/market/no/price'] = newNo;
 
-    // Update availability
     if(side === 'YES'){
       updates['matches/' + matchId + '/market/yes/available'] = Math.max(0, curAvail - q);
     } else {
@@ -803,7 +808,6 @@ document.querySelectorAll('.tab').forEach(tab => {
   tab.onclick = () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    // Future: filter by tab.dataset.tab
   };
 });
 
