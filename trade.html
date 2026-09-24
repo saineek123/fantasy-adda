@@ -2,256 +2,1123 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Trade • Fantasy Adda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fantasy Adda • Trade</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f4f6f9;color:#171717}
-.app{max-width:600px;margin:auto;min-height:100vh;background:#f4f6f9;padding-bottom:75px}
-button,input{font:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
-.header{background:#fff;padding:18px;display:flex;align-items:center;border-bottom:1px solid #ddd}
-.back,.wallet-btn{border:0;background:none;font-size:28px}
-.title{flex:1;margin-left:14px}
-.title h2{font-size:19px}
-.live{color:#e82938;font-size:12px;font-weight:bold;margin-top:5px}
-.score-box{background:#2b0307;color:#fff;padding:22px 14px}
-.score-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.team{text-align:center;font-weight:bold;font-size:13px}
-.team strong{display:block;font-size:24px;margin-top:8px}
-.match-center{text-align:center;font-size:13px}
-.match-center strong{display:block;font-size:22px;margin-bottom:7px}
-.score-info{text-align:center;margin-top:24px;font-size:13px}
-.balls{display:flex;justify-content:center;gap:8px;margin-top:18px}
-.ball{width:35px;height:35px;border-radius:50%;background:#8992a8;display:flex;align-items:center;justify-content:center;font-size:12px}
-.ball.active{background:#315bd5}
-.ball.boundary{background:#0aa84f}
-.ball.wicket{background:#d92d20}
-.tabs{display:flex;background:#fff;border-bottom:1px solid #ddd}
-.tab{flex:1;padding:18px 5px;text-align:center;font-weight:bold;color:#999;border:0;background:#fff}
-.tab.active{color:#d21f2b;border-bottom:4px solid #d21f2b}
-.wallet{margin:14px;padding:18px;border-radius:16px;background:linear-gradient(120deg,#dce7ff,#c5edff)}
-.wallet-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.wallet-label{font-size:13px;color:#444}
-.balance{font-size:27px;font-weight:bold;margin-top:8px}
-.add-btn{background:#0b9e43;color:#fff;border:0;border-radius:20px;padding:10px 15px;font-size:12px;font-weight:bold}
-.content{padding:0 14px 25px}
-.card{background:#fff;border-radius:15px;padding:18px;margin-bottom:14px}
-.card h3{font-size:17px;line-height:1.45}
-.trade-count{color:#999;font-size:12px;margin-bottom:16px}
-.question-row{display:flex;align-items:center;gap:12px}
-.question-row h3{flex:1}
-.market-img{width:70px;height:70px;background:#edf1ff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:36px}
-.prediction{display:flex;gap:10px;margin-top:22px}
-.prediction button{flex:1;padding:15px 5px;border-radius:12px;border:0;font-size:15px;font-weight:bold}
-.yes-btn{color:#079b42;background:#e5f7eb}
-.no-btn{color:#d82430;background:#fde9e9}
-.yes-btn:disabled,.no-btn:disabled{opacity:.5;cursor:not-allowed}
-.prediction button.selected{outline:3px solid #222}
-.order-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.order-title button{border:0;background:none;font-size:22px}
-.book-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.book-col h4{font-size:12px;margin-bottom:12px}
-.book-col.yes h4{color:#0aaf4b}
-.book-col.no h4{color:#df2330}
-.book-row{display:flex;justify-content:space-between;padding:10px 4px;border-bottom:1px solid #eee;font-size:13px}
-.yes-price{color:#0aa948}
-.no-price{color:#db2630}
-.portfolio-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee;font-size:13px;gap:10px}
-.exit-btn{border:0;background:#ffd8da;color:#c51e2b;border-radius:9px;padding:8px 12px;font-weight:bold}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:auto;display:flex;background:#fff;border-top:1px solid #ddd;z-index:10}
-.bottom-nav button{flex:1;padding:14px 5px;border:0;background:#fff;font-size:11px;color:#888}
-.bottom-nav button.active{color:#d4202d;font-weight:bold}
-.modal-bg{display:none;position:fixed;inset:0;background:#0009;z-index:100;align-items:flex-end;justify-content:center}
-.modal-bg.show{display:flex}
-.modal{width:100%;max-width:600px;max-height:90vh;overflow-y:auto;background:#fff;border-radius:25px 25px 0 0;padding:24px;position:relative}
-.modal h2{font-size:20px;margin-bottom:20px}
-.close-btn{position:absolute;top:18px;right:18px;border:0;background:#eee;width:30px;height:30px;border-radius:50%;font-size:14px}
-.field{margin-bottom:18px}
-.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:9px}
-.price-row,.qty-row{display:flex;gap:10px;align-items:center}
-.price-row button{width:45px;height:42px;border:1px solid #ddd;background:#fff;border-radius:10px;font-size:20px}
-.price-input{width:100%;height:42px;border:1px solid #ddd;border-radius:10px;padding:10px;font-weight:bold;outline:0}
-.qty-btn{flex:1;border:1px solid #ddd;background:#fafafa;border-radius:8px;padding:10px;font-size:12px}
-.summary{background:#f1f5ff;padding:16px;border-radius:12px;margin-bottom:16px}
-.summary p{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
-.confirm-btn{width:100%;padding:17px;background:#0ba345;color:#fff;border:0;border-radius:14px;font-weight:bold;font-size:16px}
-.confirm-btn:disabled{background:#aaa;cursor:not-allowed}
-.notice{padding:13px;background:#fff5dc;color:#805500;border-radius:10px;font-size:12px;margin-bottom:14px}
-.empty{text-align:center;padding:30px 10px;color:#999;font-size:13px}
-.toast{position:fixed;top:75px;left:50%;transform:translateX(-50%) translateY(-15px);z-index:200;display:none;background:#20242a;color:#fff;padding:11px 16px;border-radius:10px;font-size:12px;font-weight:600;box-shadow:0 5px 20px #0003;max-width:90%;text-align:center}
-.toast.show{display:block;animation:toast .3s forwards}
-.toast.success{background:#0aa84f}
-.toast.error{background:#d92d20}
-@keyframes toast{to{transform:translateX(-50%) translateY(0)}}
-@media(min-width:601px){.app{box-shadow:0 0 30px #00000014}}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --green:#0aa84f;
+  --green2:#08b85a;
+  --red:#d92d20;
+  --bg:#f4f6f8;
+  --text:#16181d;
+  --muted:#777d87;
+  --line:#e7e9ed;
+}
+
+html,
+body{
+  width:100%;
+  min-height:100%;
+}
+
+body{
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:84px;
+  overflow-x:hidden;
+}
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#fff;
+  height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 15px;
+  border-bottom:1px solid var(--line);
+}
+
+.header h2{
+  font-size:18px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:55%;
+}
+
+.back{
+  border:0;
+  background:transparent;
+  font-size:22px;
+  width:40px;
+  height:40px;
+}
+
+.wallet{
+  background:#f0fff5;
+  color:#08783b;
+  border:1px solid #ccefd9;
+  padding:8px 11px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.container{
+  max-width:560px;
+  margin:auto;
+  padding:10px 12px;
+}
+
+.match{
+  background:#fff;
+  border-radius:16px;
+  padding:14px;
+  box-shadow:0 2px 10px #00000008;
+  margin-bottom:10px;
+}
+
+.match-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:11px;
+  color:#858a92;
+}
+
+.teams{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+  margin:10px 0 8px;
+}
+
+.team{
+  text-align:center;
+  min-width:90px;
+}
+
+.team img{
+  width:45px;
+  height:45px;
+  object-fit:contain;
+  border-radius:50%;
+  background:#f4f4f4;
+}
+
+.team b{
+  display:block;
+  font-size:13px;
+  margin-top:4px;
+}
+
+.vs{
+  font-weight:800;
+  color:#999;
+  font-size:13px;
+}
+
+.live{
+  background:#151a20;
+  color:#fff;
+  border-radius:13px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.live .score{
+  font-weight:800;
+}
+
+.live small{
+  color:#aeb5bf;
+}
+
+.dot{
+  width:7px;
+  height:7px;
+  background:#19c463;
+  border-radius:50%;
+  display:inline-block;
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:#e9ecef;
+  border-radius:11px;
+  padding:3px;
+  margin:10px 0;
+}
+
+.tab{
+  border:0;
+  background:transparent;
+  padding:10px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:13px;
+}
+
+.tab.active{
+  background:#fff;
+  box-shadow:0 1px 5px #00000012;
+}
+
+.market{
+  background:#fff;
+  border-radius:16px;
+  padding:13px;
+  margin-bottom:10px;
+}
+
+.market-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.market-head b{
+  font-size:15px;
+}
+
+.market-head span{
+  font-size:11px;
+  color:#858a92;
+}
+
+.choice-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.choice{
+  border:1px solid #e3e5e8;
+  background:#fafbfc;
+  border-radius:12px;
+  padding:12px;
+  text-align:left;
+  transition:.2s;
+}
+
+.choice:hover{
+  transform:translateY(-1px);
+}
+
+.choice.yes.selected{
+  border-color:var(--green);
+  background:#effcf4;
+}
+
+.choice.no.selected{
+  border-color:var(--red);
+  background:#fff3f2;
+}
+
+.choice .top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.choice strong{
+  font-size:14px;
+}
+
+.choice .price{
+  font-size:20px;
+  font-weight:800;
+  margin-top:4px;
+}
+
+.choice small{
+  color:#7c828b;
+  font-size:10px;
+}
+
+.book{
+  background:#fff;
+  border-radius:16px;
+  padding:13px;
+  margin-bottom:10px;
+}
+
+.book-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+
+.book-title b{
+  font-size:14px;
+}
+
+.book-head,
+.book-row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  font-size:11px;
+  align-items:center;
+  text-align:right;
+  padding:7px 2px;
+}
+
+.book-head{
+  color:#8b9098;
+  font-weight:600;
+}
+
+.book-row{
+  border-top:1px solid #f0f1f3;
+}
+
+.yesc{
+  color:#159b4c;
+}
+
+.noc{
+  color:#c52c25;
+}
+
+.book-row div:first-child{
+  text-align:left;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-bottom:10px;
+}
+
+.stat{
+  background:#fff;
+  border-radius:13px;
+  padding:11px;
+}
+
+.stat small{
+  display:block;
+  color:#8b9098;
+  font-size:10px;
+}
+
+.stat b{
+  font-size:14px;
+  display:block;
+  margin-top:4px;
+}
+
+.bottom-trade{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:30;
+  background:#fff;
+  border-top:1px solid var(--line);
+  padding:10px 12px 12px;
+  box-shadow:0 -5px 20px #00000010;
+}
+
+.bottom-inner{
+  max-width:560px;
+  margin:auto;
+  display:flex;
+  gap:8px;
+}
+
+.trade-btn{
+  flex:1;
+  border:0;
+  border-radius:13px;
+  padding:13px;
+  color:#fff;
+  font-weight:800;
+  font-size:14px;
+}
+
+.trade-btn.yes{
+  background:var(--green);
+}
+
+.trade-btn.no{
+  background:var(--red);
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:#0007;
+  z-index:50;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+}
+
+.overlay.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.sheet{
+  position:absolute;
+  left:50%;
+  bottom:0;
+  transform:translate(-50%,105%);
+  width:min(560px,100%);
+  max-height:92vh;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  background:#fff;
+  border-radius:22px 22px 0 0;
+  padding:10px 15px 20px;
+  transition:.3s cubic-bezier(.2,.8,.2,1);
+}
+
+.overlay.show .sheet{
+  transform:translate(-50%,0);
+}
+
+.handle{
+  width:42px;
+  height:4px;
+  background:#d9dce1;
+  border-radius:20px;
+  margin:0 auto 12px;
+}
+
+.sheet-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.sheet-head h3{
+  font-size:17px;
+}
+
+.close{
+  border:0;
+  background:#f1f2f4;
+  border-radius:50%;
+  width:32px;
+  height:32px;
+}
+
+.selected-pill{
+  display:flex;
+  gap:8px;
+  margin:12px 0;
+}
+
+.pill{
+  flex:1;
+  border-radius:11px;
+  border:1px solid var(--line);
+  padding:10px;
+  text-align:center;
+  font-weight:700;
+  font-size:13px;
+}
+
+.pill.active.y{
+  background:#ecfff4;
+  color:#078a40;
+  border-color:#bde9ce;
+}
+
+.pill.active.n{
+  background:#fff0ef;
+  color:#c32820;
+  border-color:#f0c1bd;
+}
+
+.price-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin:10px 0;
+}
+
+.price-big{
+  font-size:27px;
+  font-weight:800;
+}
+
+.price-big small{
+  font-size:11px;
+  color:#8a9098;
+  font-weight:500;
+}
+
+.available{
+  color:#159b4c;
+  font-size:10px;
+}
+
+.qty-box{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:11px;
+  margin-bottom:10px;
+}
+
+.qty-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.qty-row span{
+  font-size:12px;
+  color:#7d828a;
+}
+
+.qty-control{
+  display:flex;
+  align-items:center;
+  border:1px solid #dfe2e6;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.qty-control button{
+  width:39px;
+  height:38px;
+  border:0;
+  background:#f5f6f7;
+  font-size:20px;
+}
+
+.qty-control input{
+  width:70px;
+  height:38px;
+  border:0;
+  text-align:center;
+  outline:0;
+  font-weight:800;
+}
+
+.quick{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  margin-top:9px;
+}
+
+.quick button{
+  border:1px solid #dfe2e6;
+  background:#fff;
+  border-radius:8px;
+  padding:8px 2px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.summary{
+  background:linear-gradient(110deg,#edf3ff,#eafaff);
+  border-radius:13px;
+  padding:13px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.summary small{
+  font-size:10px;
+}
+
+.summary b{
+  display:block;
+  font-size:17px;
+  margin-top:4px;
+}
+
+.summary .win{
+  color:#0aa84f;
+}
+
+.balance{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fff7ed;
+  border-radius:12px;
+  padding:11px;
+  margin-bottom:10px;
+}
+
+.balance small{
+  font-size:10px;
+  color:#777;
+}
+
+.balance b{
+  font-size:14px;
+}
+
+.addcash{
+  border:0;
+  background:#12a94f;
+  color:#fff;
+  border-radius:9px;
+  padding:8px 11px;
+  font-weight:700;
+  font-size:11px;
+}
+
+/* ================= MOBILE SAFE SWIPE ================= */
+
+.swipe{
+  height:58px;
+  background:#10a94f;
+  color:#fff;
+  border-radius:30px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  margin-top:7px;
+
+  overflow:hidden;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+
+  /*
+    Important:
+    Browser ko swipe gesture handle karne ke bajay
+    hum khud pointer movement handle karenge.
+  */
+  touch-action:none;
+  -ms-touch-action:none;
+
+  cursor:grab;
+}
+
+.swipe:active{
+  cursor:grabbing;
+}
+
+.swipe .knob{
+  position:absolute;
+  left:5px;
+  top:5px;
+  width:48px;
+  height:48px;
+
+  background:#fff;
+  color:#0a9c46;
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:24px;
+  box-shadow:0 2px 7px #0002;
+
+  transform:translateX(0);
+  transition:transform .15s ease;
+
+  will-change:transform;
+
+  /*
+    Finger event sirf parent ko milega.
+  */
+  pointer-events:none;
+}
+
+.swipe.disabled{
+  background:#a7abb1;
+}
+
+.swipe.disabled .knob{
+  display:none;
+}
+
+.note{
+  font-size:9px;
+  color:#8b9098;
+  text-align:center;
+  margin-top:8px;
+  line-height:1.4;
+}
+
+.toast{
+  position:fixed;
+  top:72px;
+  left:50%;
+  transform:translateX(-50%) translateY(-15px);
+  z-index:100;
+  display:none;
+  background:#20242a;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:600;
+  box-shadow:0 5px 20px #0003;
+  max-width:90%;
+  text-align:center;
+}
+
+.toast.show{
+  display:block;
+  animation:toast .25s forwards;
+}
+
+@keyframes toast{
+  to{
+    transform:translateX(-50%) translateY(0);
+  }
+}
+
+.empty{
+  padding:20px;
+  text-align:center;
+  color:#8a9098;
+  font-size:12px;
+}
+
+.login-banner{
+  background:#fff3cd;
+  border:1px solid #ffeaa7;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+}
+
+.login-banner a{
+  background:var(--green);
+  color:#fff;
+  padding:7px 14px;
+  border-radius:9px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:12px;
+}
+
+@media(max-width:380px){
+
+  .team{
+    min-width:75px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .stats .stat:last-child{
+    grid-column:span 2;
+  }
+
+  .quick button{
+    font-size:10px;
+  }
+
+  .sheet{
+    padding-left:12px;
+    padding-right:12px;
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="app">
 
 <header class="header">
-  <button class="back" onclick="history.back()">‹</button>
-  <div class="title">
-    <h2 id="matchTitle">Loading...</h2>
-    <div class="live" id="matchStatus">🔴 LIVE</div>
+  <button class="back" onclick="exitPage()">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+
+  <h2 id="pageTitle">Loading...</h2>
+
+  <div class="wallet" id="walletTop" onclick="location.href='wallet.html'">
+    ₹0.00
   </div>
-  <button class="wallet-btn" onclick="location.href='wallet.html'">▣</button>
 </header>
 
-<!-- LIVE SCORE -->
-<section class="score-box">
-  <div class="score-top">
-    <div class="team">
-      <span id="teamAName">Team A</span>
-      <strong id="teamAScore">0/0</strong>
-      <small id="teamAOvers">(0.0)</small>
-    </div>
-    <div class="match-center">
-      <strong>🏏</strong>
-      <span>🔴 LIVE</span>
-    </div>
-    <div class="team">
-      <span id="teamBName">Team B</span>
-      <strong id="teamBScore">0/0</strong>
-      <small id="teamBOvers">(0.0)</small>
-    </div>
-  </div>
-  <div class="score-info" id="scoreInfo">Loading...</div>
-  <div class="balls" id="ballStrip"></div>
-</section>
+<main class="container">
 
-<!-- TABS -->
-<div class="tabs">
-  <button class="tab active" data-tab="all">All</button>
-  <button class="tab" data-tab="match">Match</button>
-  <button class="tab" data-tab="overs">Overs</button>
-  <button class="tab" data-tab="wickets">Wickets</button>
-</div>
-
-<!-- WALLET -->
-<section class="wallet">
-  <div class="wallet-row">
-    <div>
-      <div class="wallet-label">Wallet Balance</div>
-      <div class="balance" id="balance">₹0.00</div>
-    </div>
-    <button class="add-btn" onclick="location.href='wallet.html'">+ Add Cash</button>
-  </div>
-</section>
-
-<main class="content">
-
-  <div class="notice" id="loginNotice" style="display:none">
-    ⚠️ Please <a href="login.html" style="color:#805500;font-weight:bold">Login</a> to place real trades.
+  <div id="loginBanner" class="login-banner" style="display:none">
+    <span>🔒 Login to place trades</span>
+    <a href="login.html">Login</a>
   </div>
 
-  <!-- MAIN MARKET -->
-  <section class="card" id="mainMarketCard">
-    <div class="trade-count" id="mainTradeCount">👤 0 trades</div>
-    <div class="question-row">
-      <h3 id="mainQuestion">Who will win?</h3>
-      <div class="market-img">🏏</div>
-    </div>
-    <div class="prediction">
-      <button class="yes-btn" id="yesBtn" onclick="openTrade('YES')">
-        YES | ₹<span id="yesPrice">5.00</span>
-      </button>
-      <button class="no-btn" id="noBtn" onclick="openTrade('NO')">
-        NO | ₹<span id="noPrice">5.00</span>
-      </button>
-    </div>
-  </section>
+  <section class="match">
 
-  <!-- ORDER BOOK -->
-  <section class="card">
-    <div class="order-title">
-      <h3>📖 Order Book</h3>
-      <button onclick="renderOrderBook()">↻</button>
+    <div class="match-top">
+      <span id="league">Cricket</span>
+      <span id="statusText">UPCOMING</span>
     </div>
-    <div class="book-grid">
-      <div class="book-col yes">
-        <h4>PRICE &nbsp; QTY YES</h4>
-        <div id="yesBook"></div>
+
+    <div class="teams">
+
+      <div class="team">
+        <img id="logoA" alt="">
+        <b id="nameA">Team A</b>
       </div>
-      <div class="book-col no">
-        <h4>PRICE &nbsp; QTY NO</h4>
-        <div id="noBook"></div>
+
+      <div class="vs">VS</div>
+
+      <div class="team">
+        <img id="logoB" alt="">
+        <b id="nameB">Team B</b>
       </div>
+
     </div>
+
+    <div class="live">
+
+      <span class="dot"></span>
+      <small>LIVE SCORE</small>
+
+      <span class="score" id="scoreA">—</span>
+      <span>•</span>
+      <span class="score" id="scoreB">—</span>
+
+      <small id="overs">— ov</small>
+
+    </div>
+
   </section>
 
-  <!-- MY TRADES -->
-  <section class="card">
-    <div class="order-title">
-      <h3>My Trades</h3>
-      <button onclick="renderPortfolio()">↻</button>
-    </div>
-    <div id="portfolio"></div>
-  </section>
+  <div class="tabs">
+
+    <button class="tab active" onclick="switchTab('market',this)">
+      Markets
+    </button>
+
+    <button class="tab" onclick="switchTab('activity',this)">
+      My Trades
+    </button>
+
+  </div>
+
+  <div id="marketView">
+
+    <section class="market">
+
+      <div class="market-head">
+        <b id="question">Who will win?</b>
+        <span>Virtual trading</span>
+      </div>
+
+      <div class="choice-grid">
+
+        <button class="choice yes" id="yesCard" onclick="openTrade('YES')">
+
+          <div class="top">
+            <strong>YES</strong>
+            <small id="yesQty">0 available</small>
+          </div>
+
+          <div class="price" id="yesPrice">₹0.00</div>
+
+          <small>Tap to trade</small>
+
+        </button>
+
+        <button class="choice no" id="noCard" onclick="openTrade('NO')">
+
+          <div class="top">
+            <strong>NO</strong>
+            <small id="noQty">0 available</small>
+          </div>
+
+          <div class="price" id="noPrice">₹0.00</div>
+
+          <small>Tap to trade</small>
+
+        </button>
+
+      </div>
+
+    </section>
+
+    <section class="stats">
+
+      <div class="stat">
+        <small>Last YES</small>
+        <b id="lastYes">₹0.00</b>
+      </div>
+
+      <div class="stat">
+        <small>Last NO</small>
+        <b id="lastNo">₹0.00</b>
+      </div>
+
+      <div class="stat">
+        <small>24h Volume</small>
+        <b id="volume">₹0</b>
+      </div>
+
+    </section>
+
+    <section class="book">
+
+      <div class="book-title">
+        <b>📖 Order Book</b>
+        <span style="font-size:11px;color:#888">
+          Real live orders
+        </span>
+      </div>
+
+      <div class="book-head">
+        <div>PRICE</div>
+        <div class="yesc">QTY YES</div>
+        <div>PRICE</div>
+        <div class="noc">QTY NO</div>
+      </div>
+
+      <div id="orderRows"></div>
+
+    </section>
+
+  </div>
+
+  <div id="activityView" style="display:none">
+
+    <section class="book">
+
+      <div class="book-title">
+        <b>My Trades</b>
+        <span id="tradeCount" style="font-size:11px;color:#888"></span>
+      </div>
+
+      <div id="tradeList"></div>
+
+    </section>
+
+  </div>
 
 </main>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <button onclick="scrollToTop()">🏠<br>Home</button>
-  <button onclick="document.getElementById('mainMarketCard').scrollIntoView({behavior:'smooth'})">📊<br>Market</button>
-  <button onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">📋<br>My Trades</button>
-  <button onclick="location.href='wallet.html'">💰<br>Wallet</button>
-</nav>
+<div class="bottom-trade">
+
+  <div class="bottom-inner">
+
+    <button class="trade-btn yes" onclick="openTrade('YES')">
+      YES <span id="bottomYes">₹0.00</span>
+    </button>
+
+    <button class="trade-btn no" onclick="openTrade('NO')">
+      NO <span id="bottomNo">₹0.00</span>
+    </button>
+
+  </div>
 
 </div>
 
-<!-- TRADE MODAL -->
-<div class="modal-bg" id="tradeModal">
-  <div class="modal">
-    <button class="close-btn" onclick="closeTrade()">✕</button>
-    <h2 id="modalTitle">Trade</h2>
+<!-- TRADE SHEET -->
 
-    <div class="field">
-      <label>Select Side</label>
-      <div class="prediction">
-        <button id="yesSelect" class="yes-btn" onclick="selectSide('YES')">
-          YES ₹<span id="modalYesPrice">5.00</span>
+<div class="overlay" id="overlay" onclick="outsideClose(event)">
+
+  <div class="sheet">
+
+    <div class="handle"></div>
+
+    <div class="sheet-head">
+
+      <h3 id="sheetQuestion">
+        Who will win?
+      </h3>
+
+      <div style="display:flex;gap:6px">
+
+        <button
+          onclick="exitTrade()"
+          style="border:0;background:#fff3cd;color:#856404;padding:0 12px;height:32px;border-radius:9px;font-size:12px;font-weight:700">
+          Exit
         </button>
-        <button id="noSelect" class="no-btn" onclick="selectSide('NO')">
-          NO ₹<span id="modalNoPrice">5.00</span>
+
+        <button class="close" onclick="closeTrade()">
+          <i class="fa fa-times"></i>
         </button>
+
       </div>
+
     </div>
 
-    <div class="field">
-      <label>Price (₹1 - ₹9)</label>
-      <div class="price-row">
-        <button onclick="changePrice(-0.5)">−</button>
-        <input id="priceInput" class="price-input" type="number" step="0.5" min="1" max="9" value="5" oninput="updateSummary()">
-        <button onclick="changePrice(0.5)">+</button>
-      </div>
+    <div class="selected-pill">
+
+      <button
+        class="pill y"
+        id="pillYes"
+        onclick="setSide('YES')">
+        YES <span id="pillYesPrice">₹0.00</span>
+      </button>
+
+      <button
+        class="pill n"
+        id="pillNo"
+        onclick="setSide('NO')">
+        NO <span id="pillNoPrice">₹0.00</span>
+      </button>
+
     </div>
 
-    <div class="field">
-      <label>Quantity</label>
+    <div class="price-line">
+
+      <div>
+
+        <small style="font-size:11px;color:#777">
+          Price
+        </small>
+
+        <div class="price-big" id="sheetPrice">
+          ₹0.00
+        </div>
+
+      </div>
+
+      <div style="text-align:right">
+        <b class="available" id="sheetAvailable">
+          0 qty available
+        </b>
+      </div>
+
+    </div>
+
+    <div class="qty-box">
+
       <div class="qty-row">
-        <button class="qty-btn" onclick="setQty(20)">20</button>
-        <button class="qty-btn" onclick="setQty(100)">100</button>
-        <button class="qty-btn" onclick="setQty(500)">500</button>
-        <button class="qty-btn" onclick="setQty(1000)">1000</button>
+
+        <span>Quantity</span>
+
+        <div class="qty-control">
+
+          <button onclick="changeQty(-1)">
+            −
+          </button>
+
+          <input
+            id="qtyInput"
+            type="number"
+            min="1"
+            value="5"
+            oninput="syncQty()">
+
+          <button onclick="changeQty(1)">
+            +
+          </button>
+
+        </div>
+
       </div>
-      <input id="qtyInput" class="price-input" style="margin-top:10px" type="number" min="1" value="5" oninput="updateSummary()">
+
+      <div class="quick">
+
+        <button onclick="setQty(20)">20+</button>
+        <button onclick="setQty(100)">100+</button>
+        <button onclick="setQty(500)">500+</button>
+        <button onclick="setQty(1000)">1000+</button>
+
+      </div>
+
     </div>
 
     <div class="summary">
-      <p><span>Side</span><strong id="sumSide">YES</strong></p>
-      <p><span>Price</span><strong id="sumPrice">₹5.00</strong></p>
-      <p><span>Quantity</span><strong id="sumQty">5</strong></p>
-      <p><span>Investment</span><strong id="sumInvestment">₹25.00</strong></p>
-      <p><span>Potential Return</span><strong id="sumReturn">₹50.00</strong></p>
-      <p><span>Wallet Balance</span><strong id="sumBalance">₹0.00</strong></p>
+
+      <div>
+        <small>Investment</small>
+        <b id="investment">₹0.00</b>
+      </div>
+
+      <div>
+        <small>Potential Return</small>
+        <b class="win" id="winning">₹0.00</b>
+      </div>
+
+      <div>
+        <small>Potential Profit</small>
+        <b class="win" id="profit">₹0.00</b>
+      </div>
+
+      <div>
+        <small>Avg. Price</small>
+        <b id="avgPrice">₹0.00</b>
+      </div>
+
     </div>
 
-    <button class="confirm-btn" id="confirmBtn" onclick="confirmTrade()">Confirm Trade</button>
+    <div class="balance">
+
+      <div>
+        <small>Wallet Balance</small>
+        <b id="sheetBalance">₹0.00</b>
+      </div>
+
+      <button
+        class="addcash"
+        onclick="location.href='wallet.html'">
+        + Add Funds
+      </button>
+
+    </div>
+
+    <!-- FIXED MOBILE SWIPE -->
+
+    <div class="swipe" id="swipe">
+
+      <span>
+        Swipe To Confirm
+      </span>
+
+      <div class="knob" id="knob">
+        »
+      </div>
+
+    </div>
+
+    <div class="note">
+      Trading mode: real market data, virtual currency only.
+    </div>
+
   </div>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -261,6 +1128,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
 
 <script>
+
 const firebaseConfig = {
   apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
   authDomain:"fantasy-adda-e3b72.firebaseapp.com",
@@ -270,550 +1138,1711 @@ const firebaseConfig = {
   messagingSenderId:"882657286194",
   appId:"1:882657286194:web:284e818359de2363f0442b"
 };
+
 firebase.initializeApp(firebaseConfig);
+
 const db = firebase.database();
 const auth = firebase.auth();
 
 const params = new URLSearchParams(location.search);
 const matchId = params.get('id');
 
-/* ================= STATE ================= */
+const FALLBACK =
+"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23eee'/%3E%3Cpath d='M40 15v50M15 40h50' stroke='%23aaa' stroke-width='4'/%3E%3C/svg%3E";
+
+
+/* RETURN URL */
+
+if(!sessionStorage.getItem('tradeReturnUrl')){
+
+  if(
+    document.referrer &&
+    !document.referrer.includes('trade.html')
+  ){
+
+    sessionStorage.setItem(
+      'tradeReturnUrl',
+      document.referrer
+    );
+
+  }else{
+
+    sessionStorage.setItem(
+      'tradeReturnUrl',
+      'wallet.html'
+    );
+
+  }
+
+}
+
+
+/* STATE */
+
 let state = {
-  match: null,
-  uid: null,
-  loggedIn: false,
-  balance: 0,
-  yesPrice: 5,
-  noPrice: 5,
-  yesAvail: 1000000,
-  noAvail: 1000000,
-  myTrades: [],
-  allTrades: [],
-  selectedSide: 'YES',
-  currentTradeType: 'main'   // 'main' or 'overs' etc (future)
+
+  side:'YES',
+
+  qty:5,
+
+  yesPrice:5,
+
+  noPrice:5,
+
+  yesAvailable:1000000,
+
+  noAvailable:1000000,
+
+  balance:0,
+
+  myTrades:[],
+
+  allTrades:[],
+
+  match:null,
+
+  uid:null,
+
+  loggedIn:false
+
 };
 
-let walletRef = null;
-let matchRef = null;
-let myTradesRef = null;
-let allTradesRef = null;
 
-/* ================= HELPERS ================= */
+let walletRef=null;
+let myTradesRef=null;
+let allTradesRef=null;
+let marketRef=null;
+
+
+/* MONEY */
+
 function money(n){
-  return '₹' + Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+  return '₹' +
+    Number(n || 0).toLocaleString(
+      'en-IN',
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+
 }
-function toast(msg, type=''){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
+
+
+/* TOAST */
+
+function toast(msg){
+
+  const t=document.getElementById('toast');
+
+  t.textContent=msg;
+
+  t.classList.add('show');
+
   clearTimeout(window.tt);
-  window.tt = setTimeout(()=>{ t.className='toast'; }, 2600);
-}
-function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent = val; }
-function setHTML(id, val){ const el=document.getElementById(id); if(el) el.innerHTML = val; }
-function setDisplay(id, val){ const el=document.getElementById(id); if(el) el.style.display = val; }
 
-/* ================= AUTH ================= */
-auth.onAuthStateChanged(user => {
-  if(user){
-    state.loggedIn = true;
-    state.uid = user.uid;
-    setDisplay('loginNotice', 'none');
+  window.tt=setTimeout(
+    ()=>{
+      t.classList.remove('show');
+    },
+    2500
+  );
 
-    // Wallet listener
-    if(walletRef) walletRef.off();
-    walletRef = db.ref('users/' + user.uid + '/wallet/balance');
-    walletRef.on('value', s => {
-      state.balance = Number(s.val() || 0);
-      updateBalance();
-    });
-
-    // My trades listener
-    if(myTradesRef) myTradesRef.off();
-    myTradesRef = db.ref('trades').orderByChild('userId').equalTo(user.uid);
-    myTradesRef.on('value', s => {
-      const arr = [];
-      s.forEach(c => {
-        const t = c.val();
-        // only this match
-        if(t.matchId === matchId){
-          arr.push({ id: c.key, ...t });
-        }
-      });
-      arr.sort((a,b) => Number(b.createdAt||0) - Number(a.createdAt||0));
-      state.myTrades = arr;
-      renderPortfolio();
-    });
-
-  } else {
-    state.loggedIn = false;
-    state.uid = null;
-    state.balance = 0;
-    state.myTrades = [];
-    setDisplay('loginNotice', 'flex');
-    updateBalance();
-    renderPortfolio();
-  }
-});
-
-/* ================= MATCH DATA ================= */
-if(matchId){
-  matchRef = db.ref('matches/' + matchId);
-  matchRef.on('value', s => {
-    if(!s.exists()){
-      toast('Match not found', 'error');
-      return;
-    }
-    state.match = s.val();
-    renderMatch();
-  });
-
-  allTradesRef = db.ref('trades').orderByChild('matchId').equalTo(matchId);
-  allTradesRef.on('value', s => {
-    const arr = [];
-    s.forEach(c => arr.push(c.val()));
-    state.allTrades = arr;
-    renderOrderBook();
-    renderTradeCount();
-  });
-
-} else {
-  toast('No match ID in URL', 'error');
 }
 
-/* ================= RENDER MATCH ================= */
-function renderMatch(){
-  const m = state.match || {};
 
-  setText('matchTitle', (m.teamA||'Team A') + ' vs ' + (m.teamB||'Team B'));
-  setText('matchStatus', '🔴 ' + String(m.status || 'LIVE').toUpperCase());
-  setText('teamAName', m.teamA || 'Team A');
-  setText('teamBName', m.teamB || 'Team B');
-  setText('teamAScore', m.scoreA || '0/0');
-  setText('teamBScore', m.scoreB || '0/0');
-  setText('teamAOvers', '(' + (m.oversA || m.overs || '0.0') + ')');
-  setText('teamBOvers', '(' + (m.oversB || m.overs || '0.0') + ')');
-  setText('scoreInfo', m.venue || m.league || 'Live match');
+/* RENDER */
 
-  // Market prices
-  const mkt = m.market || {};
-  state.yesPrice = Number(mkt.yes?.price ?? m.oddsA ?? 5);
-  state.noPrice = Number(mkt.no?.price ?? m.oddsB ?? 5);
-  state.yesAvail = Number(mkt.yes?.available ?? 1000000);
-  state.noAvail = Number(mkt.no?.available ?? 1000000);
+function render(){
 
-  setText('yesPrice', state.yesPrice.toFixed(2));
-  setText('noPrice', state.noPrice.toFixed(2));
-  setText('modalYesPrice', state.yesPrice.toFixed(2));
-  setText('modalNoPrice', state.noPrice.toFixed(2));
-  setText('mainQuestion', m.question || ((m.teamA||'Team A') + ' to win the match?'));
+  const m=state.match || {};
 
-  // Disable if no availability
-  const yb = document.getElementById('yesBtn');
-  const nb = document.getElementById('noBtn');
-  if(yb) yb.disabled = state.yesAvail <= 0;
-  if(nb) nb.disabled = state.noAvail <= 0;
+  const a=m.teamA || 'Team A';
+  const b=m.teamB || 'Team B';
 
-  // Ball by ball
-  renderBallStrip(m.lastBalls || []);
+  document.getElementById('nameA').textContent=a;
+  document.getElementById('nameB').textContent=b;
+
+  document.getElementById('pageTitle').textContent =
+    a + ' vs ' + b;
+
+  document.getElementById('league').textContent =
+    m.league || 'Cricket';
+
+  document.getElementById('statusText').textContent =
+    String(m.status || 'UPCOMING').toUpperCase();
+
+  document.getElementById('logoA').src =
+    m.teamALogo || FALLBACK;
+
+  document.getElementById('logoB').src =
+    m.teamBLogo || FALLBACK;
+
+  document.getElementById('scoreA').textContent =
+    m.scoreA || '—';
+
+  document.getElementById('scoreB').textContent =
+    m.scoreB || '—';
+
+  document.getElementById('overs').textContent =
+    (m.overs || '—') + ' ov';
+
+
+  document.getElementById('yesPrice').textContent =
+    money(state.yesPrice);
+
+  document.getElementById('noPrice').textContent =
+    money(state.noPrice);
+
+  document.getElementById('bottomYes').textContent =
+    money(state.yesPrice);
+
+  document.getElementById('bottomNo').textContent =
+    money(state.noPrice);
+
+
+  document.getElementById('yesQty').textContent =
+    state.yesAvailable.toLocaleString('en-IN') +
+    ' available';
+
+  document.getElementById('noQty').textContent =
+    state.noAvailable.toLocaleString('en-IN') +
+    ' available';
+
+
+  document.getElementById('walletTop').textContent =
+    money(state.balance);
+
+
+  document.getElementById('loginBanner').style.display =
+    state.loggedIn ? 'none' : 'flex';
+
+
+  renderBook();
+  renderTrades();
+
 }
 
-function renderBallStrip(balls){
-  const strip = document.getElementById('ballStrip');
-  if(!strip) return;
 
-  let data = balls && balls.length ? balls.slice(-6) : ['0','0','0','0','0','0'];
+/* ORDER BOOK */
 
-  strip.innerHTML = data.map((b, i) => {
-    const isLast = i === data.length - 1;
-    let cls = 'ball';
-    if(b === 'W') cls += ' wicket';
-    else if(b === '4' || b === '6') cls += ' boundary';
-    else if(isLast) cls += ' active';
-    return `<div class="${cls}">${b}</div>`;
-  }).join('');
-}
+function renderBook(){
 
-function renderTradeCount(){
-  const c = (state.allTrades || []).length;
-  setText('mainTradeCount', '👤 ' + c.toLocaleString('en-IN') + ' trades');
-}
+  const sourceTrades=state.allTrades || [];
 
-/* ================= ORDER BOOK ================= */
-function renderOrderBook(){
-  const yesOrders = {}, noOrders = {};
+  const yesOrders={};
+  const noOrders={};
 
-  (state.allTrades || []).forEach(t => {
-    if(t.status && t.status !== 'pending' && t.status !== 'open') return;
-    const side = (t.side || '').toUpperCase();
-    const p = Number(t.odds || 0);
-    const q = Number(t.qty || 0);
+
+  sourceTrades.forEach(t=>{
+
+    const side=(t.side || '').toUpperCase();
+
+    const p=Number(t.odds || 0);
+    const q=Number(t.qty || 0);
+
     if(!p || !q) return;
-    if(side === 'YES') yesOrders[p] = (yesOrders[p]||0) + q;
-    else if(side === 'NO') noOrders[p] = (noOrders[p]||0) + q;
+
+    if(side==='YES'){
+
+      yesOrders[p]=(yesOrders[p] || 0)+q;
+
+    }
+
+    else if(side==='NO'){
+
+      noOrders[p]=(noOrders[p] || 0)+q;
+
+    }
+
   });
 
-  const yesRows = Object.entries(yesOrders).map(([p,q])=>({p:Number(p),q}))
-    .sort((a,b)=>b.p-a.p).slice(0,5);
-  const noRows = Object.entries(noOrders).map(([p,q])=>({p:Number(p),q}))
-    .sort((a,b)=>a.p-b.p).slice(0,5);
 
-  const yBox = document.getElementById('yesBook');
-  const nBox = document.getElementById('noBook');
-  if(!yBox || !nBox) return;
+  const yesRows=
 
-  if(!yesRows.length){
-    yBox.innerHTML = '<div class="empty" style="padding:10px;font-size:11px">No orders</div>';
-  } else {
-    yBox.innerHTML = yesRows.map(r => 
-      `<div class="book-row"><span class="yes-price">₹${r.p.toFixed(2)}</span><strong>${r.q.toLocaleString('en-IN')}</strong></div>`
-    ).join('');
-  }
+    Object.entries(yesOrders)
 
-  if(!noRows.length){
-    nBox.innerHTML = '<div class="empty" style="padding:10px;font-size:11px">No orders</div>';
-  } else {
-    nBox.innerHTML = noRows.map(r => 
-      `<div class="book-row"><span class="no-price">₹${r.p.toFixed(2)}</span><strong>${r.q.toLocaleString('en-IN')}</strong></div>`
-    ).join('');
-  }
-}
+    .map(([price,qty])=>({
+      price:Number(price),
+      qty
+    }))
 
-/* ================= MY TRADES / PORTFOLIO ================= */
-function renderPortfolio(){
-  const box = document.getElementById('portfolio');
-  if(!box) return;
+    .sort((a,b)=>b.price-a.price)
 
-  if(!state.loggedIn){
-    box.innerHTML = '<div class="empty">Login to see your trades.</div>';
-    return;
-  }
-  if(!state.myTrades.length){
-    box.innerHTML = '<div class="empty">📋<br><br>No trades yet. Place one from above!</div>';
-    return;
-  }
+    .slice(0,5);
 
-  box.innerHTML = state.myTrades.map(t => {
-    const side = (t.side||'YES').toUpperCase();
-    const curP = side === 'YES' ? state.yesPrice : state.noPrice;
-    const qty = Number(t.qty||0);
-    const invested = Number(t.amount||0);
-    const currentValue = qty * curP;
-    const pnl = currentValue - invested;
-    const isOpen = (t.status === 'pending' || t.status === 'open');
-    const isProfit = pnl >= 0;
 
-    if(isOpen){
-      return `
-        <div class="portfolio-row">
+  const noRows=
+
+    Object.entries(noOrders)
+
+    .map(([price,qty])=>({
+      price:Number(price),
+      qty
+    }))
+
+    .sort((a,b)=>a.price-b.price)
+
+    .slice(0,5);
+
+
+  const maxRows=Math.max(
+    yesRows.length,
+    noRows.length
+  );
+
+
+  if(maxRows===0){
+
+    document.getElementById('orderRows').innerHTML=
+      '<div class="empty" style="padding:14px;font-size:11px">No orders yet. Be the first to trade!</div>';
+
+  }else{
+
+    let html='';
+
+    for(let i=0;i<maxRows;i++){
+
+      const y=yesRows[i];
+      const n=noRows[i];
+
+      html+=`
+
+        <div class="book-row">
+
           <div>
-            <strong style="color:${side==='YES'?'#0aa84f':'#d92d20'}">${side} • ${qty} Qty</strong>
-            <div style="color:#888;margin-top:5px">Buy: ${money(t.odds)} • Now: ${money(curP)}</div>
-            <div style="color:#888;margin-top:5px">Invested: ${money(invested)}</div>
-            <div style="color:${isProfit?'#0aa84f':'#d92d20'};margin-top:5px;font-weight:bold">
-              P&L: ${isProfit?'+':''}${money(pnl)}
-            </div>
+            ${y ? money(y.price) : '—'}
           </div>
-          <button class="exit-btn" onclick="exitTrade('${t.id}')">Exit</button>
-        </div>
-      `;
-    } else {
-      const winAmount = Number(t.exitValue || t.winAmount || 0);
-      return `
-        <div class="portfolio-row">
+
+          <div class="yesc">
+            ${y ? y.qty.toLocaleString('en-IN') : '—'}
+          </div>
+
           <div>
-            <strong style="color:${side==='YES'?'#0aa84f':'#d92d20'}">${side} • ${qty} Qty</strong>
-            <div style="color:#888;margin-top:5px">${t.status === 'win' ? '🏆 WON' : '❌ LOST'}</div>
-            <div style="color:#888;margin-top:5px">Invested: ${money(invested)}</div>
-            <div style="color:${t.status==='win'?'#0aa84f':'#d92d20'};margin-top:5px;font-weight:bold">
-              ${t.status === 'win' ? '+' + money(winAmount) : '-' + money(invested)}
-            </div>
+            ${n ? money(n.price) : '—'}
           </div>
+
+          <div class="noc">
+            ${n ? n.qty.toLocaleString('en-IN') : '—'}
+          </div>
+
         </div>
+
       `;
+
     }
-  }).join('');
+
+    document.getElementById('orderRows').innerHTML=html;
+
+  }
+
+
+  document.getElementById('lastYes').textContent =
+    money(state.yesPrice);
+
+  document.getElementById('lastNo').textContent =
+    money(state.noPrice);
+
+
+  const vol=sourceTrades.reduce(
+    (s,t)=>s+Number(t.amount || 0),
+    0
+  );
+
+  document.getElementById('volume').textContent =
+    money(vol);
+
 }
 
-/* ================= BALANCE UPDATE ================= */
-function updateBalance(){
-  setText('balance', money(state.balance));
-  setText('sumBalance', money(state.balance));
-  updateSummary();
-}
 
-/* ================= TRADE MODAL ================= */
+/* OPEN TRADE */
+
 function openTrade(side){
+
   if(!state.loggedIn){
-    toast('Please login to trade', 'error');
-    setTimeout(()=>{ location.href='login.html?redirect='+encodeURIComponent(location.href); }, 1200);
+
+    toast('Please login to trade');
+
+    setTimeout(
+      ()=>{
+        location.href =
+          'login.html?redirect=' +
+          encodeURIComponent(location.href);
+      },
+      1200
+    );
+
     return;
   }
-  if(!state.match){ toast('Match not loaded', 'error'); return; }
 
-  const avail = side === 'YES' ? state.yesAvail : state.noAvail;
-  if(avail <= 0){
-    toast('No shares available for ' + side, 'error');
+
+  if(!state.match){
+
+    toast('Match not loaded');
+
     return;
   }
 
-  state.selectedSide = side;
-  const defaultPrice = side === 'YES' ? state.yesPrice : state.noPrice;
 
-  document.getElementById('tradeModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
+  state.side=side;
 
-  document.getElementById('priceInput').value = defaultPrice;
-  document.getElementById('qtyInput').value = 5;
 
-  selectSide(side);
+  document.getElementById(
+    'overlay'
+  ).classList.add('show');
+
+
+  document.body.style.overflow='hidden';
+
+
+  document.getElementById(
+    'sheetQuestion'
+  ).textContent=
+    (state.match?.teamA || 'Team A') +
+    ' to win?';
+
+
+  setSide(side);
+
+  setQty(state.qty || 5);
+
 }
+
+
+/* CLOSE */
 
 function closeTrade(){
-  document.getElementById('tradeModal').classList.remove('show');
-  document.body.style.overflow = '';
+
+  document.getElementById(
+    'overlay'
+  ).classList.remove('show');
+
+  document.body.style.overflow='';
+
+  resetSwipe();
+
 }
 
-function selectSide(side){
-  state.selectedSide = side;
 
-  const yb = document.getElementById('yesSelect');
-  const nb = document.getElementById('noSelect');
-  if(yb) yb.classList.toggle('selected', side === 'YES');
-  if(nb) nb.classList.toggle('selected', side === 'NO');
+function outsideClose(e){
 
-  // Default price
-  const defaultPrice = side === 'YES' ? state.yesPrice : state.noPrice;
-  const pi = document.getElementById('priceInput');
-  if(pi) pi.value = defaultPrice.toFixed(2);
-
-  updateSummary();
-}
-
-function changePrice(delta){
-  const pi = document.getElementById('priceInput');
-  let p = Number(pi.value) || 5;
-  p = Math.max(1, Math.min(9, Math.round((p + delta) * 100) / 100));
-  pi.value = p.toFixed(2);
-  updateSummary();
-}
-
-function setQty(q){
-  document.getElementById('qtyInput').value = q;
-  updateSummary();
-}
-
-function updateSummary(){
-  const pi = document.getElementById('priceInput');
-  const qi = document.getElementById('qtyInput');
-  if(!pi || !qi) return;
-
-  const p = Number(pi.value) || 0;
-  const q = Number(qi.value) || 0;
-  const inv = p * q;
-  const ret = q * 10;
-
-  setText('sumSide', state.selectedSide);
-  setText('sumPrice', money(p));
-  setText('sumQty', q);
-  setText('sumInvestment', money(inv));
-  setText('sumReturn', money(ret));
-  setText('sumBalance', money(state.balance));
-
-  const btn = document.getElementById('confirmBtn');
-  if(btn){
-    btn.disabled = p < 1 || p > 9 || q < 1 || inv > state.balance || !state.loggedIn;
-  }
-}
-
-/* ================= CONFIRM TRADE ================= */
-async function confirmTrade(){
-  const pi = document.getElementById('priceInput');
-  const qi = document.getElementById('qtyInput');
-  const p = Number(pi.value);
-  const q = Number(qi.value);
-  const inv = p * q;
-
-  if(!state.loggedIn || !state.uid){ toast('Login required', 'error'); return; }
-  if(!matchId){ toast('Match ID missing', 'error'); return; }
-  if(p < 1 || p > 9){ toast('Price must be ₹1 - ₹9', 'error'); return; }
-  if(q < 1){ toast('Quantity min 1', 'error'); return; }
-  if(inv > state.balance){ toast('Insufficient balance', 'error'); return; }
-
-  const btn = document.getElementById('confirmBtn');
-  btn.disabled = true;
-  btn.textContent = 'Placing...';
-
-  try{
-    // Re-verify balance
-    const balSnap = await db.ref('users/' + state.uid + '/wallet/balance').once('value');
-    const bal = Number(balSnap.val() || 0);
-    if(inv > bal){ toast('Insufficient balance', 'error'); btn.disabled=false; btn.textContent='Confirm Trade'; return; }
-
-    // Re-verify availability
-    const side = state.selectedSide;
-    const availSnap = await db.ref('matches/' + matchId + '/market/' + side.toLowerCase() + '/available').once('value');
-    const curAvail = Number(availSnap.val() ?? 1000000);
-    if(curAvail < q){
-      toast('Only ' + curAvail + ' shares available now', 'error');
-      btn.disabled=false; btn.textContent='Confirm Trade';
-      return;
-    }
-
-    const m = state.match || {};
-    const key = db.ref('trades').push().key;
-    const sideLabel = side === 'YES' ? (m.teamA || 'YES') : (m.teamB || 'NO');
-
-    const trade = {
-      userId: state.uid,
-      matchId: matchId,
-      teamA: m.teamA || 'Team A',
-      teamB: m.teamB || 'Team B',
-      selectedTeam: sideLabel,
-      side: side,
-      amount: Number(inv.toFixed(2)),
-      odds: Number(p.toFixed(2)),
-      buyPrice: Number(p.toFixed(2)),
-      qty: q,
-      winAmount: Number((q * 10).toFixed(2)),
-      status: 'pending',
-      createdAt: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    const updates = {};
-    updates['trades/' + key] = trade;
-    updates['users/' + state.uid + '/wallet/balance'] = Number((bal - inv).toFixed(2));
-
-    const txKey = db.ref('transactions').push().key;
-    updates['transactions/' + txKey] = {
-      userId: state.uid,
-      type: 'debit',
-      amount: Number(inv.toFixed(2)),
-      description: `Buy ${side} x${q} @ ₹${p.toFixed(2)} on ${m.teamA} vs ${m.teamB}`,
-      matchId: matchId,
-      tradeId: key,
-      date: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    // Price shift
-    const shift = Math.min(0.5, (inv / 1000) * 0.1);
-    let newYes = state.yesPrice;
-    let newNo = state.noPrice;
-    if(side === 'YES'){
-      newYes = Math.min(9, state.yesPrice + shift);
-      newNo = Math.max(1, state.noPrice - shift);
-    } else {
-      newNo = Math.min(9, state.noPrice + shift);
-      newYes = Math.max(1, state.yesPrice - shift);
-    }
-    newYes = Number(newYes.toFixed(2));
-    newNo = Number(newNo.toFixed(2));
-
-    updates['matches/' + matchId + '/oddsA'] = newYes;
-    updates['matches/' + matchId + '/oddsB'] = newNo;
-    updates['matches/' + matchId + '/market/yes/price'] = newYes;
-    updates['matches/' + matchId + '/market/no/price'] = newNo;
-
-    // Update availability
-    if(side === 'YES'){
-      updates['matches/' + matchId + '/market/yes/available'] = Math.max(0, curAvail - q);
-    } else {
-      updates['matches/' + matchId + '/market/no/available'] = Math.max(0, curAvail - q);
-    }
-
-    await db.ref().update(updates);
+  if(e.target.id==='overlay'){
 
     closeTrade();
-    toast('✅ Trade placed successfully!', 'success');
 
-  } catch(e){
-    console.error(e);
-    toast('Trade failed: ' + (e.message || 'Unknown'), 'error');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Confirm Trade';
   }
+
 }
 
-/* ================= EXIT POSITION ================= */
-async function exitTrade(tradeId){
-  const t = state.myTrades.find(x => x.id === tradeId);
-  if(!t){ toast('Trade not found', 'error'); return; }
 
-  const side = (t.side||'YES').toUpperCase();
-  const curP = side === 'YES' ? state.yesPrice : state.noPrice;
-  const qty = Number(t.qty||0);
-  const invested = Number(t.amount||0);
-  const currentValue = qty * curP;
-  const pnl = currentValue - invested;
+function exitTrade(){
 
-  const ok = confirm(
-    `Exit this ${side} position?\n\n` +
-    `Qty: ${qty}\n` +
-    `Buy: ₹${Number(t.odds||0).toFixed(2)}\n` +
-    `Now: ₹${curP.toFixed(2)}\n` +
-    `Invested: ₹${invested.toFixed(2)}\n` +
-    `Current Value: ₹${currentValue.toFixed(2)}\n` +
-    `P&L: ${pnl>=0?'+':''}₹${pnl.toFixed(2)}\n\n` +
-    `Wallet will receive ₹${currentValue.toFixed(2)}`
+  closeTrade();
+
+  setTimeout(
+    exitPage,
+    200
   );
-  if(!ok) return;
+
+}
+
+
+function exitPage(){
+
+  const returnUrl =
+    sessionStorage.getItem('tradeReturnUrl') ||
+    'wallet.html';
+
+  location.href=returnUrl;
+
+}
+
+
+/* SIDE */
+
+function setSide(side){
+
+  state.side=side;
+
+  document.getElementById(
+    'pillYes'
+  ).classList.toggle(
+    'active',
+    side==='YES'
+  );
+
+  document.getElementById(
+    'pillNo'
+  ).classList.toggle(
+    'active',
+    side==='NO'
+  );
+
+  updateSheet();
+
+}
+
+
+function price(){
+
+  return state.side==='YES'
+    ? state.yesPrice
+    : state.noPrice;
+
+}
+
+
+function available(){
+
+  return state.side==='YES'
+    ? state.yesAvailable
+    : state.noAvailable;
+
+}
+
+
+/* QUANTITY */
+
+function setQty(q){
+
+  state.qty=Math.max(
+    1,
+    Math.floor(Number(q) || 1)
+  );
+
+  document.getElementById(
+    'qtyInput'
+  ).value=state.qty;
+
+  updateSheet();
+
+}
+
+
+function changeQty(d){
+
+  setQty(
+    state.qty+d
+  );
+
+}
+
+
+function syncQty(){
+
+  setQty(
+    document.getElementById(
+      'qtyInput'
+    ).value
+  );
+
+}
+
+
+/* SHEET */
+
+function updateSheet(){
+
+  const p=price();
+
+  const q=state.qty;
+
+  const inv=p*q;
+
+  const ret=q*10;
+
+  const profit=ret-inv;
+
+
+  document.getElementById(
+    'sheetPrice'
+  ).textContent=money(p);
+
+
+  document.getElementById(
+    'sheetAvailable'
+  ).textContent=
+    available().toLocaleString('en-IN') +
+    ' qty available';
+
+
+  document.getElementById(
+    'pillYesPrice'
+  ).textContent=
+    money(state.yesPrice);
+
+
+  document.getElementById(
+    'pillNoPrice'
+  ).textContent=
+    money(state.noPrice);
+
+
+  document.getElementById(
+    'investment'
+  ).textContent=
+    money(inv);
+
+
+  document.getElementById(
+    'winning'
+  ).textContent=
+    money(ret);
+
+
+  document.getElementById(
+    'profit'
+  ).textContent=
+    money(profit);
+
+
+  document.getElementById(
+    'avgPrice'
+  ).textContent=
+    money(p);
+
+
+  document.getElementById(
+    'sheetBalance'
+  ).textContent=
+    money(state.balance);
+
+
+  document.getElementById(
+    'swipe'
+  ).classList.toggle(
+    'disabled',
+    inv>state.balance ||
+    q>available()
+  );
+
+}
+
+
+/* =====================================================
+   MOBILE SWIPE SYSTEM
+   ===================================================== */
+
+const swipeState={
+
+  active:false,
+
+  startX:0,
+
+  currentX:0,
+
+  maxX:0,
+
+  pointerId:null
+
+};
+
+
+const swipeEl=
+  document.getElementById('swipe');
+
+const knobEl=
+  document.getElementById('knob');
+
+
+function getSwipeMax(){
+
+  if(!swipeEl) return 0;
+
+  return Math.max(
+    0,
+    swipeEl.clientWidth -
+    knobEl.offsetWidth -
+    10
+  );
+
+}
+
+
+function setKnobPosition(
+  x,
+  animate=false
+){
+
+  if(!knobEl) return;
+
+
+  x=Math.max(
+    0,
+    Math.min(
+      x,
+      swipeState.maxX
+    )
+  );
+
+
+  knobEl.style.transition=
+    animate
+      ? 'transform .18s ease'
+      : 'none';
+
+
+  knobEl.style.transform=
+    `translateX(${x}px)`;
+
+
+  swipeState.currentX=x;
+
+}
+
+
+function startSwipe(e){
+
+  if(
+    !swipeEl ||
+    swipeEl.classList.contains('disabled')
+  ){
+
+    return;
+
+  }
+
+
+  const inv=
+    price()*state.qty;
+
+
+  if(inv>state.balance){
+
+    toast('Insufficient balance');
+
+    return;
+
+  }
+
+
+  if(state.qty>available()){
+
+    toast('Not enough quantity available');
+
+    return;
+
+  }
+
+
+  swipeState.active=true;
+
+  swipeState.pointerId=e.pointerId;
+
+  swipeState.maxX=getSwipeMax();
+
+
+  const rect=
+    swipeEl.getBoundingClientRect();
+
+
+  const fingerX=
+    e.clientX-rect.left;
+
+
+  swipeState.startX=
+    fingerX -
+    Math.min(
+      swipeState.maxX,
+      Math.max(
+        0,
+        swipeState.currentX
+      )
+    );
+
 
   try{
-    const balSnap = await db.ref('users/' + state.uid + '/wallet/balance').once('value');
-    const bal = Number(balSnap.val() || 0);
-    const newBal = Number((bal + currentValue).toFixed(2));
 
-    const availSnap = await db.ref('matches/' + matchId + '/market/' + side.toLowerCase() + '/available').once('value');
-    const oldAvail = Number(availSnap.val() ?? 1000000);
+    swipeEl.setPointerCapture(
+      e.pointerId
+    );
 
-    const updates = {};
-    updates['trades/' + tradeId + '/status'] = pnl >= 0 ? 'win' : 'loss';
-    updates['trades/' + tradeId + '/exitPrice'] = Number(curP.toFixed(2));
-    updates['trades/' + tradeId + '/exitValue'] = Number(currentValue.toFixed(2));
-    updates['trades/' + tradeId + '/pnl'] = Number(pnl.toFixed(2));
-    updates['trades/' + tradeId + '/settledAt'] = firebase.database.ServerValue.TIMESTAMP;
-    updates['trades/' + tradeId + '/settledBy'] = 'user_exit';
+  }catch(err){}
 
-    updates['users/' + state.uid + '/wallet/balance'] = newBal;
-    updates['matches/' + matchId + '/market/' + side.toLowerCase() + '/available'] = oldAvail + qty;
 
-    const txKey = db.ref('transactions').push().key;
-    updates['transactions/' + txKey] = {
-      userId: state.uid,
-      type: 'credit',
-      amount: Number(currentValue.toFixed(2)),
-      description: `Exit ${side} (${pnl>=0?'Profit':'Loss'}: ₹${pnl.toFixed(2)})`,
-      matchId: matchId,
-      tradeId: tradeId,
-      date: firebase.database.ServerValue.TIMESTAMP
-    };
+  e.preventDefault();
 
-    await db.ref().update(updates);
-    toast(`✅ Exited! ${pnl>=0?'+':''}₹${pnl.toFixed(2)}`, pnl>=0?'success':'error');
-
-  } catch(e){
-    console.error(e);
-    toast('Exit failed: ' + (e.message || 'Unknown'), 'error');
-  }
 }
 
-/* ================= TABS ================= */
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    // Future: filter by tab.dataset.tab
-  };
-});
 
-/* ================= NAV ================= */
-function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+function moveSwipe(e){
 
-/* ================= INITIAL ================= */
-updateBalance();
-renderOrderBook();
-renderPortfolio();
+  if(!swipeState.active) return;
+
+  if(
+    e.pointerId !==
+    swipeState.pointerId
+  ){
+
+    return;
+
+  }
+
+
+  const rect=
+    swipeEl.getBoundingClientRect();
+
+
+  const fingerX=
+    e.clientX-rect.left;
+
+
+  let newX=
+    fingerX -
+    swipeState.startX;
+
+
+  newX=Math.max(
+    0,
+    Math.min(
+      newX,
+      swipeState.maxX
+    )
+  );
+
+
+  setKnobPosition(
+    newX,
+    false
+  );
+
+
+  e.preventDefault();
+
+}
+
+
+function endSwipe(e){
+
+  if(!swipeState.active) return;
+
+
+  if(
+    e &&
+    e.pointerId !==
+    swipeState.pointerId
+  ){
+
+    return;
+
+  }
+
+
+  const max=
+    swipeState.maxX;
+
+  const current=
+    swipeState.currentX;
+
+
+  swipeState.active=false;
+
+
+  try{
+
+    if(e){
+
+      swipeEl.releasePointerCapture(
+        e.pointerId
+      );
+
+    }
+
+  }catch(err){}
+
+
+  /*
+    75% swipe complete hone par
+    confirmation.
+  */
+
+  if(
+    max>0 &&
+    current>=max*0.75
+  ){
+
+    setKnobPosition(
+      max,
+      true
+    );
+
+
+    setTimeout(
+      ()=>{
+        confirmTrade();
+      },
+      120
+    );
+
+  }else{
+
+    resetSwipe();
+
+  }
+
+}
+
+
+function resetSwipe(){
+
+  swipeState.active=false;
+
+  swipeState.currentX=0;
+
+
+  if(knobEl){
+
+    knobEl.style.transition=
+      'transform .18s ease';
+
+    knobEl.style.transform=
+      'translateX(0)';
+
+  }
+
+}
+
+
+/* POINTER EVENTS */
+
+swipeEl.addEventListener(
+  'pointerdown',
+  startSwipe,
+  {passive:false}
+);
+
+swipeEl.addEventListener(
+  'pointermove',
+  moveSwipe,
+  {passive:false}
+);
+
+swipeEl.addEventListener(
+  'pointerup',
+  endSwipe,
+  {passive:false}
+);
+
+swipeEl.addEventListener(
+  'pointercancel',
+  endSwipe,
+  {passive:false}
+);
+
+
+swipeEl.addEventListener(
+  'lostpointercapture',
+  ()=>{
+    if(swipeState.active){
+      resetSwipe();
+    }
+  }
+);
+
+
+/* SCREEN ROTATION / RESIZE */
+
+window.addEventListener(
+  'resize',
+  ()=>{
+    if(!swipeState.active){
+
+      swipeState.maxX=
+        getSwipeMax();
+
+      setKnobPosition(
+        0,
+        false
+      );
+
+    }
+  }
+);
+
+
+/* =====================================================
+   CONFIRM TRADE
+   ===================================================== */
+
+async function confirmTrade(){
+
+  const inv=
+    price()*state.qty;
+
+
+  if(inv>state.balance){
+
+    toast('Insufficient balance');
+
+    resetSwipe();
+
+    return;
+
+  }
+
+
+  if(state.qty>available()){
+
+    toast('Not enough quantity available');
+
+    resetSwipe();
+
+    return;
+
+  }
+
+
+  if(
+    !state.loggedIn ||
+    !matchId
+  ){
+
+    toast('Login required');
+
+    resetSwipe();
+
+    return;
+
+  }
+
+
+  try{
+
+    const w=
+      db.ref(
+        'users/' +
+        state.uid +
+        '/wallet/balance'
+      );
+
+
+    const snap=
+      await w.once('value');
+
+
+    const bal=
+      Number(
+        snap.val() || 0
+      );
+
+
+    if(inv>bal){
+
+      toast('Insufficient balance');
+
+      resetSwipe();
+
+      return;
+
+    }
+
+
+    const key=
+      db.ref('trades').push().key;
+
+
+    const sideLabel=
+      state.side==='YES'
+        ? (
+            state.match?.teamA ||
+            'Team A'
+          )
+        : (
+            state.match?.teamB ||
+            'Team B'
+          );
+
+
+    const trade={
+
+      userId:state.uid,
+
+      matchId:matchId,
+
+      teamA:
+        state.match?.teamA ||
+        'Team A',
+
+      teamB:
+        state.match?.teamB ||
+        'Team B',
+
+      selectedTeam:sideLabel,
+
+      side:state.side,
+
+      amount:
+        Number(
+          inv.toFixed(2)
+        ),
+
+      odds:price(),
+
+      qty:state.qty,
+
+      winAmount:
+        Number(
+          (state.qty*10).toFixed(2)
+        ),
+
+      status:'pending',
+
+      createdAt:
+        firebase.database.ServerValue.TIMESTAMP
+
+    };
+
+
+    const updates={};
+
+
+    updates[
+      'trades/'+key
+    ]=trade;
+
+
+    updates[
+      'users/'+
+      state.uid+
+      '/wallet/balance'
+    ]=
+      Number(
+        (bal-inv).toFixed(2)
+      );
+
+
+    updates[
+      'transactions/'+key
+    ]={
+
+      userId:state.uid,
+
+      type:'debit',
+
+      amount:
+        Number(
+          inv.toFixed(2)
+        ),
+
+      description:
+        `Trade ${state.side} x${state.qty} @ ${price()} on ${state.match?.teamA} vs ${state.match?.teamB}`,
+
+      date:
+        firebase.database.ServerValue.TIMESTAMP
+
+    };
+
+
+    /* PRICE MOVEMENT */
+
+    const oldYes=
+      state.yesPrice;
+
+    const oldNo=
+      state.noPrice;
+
+
+    const shift=
+      Math.min(
+        0.5,
+        (inv/1000)*0.1
+      );
+
+
+    let newYes=oldYes;
+
+    let newNo=oldNo;
+
+
+    if(state.side==='YES'){
+
+      newYes=
+        Math.min(
+          9,
+          oldYes+shift
+        );
+
+      newNo=
+        Math.max(
+          1,
+          oldNo-shift
+        );
+
+    }else{
+
+      newNo=
+        Math.min(
+          9,
+          oldNo+shift
+        );
+
+      newYes=
+        Math.max(
+          1,
+          oldYes-shift
+        );
+
+    }
+
+
+    newYes=
+      Number(
+        newYes.toFixed(2)
+      );
+
+    newNo=
+      Number(
+        newNo.toFixed(2)
+      );
+
+
+    updates[
+      'matches/'+
+      matchId+
+      '/oddsA'
+    ]=newYes;
+
+
+    updates[
+      'matches/'+
+      matchId+
+      '/oddsB'
+    ]=newNo;
+
+
+    updates[
+      'matches/'+
+      matchId+
+      '/market/yes/price'
+    ]=newYes;
+
+
+    updates[
+      'matches/'+
+      matchId+
+      '/market/no/price'
+    ]=newNo;
+
+
+    /* AVAILABLE QUANTITY */
+
+    const yesSnap=
+      await db.ref(
+        'matches/'+
+        matchId+
+        '/market/yes/available'
+      ).once('value');
+
+
+    const noSnap=
+      await db.ref(
+        'matches/'+
+        matchId+
+        '/market/no/available'
+      ).once('value');
+
+
+    let yesAvail=
+      Number(
+        yesSnap.val() ??
+        1000000
+      );
+
+
+    let noAvail=
+      Number(
+        noSnap.val() ??
+        1000000
+      );
+
+
+    if(state.side==='YES'){
+
+      yesAvail=
+        Math.max(
+          0,
+          yesAvail-state.qty
+        );
+
+    }else{
+
+      noAvail=
+        Math.max(
+          0,
+          noAvail-state.qty
+        );
+
+    }
+
+
+    updates[
+      'matches/'+
+      matchId+
+      '/market/yes/available'
+    ]=yesAvail;
+
+
+    updates[
+      'matches/'+
+      matchId+
+      '/market/no/available'
+    ]=noAvail;
+
+
+    await db.ref().update(
+      updates
+    );
+
+
+    closeTrade();
+
+
+    toast(
+      '✅ Trade placed! Price updated'
+    );
+
+
+    setTimeout(
+      ()=>{
+
+        const returnUrl=
+          sessionStorage.getItem(
+            'tradeReturnUrl'
+          ) ||
+          'wallet.html';
+
+
+        sessionStorage.removeItem(
+          'tradeReturnUrl'
+        );
+
+
+        location.href=
+          returnUrl;
+
+      },
+      1500
+    );
+
+
+  }catch(e){
+
+    console.error(e);
+
+    resetSwipe();
+
+    toast(
+      'Trade failed: ' +
+      (e.message || 'Unknown error')
+    );
+
+  }
+
+}
+
+
+/* MY TRADES */
+
+function renderTrades(){
+
+  const box=
+    document.getElementById(
+      'tradeList'
+    );
+
+
+  if(!state.loggedIn){
+
+    box.innerHTML=
+      '<div class="empty">Login to see your trades.</div>';
+
+    document.getElementById(
+      'tradeCount'
+    ).textContent='';
+
+    return;
+
+  }
+
+
+  if(!state.myTrades.length){
+
+    box.innerHTML=
+      '<div class="empty">No trades yet.<br>Choose YES or NO to place one.</div>';
+
+    document.getElementById(
+      'tradeCount'
+    ).textContent='';
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    'tradeCount'
+  ).textContent=
+    state.myTrades.length +
+    ' trades';
+
+
+  box.innerHTML=
+    state.myTrades.map(t=>`
+
+      <div
+        class="book-row"
+        style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+
+        <div>
+
+          <b>${t.side || '—'}</b>
+
+          <small
+            style="display:block;color:#888">
+            ${Number(t.qty || 0)} qty
+          </small>
+
+        </div>
+
+        <div>
+          ${money(t.odds)}
+        </div>
+
+        <div>
+          ${money(t.amount)}
+        </div>
+
+        <div
+          style="
+            color:${
+              t.status==='win'
+                ? '#159b4c'
+                : t.status==='loss'
+                  ? '#d92d20'
+                  : '#f39c12'
+            };
+            text-transform:uppercase;
+            font-size:10px;
+            font-weight:700">
+
+          ${t.status || 'pending'}
+
+        </div>
+
+      </div>
+
+    `).join('');
+
+}
+
+
+/* TABS */
+
+function switchTab(tab,btn){
+
+  document.querySelectorAll(
+    '.tab'
+  ).forEach(
+    x=>x.classList.remove('active')
+  );
+
+
+  btn.classList.add('active');
+
+
+  document.getElementById(
+    'marketView'
+  ).style.display=
+    tab==='market'
+      ? 'block'
+      : 'none';
+
+
+  document.getElementById(
+    'activityView'
+  ).style.display=
+    tab==='activity'
+      ? 'block'
+      : 'none';
+
+}
+
+
+/* =====================================================
+   FIREBASE AUTH
+   ===================================================== */
+
+auth.onAuthStateChanged(
+  user=>{
+
+    if(user){
+
+      state.loggedIn=true;
+
+      state.uid=user.uid;
+
+
+      /* BALANCE */
+
+      if(walletRef){
+
+        walletRef.off();
+
+      }
+
+
+      walletRef=
+        db.ref(
+          'users/' +
+          user.uid +
+          '/wallet/balance'
+        );
+
+
+      walletRef.on(
+        'value',
+        s=>{
+
+          state.balance=
+            Number(
+              s.val() || 0
+            );
+
+          render();
+
+          updateSheet();
+
+        },
+        err=>{
+
+          console.error(
+            'Balance read error:',
+            err
+          );
+
+          toast(
+            'Cannot read wallet balance'
+          );
+
+        }
+      );
+
+
+      /* MY TRADES */
+
+      if(myTradesRef){
+
+        myTradesRef.off();
+
+      }
+
+
+      myTradesRef=
+        db.ref('trades')
+          .orderByChild('userId')
+          .equalTo(user.uid);
+
+
+      myTradesRef.on(
+        'value',
+        s=>{
+
+          const arr=[];
+
+
+          s.forEach(
+            c=>{
+              arr.push({
+                id:c.key,
+                ...c.val()
+              });
+            }
+          );
+
+
+          arr.sort(
+            (a,b)=>
+              Number(
+                b.createdAt || 0
+              ) -
+              Number(
+                a.createdAt || 0
+              )
+          );
+
+
+          state.myTrades=arr;
+
+          renderTrades();
+
+        }
+      );
+
+
+    }else{
+
+      state.loggedIn=false;
+
+      state.uid=null;
+
+      state.balance=0;
+
+      state.myTrades=[];
+
+
+      if(walletRef){
+
+        walletRef.off();
+
+      }
+
+
+      if(myTradesRef){
+
+        myTradesRef.off();
+
+      }
+
+
+      render();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   MATCH LIVE SYNC
+   ===================================================== */
+
+if(matchId){
+
+  marketRef=
+    db.ref(
+      'matches/'+
+      matchId
+    );
+
+
+  marketRef.on(
+    'value',
+    s=>{
+
+      if(!s.exists()){
+
+        toast(
+          'Match not found'
+        );
+
+        return;
+
+      }
+
+
+      state.match=s.val();
+
+
+      const m=
+        state.match.market ||
+        {};
+
+
+      const yes=
+        m.yes ||
+        {};
+
+
+      const no=
+        m.no ||
+        {};
+
+
+      state.yesPrice=
+        Number(
+          yes.price ??
+          state.match.oddsA ??
+          5
+        );
+
+
+      state.noPrice=
+        Number(
+          no.price ??
+          state.match.oddsB ??
+          5
+        );
+
+
+      state.yesAvailable=
+        Number(
+          yes.available ??
+          1000000
+        );
+
+
+      state.noAvailable=
+        Number(
+          no.available ??
+          1000000
+        );
+
+
+      render();
+
+      updateSheet();
+
+    }
+  );
+
+
+  /* ALL TRADES */
+
+  allTradesRef=
+    db.ref('trades')
+      .orderByChild('matchId')
+      .equalTo(matchId);
+
+
+  allTradesRef.on(
+    'value',
+    s=>{
+
+      const arr=[];
+
+
+      s.forEach(
+        c=>{
+          arr.push(c.val());
+        }
+      );
+
+
+      state.allTrades=arr;
+
+      renderBook();
+
+    }
+  );
+
+
+}else{
+
+  toast(
+    'No match ID in URL'
+  );
+
+  render();
+
+}
+
+
+/* INITIAL */
+
+render();
+
 </script>
+
 </body>
 </html>
