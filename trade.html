@@ -52,12 +52,14 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .order-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .order-title button{border:0;background:none;font-size:22px}
 .book-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.book-col h4{font-size:12px;margin-bottom:12px}
+.book-col h4{font-size:11px;margin-bottom:10px;letter-spacing:.5px}
 .book-col.yes h4{color:#0aaf4b}
 .book-col.no h4{color:#df2330}
-.book-row{display:flex;justify-content:space-between;padding:10px 4px;border-bottom:1px solid #eee;font-size:13px}
-.yes-price{color:#0aa948}
-.no-price{color:#db2630}
+.book-row{display:flex;justify-content:space-between;padding:8px 4px;border-bottom:1px solid #eee;font-size:12px}
+.book-row:last-child{border-bottom:0}
+.yes-price{color:#0aa948;font-weight:bold}
+.no-price{color:#db2630;font-weight:bold}
+.user-count{font-size:11px;color:#888;margin-top:8px;text-align:center;font-weight:600;padding-top:8px;border-top:1px dashed #ddd}
 .portfolio-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee;font-size:13px;gap:10px}
 .exit-btn{border:0;background:#ffd8da;color:#c51e2b;border-radius:9px;padding:8px 12px;font-weight:bold}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:auto;display:flex;background:#fff;border-top:1px solid #ddd;z-index:10}
@@ -85,6 +87,14 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .toast.success{background:#0aa84f}
 .toast.error{background:#d92d20}
 @keyframes toast{to{transform:translateX(-50%) translateY(0)}}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;margin-left:4px}
+.badge.p2p{background:#e5f7eb;color:#0aaf4b}
+.badge.admin{background:#fff5dc;color:#805500}
+.badge.pending{background:#eee;color:#666}
+.market-tabs-bar{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;background:#fff;border-bottom:1px solid #eee;scrollbar-width:none}
+.market-tabs-bar::-webkit-scrollbar{display:none}
+.market-tab{padding:8px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;color:#666;font-size:12px;font-weight:bold;white-space:nowrap;cursor:pointer;transition:all .2s}
+.market-tab.active{background:#4ea1ff;border-color:#4ea1ff;color:#fff}
 @media(min-width:601px){.app{box-shadow:0 0 30px #00000014}}
 </style>
 </head>
@@ -100,7 +110,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   <button class="wallet-btn" onclick="location.href='wallet.html'">▣</button>
 </header>
 
-<!-- LIVE SCORE -->
 <section class="score-box">
   <div class="score-top">
     <div class="team">
@@ -122,7 +131,8 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   <div class="balls" id="ballStrip"></div>
 </section>
 
-<!-- TABS -->
+<div class="market-tabs-bar" id="marketTabs"></div>
+
 <div class="tabs">
   <button class="tab active" data-tab="all">All</button>
   <button class="tab" data-tab="match">Match</button>
@@ -130,7 +140,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   <button class="tab" data-tab="wickets">Wickets</button>
 </div>
 
-<!-- WALLET -->
 <section class="wallet">
   <div class="wallet-row">
     <div>
@@ -147,42 +156,26 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
     ⚠️ Please <a href="login.html" style="color:#805500;font-weight:bold">Login</a> to place real trades.
   </div>
 
-  <!-- MAIN MARKET -->
+  <div class="notice" id="liquidityNotice" style="background:#e5f7eb;color:#0a6b3a">
+    💧 Market Liquidity: <b id="liqYes">0</b> YES • <b id="liqNo">0</b> NO
+  </div>
+
   <section class="card" id="mainMarketCard">
-    <div class="trade-count" id="mainTradeCount">👤 0 trades</div>
+    <div class="trade-count" id="mainTradeCount">👤 0 open orders</div>
     <div class="question-row">
       <h3 id="mainQuestion">Who will win?</h3>
       <div class="market-img">🏏</div>
     </div>
     <div class="prediction">
-      <button class="yes-btn" id="yesBtn" onclick="openTrade('YES')">
-        YES | ₹<span id="yesPrice">5.00</span>
+      <button class="yes-btn" id="yesBtn" onclick="openTrade('YES','BUY')">
+        <span id="yesBtnLabel">YES</span> | ₹<span id="yesPrice">5.00</span>
       </button>
-      <button class="no-btn" id="noBtn" onclick="openTrade('NO')">
-        NO | ₹<span id="noPrice">5.00</span>
+      <button class="no-btn" id="noBtn" onclick="openTrade('NO','BUY')">
+        <span id="noBtnLabel">NO</span> | ₹<span id="noPrice">5.00</span>
       </button>
     </div>
   </section>
 
-  <!-- ORDER BOOK -->
-  <section class="card">
-    <div class="order-title">
-      <h3>📖 Order Book</h3>
-      <button onclick="renderOrderBook()">↻</button>
-    </div>
-    <div class="book-grid">
-      <div class="book-col yes">
-        <h4>PRICE &nbsp; QTY YES</h4>
-        <div id="yesBook"></div>
-      </div>
-      <div class="book-col no">
-        <h4>PRICE &nbsp; QTY NO</h4>
-        <div id="noBook"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MY TRADES -->
   <section class="card">
     <div class="order-title">
       <h3>My Trades</h3>
@@ -193,7 +186,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 </main>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button onclick="scrollToTop()">🏠<br>Home</button>
   <button onclick="document.getElementById('mainMarketCard').scrollIntoView({behavior:'smooth'})">📊<br>Market</button>
@@ -203,7 +195,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 </div>
 
-<!-- TRADE MODAL -->
 <div class="modal-bg" id="tradeModal">
   <div class="modal">
     <button class="close-btn" onclick="closeTrade()">✕</button>
@@ -213,11 +204,30 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
       <label>Select Side</label>
       <div class="prediction">
         <button id="yesSelect" class="yes-btn" onclick="selectSide('YES')">
-          YES ₹<span id="modalYesPrice">5.00</span>
+          <span id="modalYesLabel">YES</span> ₹<span id="modalYesPrice">5.00</span>
         </button>
         <button id="noSelect" class="no-btn" onclick="selectSide('NO')">
-          NO ₹<span id="modalNoPrice">5.00</span>
+          <span id="modalNoLabel">NO</span> ₹<span id="modalNoPrice">5.00</span>
         </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>📖 Live Order Book (P2P)</label>
+      <div class="book-grid" style="background:#f9fafb;border-radius:12px;padding:12px">
+        <div class="book-col yes">
+          <h4 id="obYesHeader">YES — SELLS</h4>
+          <div id="yesBook"></div>
+          <div class="user-count" id="yesUsers">👤 0 sellers</div>
+        </div>
+        <div class="book-col no">
+          <h4 id="obNoHeader">NO — SELLS</h4>
+          <div id="noBook"></div>
+          <div class="user-count" id="noUsers">👤 0 sellers</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:8px;text-align:center">
+        🔴 Real-time • Buy karne pe in sellers se match hoga
       </div>
     </div>
 
@@ -242,6 +252,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
     </div>
 
     <div class="summary">
+      <p><span>Market</span><strong id="sumMarket">Match Winner</strong></p>
       <p><span>Side</span><strong id="sumSide">YES</strong></p>
       <p><span>Price</span><strong id="sumPrice">₹5.00</strong></p>
       <p><span>Quantity</span><strong id="sumQty">5</strong></p>
@@ -250,7 +261,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
       <p><span>Wallet Balance</span><strong id="sumBalance">₹0.00</strong></p>
     </div>
 
-    <button class="confirm-btn" id="confirmBtn" onclick="confirmTrade()">Confirm Trade</button>
+    <button class="confirm-btn" id="confirmBtn" onclick="confirmTrade()">Confirm Buy</button>
   </div>
 </div>
 
@@ -277,50 +288,42 @@ const auth = firebase.auth();
 const params = new URLSearchParams(location.search);
 const matchId = params.get('id');
 
-/* ================= STATE ================= */
 let state = {
-  match: null,
-  uid: null,
-  loggedIn: false,
-  balance: 0,
-  yesPrice: 5,
-  noPrice: 5,
-  yesAvail: 1000000,
-  noAvail: 1000000,
+  match: null, uid: null, loggedIn: false, balance: 0,
+  markets: {},
+  activeMarketId: null,
+  activeMarket: null,
+  marketOrderbooks: {},
   myTrades: [],
-  allTrades: [],
   selectedSide: 'YES',
-  currentTradeType: 'main'   // 'main' or 'overs' etc (future)
+  tradeMode: 'BUY'
 };
 
 let walletRef = null;
 let matchRef = null;
+let marketsRef = null;
 let myTradesRef = null;
-let allTradesRef = null;
+let obListeners = {};
 
-/* ================= HELPERS ================= */
-function money(n){
-  return '₹' + Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
+function money(n){ return '₹' + Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function toast(msg, type=''){
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show ' + type;
   clearTimeout(window.tt);
-  window.tt = setTimeout(()=>{ t.className='toast'; }, 2600);
+  window.tt = setTimeout(()=>{ t.className='toast'; }, 2800);
 }
 function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent = val; }
-function setHTML(id, val){ const el=document.getElementById(id); if(el) el.innerHTML = val; }
 function setDisplay(id, val){ const el=document.getElementById(id); if(el) el.style.display = val; }
+function nowTs(){ return Date.now(); }
+function esc(s){ return String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 /* ================= AUTH ================= */
 auth.onAuthStateChanged(user => {
   if(user){
-    state.loggedIn = true;
-    state.uid = user.uid;
+    state.loggedIn = true; state.uid = user.uid;
     setDisplay('loginNotice', 'none');
 
-    // Wallet listener
     if(walletRef) walletRef.off();
     walletRef = db.ref('users/' + user.uid + '/wallet/balance');
     walletRef.on('value', s => {
@@ -328,63 +331,69 @@ auth.onAuthStateChanged(user => {
       updateBalance();
     });
 
-    // My trades listener
     if(myTradesRef) myTradesRef.off();
     myTradesRef = db.ref('trades').orderByChild('userId').equalTo(user.uid);
     myTradesRef.on('value', s => {
       const arr = [];
       s.forEach(c => {
         const t = c.val();
-        // only this match
-        if(t.matchId === matchId){
-          arr.push({ id: c.key, ...t });
-        }
+        if(t.matchId === matchId) arr.push({ id: c.key, ...t });
       });
       arr.sort((a,b) => Number(b.createdAt||0) - Number(a.createdAt||0));
       state.myTrades = arr;
       renderPortfolio();
     });
-
   } else {
-    state.loggedIn = false;
-    state.uid = null;
-    state.balance = 0;
-    state.myTrades = [];
+    state.loggedIn = false; state.uid = null; state.balance = 0; state.myTrades = [];
     setDisplay('loginNotice', 'flex');
     updateBalance();
     renderPortfolio();
   }
 });
 
-/* ================= MATCH DATA ================= */
+/* ================= MATCH LISTENER ================= */
 if(matchId){
   matchRef = db.ref('matches/' + matchId);
   matchRef.on('value', s => {
-    if(!s.exists()){
-      toast('Match not found', 'error');
-      return;
-    }
+    if(!s.exists()){ toast('Match not found', 'error'); return; }
     state.match = s.val();
     renderMatch();
   });
 
-  allTradesRef = db.ref('trades').orderByChild('matchId').equalTo(matchId);
-  allTradesRef.on('value', s => {
-    const arr = [];
-    s.forEach(c => arr.push(c.val()));
-    state.allTrades = arr;
-    renderOrderBook();
-    renderTradeCount();
+  marketsRef = db.ref('matches/' + matchId + '/markets');
+  marketsRef.on('value', s => {
+    state.markets = s.val() || {};
+    if(!state.activeMarketId || !state.markets[state.activeMarketId]){
+      const first = Object.keys(state.markets)[0];
+      state.activeMarketId = first || null;
+    }
+    renderMarketTabs();
+    renderActiveMarket();
+    // Setup orderbook listeners per market
+    Object.keys(state.markets).forEach(mid => setupMarketOrderbookListener(mid));
   });
-
 } else {
   toast('No match ID in URL', 'error');
 }
 
-/* ================= RENDER MATCH ================= */
+function setupMarketOrderbookListener(mid){
+  const path = `matches/${matchId}/markets/${mid}/orderbook`;
+  if(obListeners[mid]) return;
+  const ref = db.ref(path);
+  ref.on('value', s => {
+    state.marketOrderbooks[mid] = s.val() || { yes:{buys:{},sells:{}}, no:{buys:{},sells:{}} };
+    if(mid === state.activeMarketId){
+      renderOrderBook();
+      renderActiveMarket();
+      renderTradeCount();
+    }
+  });
+  obListeners[mid] = ref;
+}
+
+/* ================= RENDER ================= */
 function renderMatch(){
   const m = state.match || {};
-
   setText('matchTitle', (m.teamA||'Team A') + ' vs ' + (m.teamB||'Team B'));
   setText('matchStatus', '🔴 ' + String(m.status || 'LIVE').toUpperCase());
   setText('teamAName', m.teamA || 'Team A');
@@ -394,36 +403,13 @@ function renderMatch(){
   setText('teamAOvers', '(' + (m.oversA || m.overs || '0.0') + ')');
   setText('teamBOvers', '(' + (m.oversB || m.overs || '0.0') + ')');
   setText('scoreInfo', m.venue || m.league || 'Live match');
-
-  // Market prices
-  const mkt = m.market || {};
-  state.yesPrice = Number(mkt.yes?.price ?? m.oddsA ?? 5);
-  state.noPrice = Number(mkt.no?.price ?? m.oddsB ?? 5);
-  state.yesAvail = Number(mkt.yes?.available ?? 1000000);
-  state.noAvail = Number(mkt.no?.available ?? 1000000);
-
-  setText('yesPrice', state.yesPrice.toFixed(2));
-  setText('noPrice', state.noPrice.toFixed(2));
-  setText('modalYesPrice', state.yesPrice.toFixed(2));
-  setText('modalNoPrice', state.noPrice.toFixed(2));
-  setText('mainQuestion', m.question || ((m.teamA||'Team A') + ' to win the match?'));
-
-  // Disable if no availability
-  const yb = document.getElementById('yesBtn');
-  const nb = document.getElementById('noBtn');
-  if(yb) yb.disabled = state.yesAvail <= 0;
-  if(nb) nb.disabled = state.noAvail <= 0;
-
-  // Ball by ball
   renderBallStrip(m.lastBalls || []);
 }
 
 function renderBallStrip(balls){
   const strip = document.getElementById('ballStrip');
   if(!strip) return;
-
   let data = balls && balls.length ? balls.slice(-6) : ['0','0','0','0','0','0'];
-
   strip.innerHTML = data.map((b, i) => {
     const isLast = i === data.length - 1;
     let cls = 'ball';
@@ -434,87 +420,121 @@ function renderBallStrip(balls){
   }).join('');
 }
 
-function renderTradeCount(){
-  const c = (state.allTrades || []).length;
-  setText('mainTradeCount', '👤 ' + c.toLocaleString('en-IN') + ' trades');
+function renderMarketTabs(){
+  const box = document.getElementById('marketTabs');
+  const arr = Object.entries(state.markets).filter(([_, m]) => m.active !== false);
+  if(!arr.length){ box.innerHTML = '<div style="padding:8px 14px;color:#999;font-size:12px">No active markets</div>'; return; }
+  box.innerHTML = arr.map(([mid, m]) => `
+    <button class="market-tab ${mid===state.activeMarketId?'active':''}" onclick="switchMarket('${mid}')">
+      ${esc(m.title || mid)}
+    </button>
+  `).join('');
 }
 
-/* ================= ORDER BOOK ================= */
-function renderOrderBook(){
-  const yesOrders = {}, noOrders = {};
+function switchMarket(mid){
+  state.activeMarketId = mid;
+  renderMarketTabs();
+  renderActiveMarket();
+  renderOrderBook();
+  renderTradeCount();
+}
 
-  (state.allTrades || []).forEach(t => {
-    if(t.status && t.status !== 'pending' && t.status !== 'open') return;
-    const side = (t.side || '').toUpperCase();
-    const p = Number(t.odds || 0);
-    const q = Number(t.qty || 0);
-    if(!p || !q) return;
-    if(side === 'YES') yesOrders[p] = (yesOrders[p]||0) + q;
-    else if(side === 'NO') noOrders[p] = (noOrders[p]||0) + q;
+function renderActiveMarket(){
+  const m = state.markets[state.activeMarketId] || {};
+  state.activeMarket = m;
+  setText('mainQuestion', m.title || 'Who will win?');
+  setText('yesBtnLabel', m.yesLabel || 'YES');
+  setText('noBtnLabel', m.noLabel || 'NO');
+  setText('modalYesLabel', m.yesLabel || 'YES');
+  setText('modalNoLabel', m.noLabel || 'NO');
+  setText('obYesHeader', (m.yesLabel || 'YES').toUpperCase() + ' — SELLS');
+  setText('obNoHeader', (m.noLabel || 'NO').toUpperCase() + ' — SELLS');
+  setText('sumMarket', m.title || 'Match Winner');
+
+  const ob = state.marketOrderbooks[state.activeMarketId] || { yes:{sells:{}}, no:{sells:{}} };
+  const yesSells = Object.values(ob.yes?.sells || {}).filter(o => o.status==='open' && (o.qty-(o.filled||0))>0);
+  const noSells  = Object.values(ob.no?.sells || {}).filter(o => o.status==='open' && (o.qty-(o.filled||0))>0);
+  const yesP = yesSells.length ? Math.min(...yesSells.map(o=>Number(o.price))) : Number(m.liquidity?.yes?.price || 5);
+  const noP  = noSells.length  ? Math.min(...noSells.map(o=>Number(o.price)))  : Number(m.liquidity?.no?.price || 5);
+
+  setText('yesPrice', yesP.toFixed(2));
+  setText('noPrice', noP.toFixed(2));
+  setText('modalYesPrice', yesP.toFixed(2));
+  setText('modalNoPrice', noP.toFixed(2));
+  setText('liqYes', m.liquidity?.yes?.qty ?? 0);
+  setText('liqNo', m.liquidity?.no?.qty ?? 0);
+}
+
+function renderTradeCount(){
+  const ob = state.marketOrderbooks[state.activeMarketId] || {};
+  let total = 0;
+  ['yes','no'].forEach(s => {
+    ['buys','sells'].forEach(t => {
+      total += Object.keys(ob[s]?.[t] || {}).length;
+    });
   });
+  setText('mainTradeCount', '👤 ' + total + ' open orders in this market');
+}
 
-  const yesRows = Object.entries(yesOrders).map(([p,q])=>({p:Number(p),q}))
-    .sort((a,b)=>b.p-a.p).slice(0,5);
-  const noRows = Object.entries(noOrders).map(([p,q])=>({p:Number(p),q}))
-    .sort((a,b)=>a.p-b.p).slice(0,5);
+function renderOrderBook(){
+  const ob = state.marketOrderbooks[state.activeMarketId] || { yes:{buys:{},sells:{}}, no:{buys:{},sells:{}} };
+  const yesSells = Object.entries(ob.yes?.sells || {}).map(([id,o])=>({id,...o})).filter(o=>o.status==='open'&&o.qty>(o.filled||0)).sort((a,b)=>a.price-b.price).slice(0,5);
+  const noSells  = Object.entries(ob.no?.sells  || {}).map(([id,o])=>({id,...o})).filter(o=>o.status==='open'&&o.qty>(o.filled||0)).sort((a,b)=>a.price-b.price).slice(0,5);
 
   const yBox = document.getElementById('yesBook');
   const nBox = document.getElementById('noBook');
-  if(!yBox || !nBox) return;
-
-  if(!yesRows.length){
-    yBox.innerHTML = '<div class="empty" style="padding:10px;font-size:11px">No orders</div>';
-  } else {
-    yBox.innerHTML = yesRows.map(r => 
-      `<div class="book-row"><span class="yes-price">₹${r.p.toFixed(2)}</span><strong>${r.q.toLocaleString('en-IN')}</strong></div>`
-    ).join('');
+  if(yBox){
+    yBox.innerHTML = yesSells.length
+      ? yesSells.map(o => `<div class="book-row"><span class="yes-price">₹${Number(o.price).toFixed(2)}</span><strong>${(o.qty-(o.filled||0)).toLocaleString('en-IN')}</strong></div>`).join('')
+      : '<div class="empty" style="padding:10px;font-size:11px">No sellers</div>';
   }
-
-  if(!noRows.length){
-    nBox.innerHTML = '<div class="empty" style="padding:10px;font-size:11px">No orders</div>';
-  } else {
-    nBox.innerHTML = noRows.map(r => 
-      `<div class="book-row"><span class="no-price">₹${r.p.toFixed(2)}</span><strong>${r.q.toLocaleString('en-IN')}</strong></div>`
-    ).join('');
+  if(nBox){
+    nBox.innerHTML = noSells.length
+      ? noSells.map(o => `<div class="book-row"><span class="no-price">₹${Number(o.price).toFixed(2)}</span><strong>${(o.qty-(o.filled||0)).toLocaleString('en-IN')}</strong></div>`).join('')
+      : '<div class="empty" style="padding:10px;font-size:11px">No sellers</div>';
   }
+  setText('yesUsers', '👤 ' + new Set(yesSells.map(o=>o.userId)).size + ' sellers');
+  setText('noUsers', '👤 ' + new Set(noSells.map(o=>o.userId)).size + ' sellers');
 }
 
-/* ================= MY TRADES / PORTFOLIO ================= */
+/* ================= PORTFOLIO ================= */
 function renderPortfolio(){
   const box = document.getElementById('portfolio');
   if(!box) return;
-
-  if(!state.loggedIn){
-    box.innerHTML = '<div class="empty">Login to see your trades.</div>';
-    return;
-  }
-  if(!state.myTrades.length){
-    box.innerHTML = '<div class="empty">📋<br><br>No trades yet. Place one from above!</div>';
-    return;
-  }
+  if(!state.loggedIn){ box.innerHTML = '<div class="empty">Login to see your trades.</div>'; return; }
+  if(!state.myTrades.length){ box.innerHTML = '<div class="empty">📋<br><br>No trades yet. Place one from above!</div>'; return; }
 
   box.innerHTML = state.myTrades.map(t => {
     const side = (t.side||'YES').toUpperCase();
-    const curP = side === 'YES' ? state.yesPrice : state.noPrice;
     const qty = Number(t.qty||0);
     const invested = Number(t.amount||0);
+    const isOpen = (t.status === 'pending' || t.status === 'open');
+    const marketTitle = t.marketTitle || t.marketId || 'Match Winner';
+    const market = state.markets[t.marketId] || {};
+    const ob = state.marketOrderbooks[t.marketId] || {};
+    const sideSells = Object.values(ob[side.toLowerCase()]?.sells || {}).filter(o => o.status==='open' && (o.qty-(o.filled||0))>0);
+    const curP = sideSells.length ? Math.min(...sideSells.map(o=>Number(o.price))) : Number(market.liquidity?.[side.toLowerCase()]?.price || 5);
     const currentValue = qty * curP;
     const pnl = currentValue - invested;
-    const isOpen = (t.status === 'pending' || t.status === 'open');
     const isProfit = pnl >= 0;
 
     if(isOpen){
+      const matchedBadge = t.matchedWith === 'admin'
+        ? '<span class="badge admin">ADMIN</span>'
+        : (t.matchedWith && t.matchedWith !== 'pending' ? '<span class="badge p2p">P2P</span>' : '<span class="badge pending">PENDING</span>');
+
       return `
         <div class="portfolio-row">
           <div>
-            <strong style="color:${side==='YES'?'#0aa84f':'#d92d20'}">${side} • ${qty} Qty</strong>
+            <div style="font-size:11px;color:#999;margin-bottom:4px">${esc(marketTitle)}</div>
+            <strong style="color:${side==='YES'?'#0aa84f':'#d92d20'}">${side} • ${qty} Qty</strong> ${matchedBadge}
             <div style="color:#888;margin-top:5px">Buy: ${money(t.odds)} • Now: ${money(curP)}</div>
             <div style="color:#888;margin-top:5px">Invested: ${money(invested)}</div>
             <div style="color:${isProfit?'#0aa84f':'#d92d20'};margin-top:5px;font-weight:bold">
               P&L: ${isProfit?'+':''}${money(pnl)}
             </div>
           </div>
-          <button class="exit-btn" onclick="exitTrade('${t.id}')">Exit</button>
+          <button class="exit-btn" onclick="openExitModal('${t.id}')">Sell</button>
         </div>
       `;
     } else {
@@ -522,11 +542,12 @@ function renderPortfolio(){
       return `
         <div class="portfolio-row">
           <div>
+            <div style="font-size:11px;color:#999;margin-bottom:4px">${esc(marketTitle)}</div>
             <strong style="color:${side==='YES'?'#0aa84f':'#d92d20'}">${side} • ${qty} Qty</strong>
-            <div style="color:#888;margin-top:5px">${t.status === 'win' ? '🏆 WON' : '❌ LOST'}</div>
+            <div style="color:#888;margin-top:5px">${t.status === 'win' ? '🏆 SOLD/WON' : t.status === 'cancelled' ? '↩️ CANCELLED' : '❌ LOST'}</div>
             <div style="color:#888;margin-top:5px">Invested: ${money(invested)}</div>
             <div style="color:${t.status==='win'?'#0aa84f':'#d92d20'};margin-top:5px;font-weight:bold">
-              ${t.status === 'win' ? '+' + money(winAmount) : '-' + money(invested)}
+              ${t.status === 'win' ? '+' + money(winAmount) : t.status === 'cancelled' ? money(invested) : '-' + money(invested)}
             </div>
           </div>
         </div>
@@ -535,7 +556,6 @@ function renderPortfolio(){
   }).join('');
 }
 
-/* ================= BALANCE UPDATE ================= */
 function updateBalance(){
   setText('balance', money(state.balance));
   setText('sumBalance', money(state.balance));
@@ -543,30 +563,32 @@ function updateBalance(){
 }
 
 /* ================= TRADE MODAL ================= */
-function openTrade(side){
+function openTrade(side, mode){
   if(!state.loggedIn){
     toast('Please login to trade', 'error');
     setTimeout(()=>{ location.href='login.html?redirect='+encodeURIComponent(location.href); }, 1200);
     return;
   }
-  if(!state.match){ toast('Match not loaded', 'error'); return; }
-
-  const avail = side === 'YES' ? state.yesAvail : state.noAvail;
-  if(avail <= 0){
-    toast('No shares available for ' + side, 'error');
-    return;
-  }
+  if(!state.activeMarketId){ toast('No active market', 'error'); return; }
+  const market = state.markets[state.activeMarketId];
+  if(!market || market.active === false){ toast('Market closed', 'error'); return; }
 
   state.selectedSide = side;
-  const defaultPrice = side === 'YES' ? state.yesPrice : state.noPrice;
+  state.tradeMode = mode || 'BUY';
+
+  const ob = state.marketOrderbooks[state.activeMarketId] || {};
+  const sideKey = side.toLowerCase();
+  const sells = Object.values(ob[sideKey]?.sells || {}).filter(o => o.status==='open' && (o.qty-(o.filled||0))>0);
+  const defaultPrice = sells.length ? Math.min(...sells.map(o=>Number(o.price))) : Number(market.liquidity?.[sideKey]?.price || 5);
 
   document.getElementById('tradeModal').classList.add('show');
   document.body.style.overflow = 'hidden';
-
-  document.getElementById('priceInput').value = defaultPrice;
+  document.getElementById('priceInput').value = defaultPrice.toFixed(2);
   document.getElementById('qtyInput').value = 5;
+  document.getElementById('modalTitle').textContent = 'Buy ' + (market.yesLabel || 'YES') + ' / ' + (market.noLabel || 'NO');
 
   selectSide(side);
+  renderOrderBook();
 }
 
 function closeTrade(){
@@ -576,17 +598,18 @@ function closeTrade(){
 
 function selectSide(side){
   state.selectedSide = side;
-
   const yb = document.getElementById('yesSelect');
   const nb = document.getElementById('noSelect');
   if(yb) yb.classList.toggle('selected', side === 'YES');
   if(nb) nb.classList.toggle('selected', side === 'NO');
 
-  // Default price
-  const defaultPrice = side === 'YES' ? state.yesPrice : state.noPrice;
+  const market = state.markets[state.activeMarketId] || {};
+  const ob = state.marketOrderbooks[state.activeMarketId] || {};
+  const sideKey = side.toLowerCase();
+  const sells = Object.values(ob[sideKey]?.sells || {}).filter(o => o.status==='open' && (o.qty-(o.filled||0))>0);
+  const defaultPrice = sells.length ? Math.min(...sells.map(o=>Number(o.price))) : Number(market.liquidity?.[sideKey]?.price || 5);
   const pi = document.getElementById('priceInput');
   if(pi) pi.value = defaultPrice.toFixed(2);
-
   updateSummary();
 }
 
@@ -597,33 +620,118 @@ function changePrice(delta){
   pi.value = p.toFixed(2);
   updateSummary();
 }
-
-function setQty(q){
-  document.getElementById('qtyInput').value = q;
-  updateSummary();
-}
+function setQty(q){ document.getElementById('qtyInput').value = q; updateSummary(); }
 
 function updateSummary(){
   const pi = document.getElementById('priceInput');
   const qi = document.getElementById('qtyInput');
   if(!pi || !qi) return;
-
   const p = Number(pi.value) || 0;
   const q = Number(qi.value) || 0;
   const inv = p * q;
   const ret = q * 10;
-
   setText('sumSide', state.selectedSide);
   setText('sumPrice', money(p));
   setText('sumQty', q);
   setText('sumInvestment', money(inv));
   setText('sumReturn', money(ret));
   setText('sumBalance', money(state.balance));
-
   const btn = document.getElementById('confirmBtn');
-  if(btn){
-    btn.disabled = p < 1 || p > 9 || q < 1 || inv > state.balance || !state.loggedIn;
+  if(btn) btn.disabled = p < 1 || p > 9 || q < 1 || inv > state.balance || !state.loggedIn;
+}
+
+/* ================= MATCHING ENGINE ================= */
+async function matchBuyOrder(side, price, qty, userId, matchId, marketId){
+  const sideKey = side.toLowerCase();
+  const updates = {};
+  let remainingQty = qty;
+  let matchedWith = [];
+  let totalCost = 0;
+  let matchedQtyTotal = 0;
+
+  const obRef = db.ref(`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/sells`);
+  const sellsSnap = await obRef.once('value');
+  const sellOrders = [];
+  sellsSnap.forEach(c => {
+    const o = c.val();
+    if(o && o.status === 'open' && (o.qty - (o.filled||0)) > 0 && Number(o.price) <= price){
+      sellOrders.push({ id: c.key, ...o });
+    }
+  });
+  sellOrders.sort((a,b) => Number(a.price) - Number(b.price));
+
+  for(const order of sellOrders){
+    if(remainingQty <= 0) break;
+    const available = order.qty - (order.filled || 0);
+    const matchQty = Math.min(remainingQty, available);
+    const matchPrice = Number(order.price);
+
+    const sellerBalSnap = await db.ref('users/' + order.userId + '/wallet/balance').once('value');
+    const sellerBal = Number(sellerBalSnap.val() || 0);
+    updates['users/' + order.userId + '/wallet/balance'] = Number((sellerBal + matchQty * matchPrice).toFixed(2));
+
+    if(order.tradeId){
+      updates['trades/' + order.tradeId + '/status'] = 'win';
+      updates['trades/' + order.tradeId + '/exitPrice'] = matchPrice;
+      updates['trades/' + order.tradeId + '/exitValue'] = Number((matchQty * matchPrice).toFixed(2));
+      updates['trades/' + order.tradeId + '/settledAt'] = nowTs();
+      updates['trades/' + order.tradeId + '/settledBy'] = 'p2p_sell';
+      updates['trades/' + order.tradeId + '/buyerId'] = userId;
+    }
+
+    const newFilled = (order.filled || 0) + matchQty;
+    updates[`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/sells/${order.id}/filled`] = newFilled;
+    if(newFilled >= order.qty){
+      updates[`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/sells/${order.id}/status`] = 'filled';
+    }
+
+    const txKey = db.ref('transactions').push().key;
+    updates['transactions/' + txKey] = {
+      userId: order.userId, type: 'credit',
+      amount: Number((matchQty * matchPrice).toFixed(2)),
+      description: `Sold ${side} x${matchQty} @ ₹${matchPrice} (P2P)`,
+      matchId: matchId, date: nowTs()
+    };
+
+    remainingQty -= matchQty;
+    matchedQtyTotal += matchQty;
+    totalCost += matchQty * matchPrice;
+    matchedWith.push('p2p');
   }
+
+  if(remainingQty > 0){
+    const liqSnap = await db.ref(`matches/${matchId}/markets/${marketId}/liquidity/${sideKey}`).once('value');
+    const liq = liqSnap.val();
+    if(liq && liq.qty > 0){
+      const adminPrice = Number(liq.price || price);
+      const adminQty = Math.min(remainingQty, liq.qty);
+      updates[`matches/${matchId}/markets/${marketId}/liquidity/${sideKey}/qty`] = liq.qty - adminQty;
+      remainingQty -= adminQty;
+      matchedQtyTotal += adminQty;
+      totalCost += adminQty * adminPrice;
+      matchedWith.push('admin');
+    }
+  }
+
+  if(remainingQty > 0){
+    const buyOrderKey = db.ref(`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/buys`).push().key;
+    updates[`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/buys/${buyOrderKey}`] = {
+      userId: userId, price: price, qty: remainingQty, filled: 0, status: 'open',
+      escrow: Number((remainingQty * price).toFixed(2)),
+      createdAt: nowTs()
+    };
+  }
+
+  await db.ref().update(updates);
+
+  return {
+    success: true,
+    matchedQty: matchedQtyTotal,
+    pendingQty: remainingQty,
+    totalCost: Number(totalCost.toFixed(2)),
+    pendingCost: Number((remainingQty * price).toFixed(2)),
+    matchedWith: matchedWith.length ? matchedWith.join(', ') : 'pending'
+  };
 }
 
 /* ================= CONFIRM TRADE ================= */
@@ -632,187 +740,223 @@ async function confirmTrade(){
   const qi = document.getElementById('qtyInput');
   const p = Number(pi.value);
   const q = Number(qi.value);
-  const inv = p * q;
+  const side = state.selectedSide;
+  const marketId = state.activeMarketId;
 
   if(!state.loggedIn || !state.uid){ toast('Login required', 'error'); return; }
-  if(!matchId){ toast('Match ID missing', 'error'); return; }
+  if(!matchId || !marketId){ toast('Match/Market missing', 'error'); return; }
   if(p < 1 || p > 9){ toast('Price must be ₹1 - ₹9', 'error'); return; }
   if(q < 1){ toast('Quantity min 1', 'error'); return; }
-  if(inv > state.balance){ toast('Insufficient balance', 'error'); return; }
 
   const btn = document.getElementById('confirmBtn');
-  btn.disabled = true;
-  btn.textContent = 'Placing...';
+  btn.disabled = true; btn.textContent = 'Matching...';
 
   try{
-    // Re-verify balance
     const balSnap = await db.ref('users/' + state.uid + '/wallet/balance').once('value');
     const bal = Number(balSnap.val() || 0);
-    if(inv > bal){ toast('Insufficient balance', 'error'); btn.disabled=false; btn.textContent='Confirm Trade'; return; }
+    if(p * q > bal){ toast('Insufficient balance', 'error'); btn.disabled=false; btn.textContent='Confirm Buy'; return; }
 
-    // Re-verify availability
-    const side = state.selectedSide;
-    const availSnap = await db.ref('matches/' + matchId + '/market/' + side.toLowerCase() + '/available').once('value');
-    const curAvail = Number(availSnap.val() ?? 1000000);
-    if(curAvail < q){
-      toast('Only ' + curAvail + ' shares available now', 'error');
-      btn.disabled=false; btn.textContent='Confirm Trade';
-      return;
-    }
+    const result = await matchBuyOrder(side, p, q, state.uid, matchId, marketId);
+    if(!result.success){ toast(result.message || 'Match failed', 'error'); btn.disabled=false; btn.textContent='Confirm Buy'; return; }
+
+    const totalDeduct = Number((result.totalCost + result.pendingCost).toFixed(2));
+    await db.ref('users/' + state.uid + '/wallet/balance').set(Number((bal - totalDeduct).toFixed(2)));
 
     const m = state.match || {};
-    const key = db.ref('trades').push().key;
-    const sideLabel = side === 'YES' ? (m.teamA || 'YES') : (m.teamB || 'NO');
+    const market = state.markets[marketId] || {};
+    const finalQty = (result.matchedQty > 0 ? result.matchedQty : result.pendingQty) || 1;
+    const finalAmount = (result.matchedQty > 0 ? result.totalCost : result.pendingCost) || 0.01;
+    const avgP = result.matchedQty > 0 ? Number((result.totalCost / result.matchedQty).toFixed(2)) : p;
 
-    const trade = {
-      userId: state.uid,
-      matchId: matchId,
-      teamA: m.teamA || 'Team A',
-      teamB: m.teamB || 'Team B',
-      selectedTeam: sideLabel,
+    const tradeKey = db.ref('trades').push().key;
+    await db.ref('trades/' + tradeKey).set({
+      userId: state.uid, matchId: matchId,
+      marketId: marketId,
+      marketTitle: market.title || 'Match Winner',
+      teamA: m.teamA || 'Team A', teamB: m.teamB || 'Team B',
+      selectedTeam: side === 'YES' ? (market.yesLabel||m.teamA||'YES') : (market.noLabel||m.teamB||'NO'),
       side: side,
-      amount: Number(inv.toFixed(2)),
-      odds: Number(p.toFixed(2)),
-      buyPrice: Number(p.toFixed(2)),
-      qty: q,
-      winAmount: Number((q * 10).toFixed(2)),
-      status: 'pending',
-      createdAt: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    const updates = {};
-    updates['trades/' + key] = trade;
-    updates['users/' + state.uid + '/wallet/balance'] = Number((bal - inv).toFixed(2));
+      amount: finalAmount, odds: p, buyPrice: p, avgPrice: avgP,
+      qty: finalQty, winAmount: finalQty * 10,
+      status: result.matchedQty > 0 ? 'pending' : 'open',
+      matchedWith: result.matchedWith || 'pending',
+      pendingQty: result.pendingQty || 0,
+      createdAt: nowTs()
+    });
 
     const txKey = db.ref('transactions').push().key;
-    updates['transactions/' + txKey] = {
-      userId: state.uid,
-      type: 'debit',
-      amount: Number(inv.toFixed(2)),
-      description: `Buy ${side} x${q} @ ₹${p.toFixed(2)} on ${m.teamA} vs ${m.teamB}`,
-      matchId: matchId,
-      tradeId: key,
-      date: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    // Price shift
-    const shift = Math.min(0.5, (inv / 1000) * 0.1);
-    let newYes = state.yesPrice;
-    let newNo = state.noPrice;
-    if(side === 'YES'){
-      newYes = Math.min(9, state.yesPrice + shift);
-      newNo = Math.max(1, state.noPrice - shift);
-    } else {
-      newNo = Math.min(9, state.noPrice + shift);
-      newYes = Math.max(1, state.yesPrice - shift);
-    }
-    newYes = Number(newYes.toFixed(2));
-    newNo = Number(newNo.toFixed(2));
-
-    updates['matches/' + matchId + '/oddsA'] = newYes;
-    updates['matches/' + matchId + '/oddsB'] = newNo;
-    updates['matches/' + matchId + '/market/yes/price'] = newYes;
-    updates['matches/' + matchId + '/market/no/price'] = newNo;
-
-    // Update availability
-    if(side === 'YES'){
-      updates['matches/' + matchId + '/market/yes/available'] = Math.max(0, curAvail - q);
-    } else {
-      updates['matches/' + matchId + '/market/no/available'] = Math.max(0, curAvail - q);
-    }
-
-    await db.ref().update(updates);
+    await db.ref('transactions/' + txKey).set({
+      userId: state.uid, type: 'debit', amount: totalDeduct,
+      description: `Bought ${side} x${finalQty} @ avg ₹${avgP} on "${market.title||marketId}"`,
+      matchId: matchId, tradeId: tradeKey, date: nowTs()
+    });
 
     closeTrade();
-    toast('✅ Trade placed successfully!', 'success');
-
+    if(result.matchedQty > 0 && result.pendingQty > 0){
+      toast(`✅ ${result.matchedQty} matched, ${result.pendingQty} pending`, 'success');
+    } else if(result.matchedQty > 0){
+      toast(`✅ Trade matched! (${result.matchedWith})`, 'success');
+    } else {
+      toast('⏳ Order placed in book (waiting for seller)', '');
+    }
   } catch(e){
     console.error(e);
     toast('Trade failed: ' + (e.message || 'Unknown'), 'error');
   } finally {
-    btn.disabled = false;
-    btn.textContent = 'Confirm Trade';
+    btn.disabled = false; btn.textContent = 'Confirm Buy';
   }
 }
 
-/* ================= EXIT POSITION ================= */
-async function exitTrade(tradeId){
+/* ================= SELL ================= */
+function openExitModal(tradeId){
   const t = state.myTrades.find(x => x.id === tradeId);
   if(!t){ toast('Trade not found', 'error'); return; }
-
   const side = (t.side||'YES').toUpperCase();
-  const curP = side === 'YES' ? state.yesPrice : state.noPrice;
   const qty = Number(t.qty||0);
-  const invested = Number(t.amount||0);
-  const currentValue = qty * curP;
-  const pnl = currentValue - invested;
+  const buyPrice = Number(t.odds||0);
+  const market = state.markets[t.marketId] || {};
+  const ob = state.marketOrderbooks[t.marketId] || {};
+  const sells = Object.values(ob[side.toLowerCase()]?.sells || {}).filter(o => o.status==='open' && (o.qty-(o.filled||0))>0);
+  const curP = sells.length ? Math.min(...sells.map(o=>Number(o.price))) : Number(market.liquidity?.[side.toLowerCase()]?.price || 5);
 
-  const ok = confirm(
-    `Exit this ${side} position?\n\n` +
-    `Qty: ${qty}\n` +
-    `Buy: ₹${Number(t.odds||0).toFixed(2)}\n` +
-    `Now: ₹${curP.toFixed(2)}\n` +
-    `Invested: ₹${invested.toFixed(2)}\n` +
-    `Current Value: ₹${currentValue.toFixed(2)}\n` +
-    `P&L: ${pnl>=0?'+':''}₹${pnl.toFixed(2)}\n\n` +
-    `Wallet will receive ₹${currentValue.toFixed(2)}`
+  const sellPrice = prompt(
+    `Sell ${side} position\n\nMarket: ${t.marketTitle || t.marketId}\nQty: ${qty}\nBuy Price: ₹${buyPrice.toFixed(2)}\nCurrent Market: ₹${curP.toFixed(2)}\n\nApna sell price daalo (₹1-₹9):`,
+    curP.toFixed(2)
   );
-  if(!ok) return;
+  if(sellPrice === null) return;
+  const sp = Number(sellPrice);
+  if(isNaN(sp) || sp < 1 || sp > 9){ toast('Invalid price', 'error'); return; }
+  executeSell(tradeId, sp, qty);
+}
+
+async function executeSell(tradeId, sellPrice, qty){
+  const t = state.myTrades.find(x => x.id === tradeId);
+  if(!t) return;
+  const side = (t.side||'YES').toUpperCase();
+  const sideKey = side.toLowerCase();
+  const marketId = t.marketId || 'match_winner';
 
   try{
-    const balSnap = await db.ref('users/' + state.uid + '/wallet/balance').once('value');
-    const bal = Number(balSnap.val() || 0);
-    const newBal = Number((bal + currentValue).toFixed(2));
-
-    const availSnap = await db.ref('matches/' + matchId + '/market/' + side.toLowerCase() + '/available').once('value');
-    const oldAvail = Number(availSnap.val() ?? 1000000);
-
     const updates = {};
-    updates['trades/' + tradeId + '/status'] = pnl >= 0 ? 'win' : 'loss';
-    updates['trades/' + tradeId + '/exitPrice'] = Number(curP.toFixed(2));
-    updates['trades/' + tradeId + '/exitValue'] = Number(currentValue.toFixed(2));
+    let remaining = qty;
+    let matchedWith = [];
+    let totalEarned = 0;
+    let matchedQty = 0;
+
+    const buysSnap = await db.ref(`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/buys`).once('value');
+    const buyOrders = [];
+    buysSnap.forEach(c => {
+      const o = c.val();
+      if(o && o.status === 'open' && (o.qty - (o.filled||0)) > 0 && Number(o.price) >= sellPrice){
+        buyOrders.push({ id: c.key, ...o });
+      }
+    });
+    buyOrders.sort((a,b) => Number(b.price) - Number(a.price));
+
+    for(const order of buyOrders){
+      if(remaining <= 0) break;
+      const available = order.qty - (order.filled || 0);
+      const matchQty = Math.min(remaining, available);
+      const matchPrice = Number(order.price);
+
+      const buyerTradeKey = db.ref('trades').push().key;
+      updates['trades/' + buyerTradeKey] = {
+        userId: order.userId, matchId: matchId,
+        marketId: marketId,
+        marketTitle: t.marketTitle || 'Market',
+        side: side,
+        amount: matchQty * matchPrice, odds: matchPrice,
+        buyPrice: matchPrice, avgPrice: matchPrice,
+        qty: matchQty, winAmount: matchQty * 10,
+        status: 'pending', matchedWith: 'p2p',
+        createdAt: nowTs()
+      };
+
+      const newFilled = (order.filled || 0) + matchQty;
+      updates[`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/buys/${order.id}/filled`] = newFilled;
+      if(newFilled >= order.qty){
+        updates[`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/buys/${order.id}/status`] = 'filled';
+      }
+
+      remaining -= matchQty;
+      matchedQty += matchQty;
+      totalEarned += matchQty * matchPrice;
+      matchedWith.push('p2p');
+    }
+
+    if(remaining > 0){
+      const oppSide = side === 'YES' ? 'no' : 'yes';
+      const oppLiqSnap = await db.ref(`matches/${matchId}/markets/${marketId}/liquidity/${oppSide}`).once('value');
+      const oppLiq = oppLiqSnap.val();
+      const liqSnap = await db.ref(`matches/${matchId}/markets/${marketId}/liquidity/${sideKey}`).once('value');
+      const liq = liqSnap.val();
+      if(oppLiq && oppLiq.qty > 0){
+        const adminQty = Math.min(remaining, oppLiq.qty);
+        updates[`matches/${matchId}/markets/${marketId}/liquidity/${oppSide}/qty`] = oppLiq.qty - adminQty;
+        updates[`matches/${matchId}/markets/${marketId}/liquidity/${sideKey}/qty`] = Number(((liq?.qty || 0) + adminQty).toFixed(0));
+        remaining -= adminQty;
+        matchedQty += adminQty;
+        totalEarned += adminQty * sellPrice;
+        matchedWith.push('admin');
+      }
+    }
+
+    if(remaining > 0){
+      const sellOrderKey = db.ref(`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/sells`).push().key;
+      updates[`matches/${matchId}/markets/${marketId}/orderbook/${sideKey}/sells/${sellOrderKey}`] = {
+        userId: t.userId, tradeId: tradeId,
+        price: sellPrice, qty: remaining, filled: 0, status: 'open',
+        createdAt: nowTs()
+      };
+    }
+
+    const invested = Number(t.amount || 0);
+    const pnl = totalEarned - invested;
+    updates['trades/' + tradeId + '/status'] = matchedQty > 0 ? (pnl >= 0 ? 'win' : 'loss') : 'open';
+    updates['trades/' + tradeId + '/exitPrice'] = sellPrice;
+    updates['trades/' + tradeId + '/exitValue'] = Number(totalEarned.toFixed(2));
     updates['trades/' + tradeId + '/pnl'] = Number(pnl.toFixed(2));
-    updates['trades/' + tradeId + '/settledAt'] = firebase.database.ServerValue.TIMESTAMP;
-    updates['trades/' + tradeId + '/settledBy'] = 'user_exit';
+    updates['trades/' + tradeId + '/settledAt'] = matchedQty > 0 ? nowTs() : null;
+    updates['trades/' + tradeId + '/settledBy'] = matchedQty > 0 ? 'p2p_sell' : null;
+    updates['trades/' + tradeId + '/matchedWith'] = matchedWith.join(', ') || 'pending';
+    updates['trades/' + tradeId + '/qty'] = matchedQty > 0 ? matchedQty : qty;
 
-    updates['users/' + state.uid + '/wallet/balance'] = newBal;
-    updates['matches/' + matchId + '/market/' + side.toLowerCase() + '/available'] = oldAvail + qty;
+    if(totalEarned > 0){
+      const myBalSnap = await db.ref('users/' + t.userId + '/wallet/balance').once('value');
+      const myBal = Number(myBalSnap.val() || 0);
+      updates['users/' + t.userId + '/wallet/balance'] = Number((myBal + totalEarned).toFixed(2));
 
-    const txKey = db.ref('transactions').push().key;
-    updates['transactions/' + txKey] = {
-      userId: state.uid,
-      type: 'credit',
-      amount: Number(currentValue.toFixed(2)),
-      description: `Exit ${side} (${pnl>=0?'Profit':'Loss'}: ₹${pnl.toFixed(2)})`,
-      matchId: matchId,
-      tradeId: tradeId,
-      date: firebase.database.ServerValue.TIMESTAMP
-    };
+      const txKey = db.ref('transactions').push().key;
+      updates['transactions/' + txKey] = {
+        userId: t.userId, type: 'credit',
+        amount: Number(totalEarned.toFixed(2)),
+        description: `Sold ${side} x${matchedQty} @ ₹${sellPrice}`,
+        matchId: matchId, tradeId: tradeId, date: nowTs()
+      };
+    }
 
     await db.ref().update(updates);
-    toast(`✅ Exited! ${pnl>=0?'+':''}₹${pnl.toFixed(2)}`, pnl>=0?'success':'error');
 
+    if(matchedQty > 0 && remaining > 0) toast(`✅ ${matchedQty} sold, ${remaining} pending`, 'success');
+    else if(matchedQty > 0) toast(`✅ Sold! ${pnl>=0?'+':''}₹${pnl.toFixed(2)}`, pnl>=0?'success':'error');
+    else toast('⏳ Sell order placed in book', '');
   } catch(e){
     console.error(e);
-    toast('Exit failed: ' + (e.message || 'Unknown'), 'error');
+    toast('Sell failed: ' + (e.message || 'Unknown'), 'error');
   }
 }
 
-/* ================= TABS ================= */
+/* ================= TABS / NAV ================= */
 document.querySelectorAll('.tab').forEach(tab => {
   tab.onclick = () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    // Future: filter by tab.dataset.tab
   };
 });
-
-/* ================= NAV ================= */
 function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
 
-/* ================= INITIAL ================= */
+/* ================= INIT ================= */
 updateBalance();
-renderOrderBook();
 renderPortfolio();
 </script>
 </body>
