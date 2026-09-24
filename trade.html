@@ -7,184 +7,605 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f4f6f9;color:#171717}
-.app{max-width:600px;margin:auto;min-height:100vh;background:#f4f6f9}
-button,input{font:inherit}
-button{cursor:pointer}
 
-.header{background:#fff;padding:18px;display:flex;align-items:center;border-bottom:1px solid #ddd}
-.back,.wallet-btn{border:0;background:none;font-size:28px}
-.title{flex:1;margin-left:14px}
-.title h2{font-size:19px}
-.live{color:#e82938;font-size:12px;font-weight:bold;margin-top:5px}
+body{
+  font-family:Arial,sans-serif;
+  background:#f4f6f9;
+  color:#171717;
+}
 
-.score-box{background:#2b0307;color:#fff;padding:22px 14px}
-.score-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.team{text-align:center;font-weight:bold;font-size:13px}
-.team strong{display:block;font-size:24px;margin-top:8px}
-.match-center{text-align:center;font-size:13px}
-.match-center strong{display:block;font-size:22px;margin-bottom:7px}
-.score-info{text-align:center;margin-top:24px;font-size:13px}
-.balls{display:flex;justify-content:center;gap:8px;margin-top:18px}
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  max-width:600px;
+  margin:auto;
+  min-height:100vh;
+  background:#f4f6f9;
+}
+
+/* HEADER */
+
+.header{
+  background:#fff;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  border-bottom:1px solid #ddd;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.back,.wallet-btn{
+  border:0;
+  background:none;
+  font-size:28px;
+}
+
+.title{
+  flex:1;
+  margin-left:14px;
+}
+
+.title h2{
+  font-size:18px;
+}
+
+.live{
+  color:#e82938;
+  font-size:11px;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+/* SCORE */
+
+.score-box{
+  background:#2b0307;
+  color:#fff;
+  padding:22px 14px;
+}
+
+.score-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+
+.team{
+  text-align:center;
+  font-weight:bold;
+  font-size:12px;
+  flex:1;
+}
+
+.team strong{
+  display:block;
+  font-size:24px;
+  margin-top:8px;
+}
+
+.team small{
+  color:#ddd;
+}
+
+.match-center{
+  text-align:center;
+  font-size:12px;
+}
+
+.match-center strong{
+  display:block;
+  font-size:22px;
+  margin-bottom:7px;
+}
+
+.score-info{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#ddd;
+}
+
+.balls{
+  display:flex;
+  justify-content:center;
+  gap:7px;
+  margin-top:16px;
+}
+
 .ball{
-  width:35px;height:35px;border-radius:50%;
-  background:#8992a8;display:flex;
-  align-items:center;justify-content:center;font-size:12px
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#8992a8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
 }
-.ball.active{background:#315bd5}
 
-.tabs{display:flex;background:#fff;border-bottom:1px solid #ddd}
-.tab{
-  flex:1;padding:18px 5px;text-align:center;
-  font-weight:bold;color:#999;border:0;background:#fff
+.ball.active{
+  background:#315bd5;
 }
-.tab.active{color:#d21f2b;border-bottom:4px solid #d21f2b}
+
+/* TABS */
+
+.tabs{
+  display:flex;
+  background:#fff;
+  border-bottom:1px solid #ddd;
+  overflow-x:auto;
+}
+
+.tab{
+  min-width:25%;
+  padding:15px 5px;
+  text-align:center;
+  font-weight:bold;
+  color:#999;
+  border:0;
+  background:#fff;
+}
+
+.tab.active{
+  color:#d21f2b;
+  border-bottom:3px solid #d21f2b;
+}
+
+/* WALLET */
 
 .wallet{
-  margin:14px;padding:18px;border-radius:16px;
-  background:linear-gradient(120deg,#dce7ff,#c5edff)
-}
-.wallet-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.wallet-label{font-size:13px;color:#444}
-.balance{font-size:27px;font-weight:bold;margin-top:8px}
-.wallet-status{font-size:11px;color:#555;margin-top:5px}
-
-.content{padding:0 14px 25px}
-.card{background:#fff;border-radius:15px;padding:18px;margin-bottom:14px}
-.card h3{font-size:17px;line-height:1.45}
-
-.trade-count{color:#999;font-size:12px;margin-bottom:16px}
-.question-row{display:flex;align-items:center;gap:12px}
-.question-row h3{flex:1}
-.market-img{
-  width:70px;height:70px;background:#edf1ff;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;font-size:36px;
-  flex-shrink:0
+  margin:14px;
+  padding:18px;
+  border-radius:16px;
+  background:linear-gradient(120deg,#dce7ff,#c5edff);
 }
 
-.prediction{display:flex;gap:10px;margin-top:22px}
-.prediction button{
-  flex:1;padding:15px 5px;border-radius:12px;border:0;
-  font-size:15px;font-weight:bold
-}
-.yes-btn{color:#079b42;background:#e5f7eb}
-.no-btn{color:#d82430;background:#fde9e9}
-.prediction button.selected{outline:3px solid #222}
-
-.order-title{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:18px
-}
-.order-title button{border:0;background:none;font-size:22px}
-
-.book-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.book-col h4{font-size:12px;margin-bottom:12px}
-.book-col.yes h4{color:#0aaf4b}
-.book-col.no h4{color:#df2330}
-
-.book-row{
-  display:flex;justify-content:space-between;
-  padding:10px 4px;border-bottom:1px solid #eee;font-size:13px
-}
-.yes-price{color:#0aa948}
-.no-price{color:#db2630}
-
-.portfolio-row{
-  display:flex;justify-content:space-between;
-  padding:12px 0;border-bottom:1px solid #eee;
-  font-size:13px;gap:10px
-}
-.exit-btn{
-  border:0;background:#ffd8da;color:#c51e2b;
-  border-radius:9px;padding:8px 12px;font-weight:bold;
-  height:max-content
+.wallet-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
 }
 
-.bottom-nav{
-  position:sticky;bottom:0;display:flex;background:#fff;
-  border-top:1px solid #ddd;z-index:10
-}
-.bottom-nav button{
-  flex:1;padding:14px 5px;border:0;background:#fff;
-  font-size:11px;color:#888
-}
-.bottom-nav button.active{color:#d4202d;font-weight:bold}
-
-.modal-bg{
-  display:none;position:fixed;inset:0;background:#0009;
-  z-index:100;align-items:flex-end;justify-content:center
-}
-.modal-bg.show{display:flex}
-.modal{
-  width:100%;max-width:600px;max-height:90vh;overflow-y:auto;
-  background:#fff;border-radius:25px 25px 0 0;padding:24px
-}
-.modal h2{font-size:20px;margin-bottom:20px}
-.close-btn{
-  float:right;border:0;background:#eee;width:30px;
-  height:30px;border-radius:50%
+.wallet-label{
+  font-size:12px;
+  color:#444;
 }
 
-.field{margin-bottom:18px}
-.field label{
-  display:block;font-size:13px;font-weight:bold;margin-bottom:9px
-}
-.price-row,.qty-row{display:flex;gap:10px;align-items:center}
-.price-row button{
-  width:45px;height:42px;border:1px solid #ddd;
-  background:#fff;border-radius:10px;font-size:20px
-}
-.price-input{
-  width:100%;height:42px;border:1px solid #ddd;
-  border-radius:10px;padding:10px;font-weight:bold
-}
-.qty-btn{
-  flex:1;border:1px solid #ddd;background:#fafafa;
-  border-radius:8px;padding:10px;font-size:12px
+.balance{
+  font-size:27px;
+  font-weight:bold;
+  margin-top:7px;
 }
 
-.summary{
-  background:#f1f5ff;padding:16px;
-  border-radius:12px;margin-bottom:16px
-}
-.summary p{
-  display:flex;justify-content:space-between;
-  padding:6px 0;font-size:14px
+.wallet-status{
+  font-size:11px;
+  color:#666;
+  margin-top:5px;
 }
 
-.confirm-btn{
-  width:100%;padding:17px;background:#0ba345;color:#fff;
-  border:0;border-radius:14px;font-weight:bold;font-size:16px
+/* CONTENT */
+
+.content{
+  padding:0 14px 30px;
 }
-.confirm-btn:disabled{background:#aaa}
+
+.card{
+  background:#fff;
+  border-radius:15px;
+  padding:17px;
+  margin-bottom:14px;
+}
+
+.card h3{
+  font-size:16px;
+  line-height:1.4;
+}
 
 .notice{
-  padding:13px;background:#fff5dc;color:#805500;
-  border-radius:10px;font-size:12px;margin-bottom:14px
+  padding:13px;
+  background:#fff5dc;
+  color:#805500;
+  border-radius:10px;
+  font-size:12px;
+  margin-bottom:14px;
+}
+
+.error{
+  padding:13px;
+  background:#ffe4e4;
+  color:#a90000;
+  border-radius:10px;
+  font-size:12px;
+  margin-bottom:14px;
 }
 
 .loading{
-  text-align:center;padding:25px;color:#777;font-size:13px
+  text-align:center;
+  padding:30px 10px;
+  color:#999;
+  font-size:13px;
 }
-.empty{text-align:center;padding:30px 10px;color:#999;font-size:13px}
 
-.error{
-  padding:14px;background:#ffe5e5;color:#b30000;
-  border-radius:10px;font-size:13px;margin:14px
+.empty{
+  text-align:center;
+  padding:28px 10px;
+  color:#999;
+  font-size:13px;
+}
+
+/* MARKET */
+
+.market-card{
+  border:1px solid #eee;
+}
+
+.market-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.market-title{
+  flex:1;
+}
+
+.market-type{
+  display:inline-block;
+  font-size:10px;
+  color:#777;
+  background:#f1f1f1;
+  padding:5px 8px;
+  border-radius:10px;
+  margin-bottom:9px;
+}
+
+.market-title h3{
+  font-size:16px;
+}
+
+.market-status{
+  font-size:10px;
+  font-weight:bold;
+  color:#0a9e45;
+  background:#e7f8ed;
+  padding:6px 9px;
+  border-radius:10px;
+}
+
+.market-status.closed{
+  color:#d32935;
+  background:#fde8e9;
+}
+
+.prediction{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.prediction button{
+  flex:1;
+  padding:14px 5px;
+  border-radius:12px;
+  border:0;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.yes-btn{
+  color:#079b42;
+  background:#e5f7eb;
+}
+
+.no-btn{
+  color:#d82430;
+  background:#fde9e9;
+}
+
+.market-meta{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px;
+}
+
+.meta{
+  background:#f7f8fa;
+  padding:9px;
+  border-radius:8px;
+  font-size:11px;
+  color:#666;
+}
+
+.meta strong{
+  display:block;
+  color:#222;
+  margin-top:3px;
+}
+
+/* ORDER BOOK */
+
+.order-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.order-title button{
+  border:0;
+  background:none;
+  font-size:21px;
+}
+
+.book-select{
+  width:100%;
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:9px;
+  background:#fff;
+  margin-bottom:14px;
+}
+
+.book-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.book-col h4{
+  font-size:11px;
+  margin-bottom:8px;
+}
+
+.book-col.yes h4{
+  color:#0aaf4b;
+}
+
+.book-col.no h4{
+  color:#df2330;
+}
+
+.book-row{
+  display:flex;
+  justify-content:space-between;
+  padding:9px 3px;
+  border-bottom:1px solid #eee;
+  font-size:12px;
+}
+
+.yes-price{
+  color:#0aa948;
+}
+
+.no-price{
+  color:#db2630;
+}
+
+/* TRADE */
+
+.portfolio-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:13px 0;
+  border-bottom:1px solid #eee;
+}
+
+.trade-main{
+  flex:1;
+}
+
+.trade-side{
+  font-weight:bold;
+}
+
+.trade-meta{
+  color:#888;
+  font-size:11px;
+  margin-top:4px;
+}
+
+.status{
+  display:inline-block;
+  margin-top:7px;
+  padding:5px 8px;
+  border-radius:8px;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.status.pending{
+  background:#fff2d7;
+  color:#9b6700;
+}
+
+.status.open,.status.matched{
+  background:#e6f8ec;
+  color:#09863b;
+}
+
+.status.settled{
+  background:#e1f0ff;
+  color:#1663a5;
+}
+
+.status.exit{
+  background:#fde8e9;
+  color:#c4232d;
+}
+
+.exit-btn{
+  border:0;
+  background:#ffd8da;
+  color:#c51e2b;
+  border-radius:9px;
+  padding:8px 11px;
+  font-weight:bold;
+  height:max-content;
+}
+
+/* BOTTOM */
+
+.bottom-nav{
+  position:sticky;
+  bottom:0;
+  display:flex;
+  background:#fff;
+  border-top:1px solid #ddd;
+  z-index:15;
+}
+
+.bottom-nav button{
+  flex:1;
+  padding:13px 5px;
+  border:0;
+  background:#fff;
+  font-size:11px;
+  color:#888;
+}
+
+.bottom-nav button.active{
+  color:#d4202d;
+  font-weight:bold;
+}
+
+/* MODAL */
+
+.modal-bg{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0009;
+  z-index:100;
+  align-items:flex-end;
+  justify-content:center;
+}
+
+.modal-bg.show{
+  display:flex;
+}
+
+.modal{
+  width:100%;
+  max-width:600px;
+  max-height:92vh;
+  overflow-y:auto;
+  background:#fff;
+  border-radius:24px 24px 0 0;
+  padding:22px;
+}
+
+.modal h2{
+  font-size:20px;
+  margin-bottom:18px;
+}
+
+.close-btn{
+  float:right;
+  border:0;
+  background:#eee;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+}
+
+.field{
+  margin-bottom:17px;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.price-row,.qty-row{
+  display:flex;
+  gap:9px;
+  align-items:center;
+}
+
+.price-row button{
+  width:44px;
+  height:42px;
+  border:1px solid #ddd;
+  background:#fff;
+  border-radius:9px;
+  font-size:19px;
+}
+
+.price-input{
+  width:100%;
+  height:42px;
+  border:1px solid #ddd;
+  border-radius:9px;
+  padding:10px;
+  font-weight:bold;
+}
+
+.qty-btn{
+  flex:1;
+  border:1px solid #ddd;
+  background:#fafafa;
+  border-radius:8px;
+  padding:10px 5px;
+  font-size:12px;
+}
+
+.summary{
+  background:#f1f5ff;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+.summary p{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 0;
+  font-size:13px;
+}
+
+.confirm-btn{
+  width:100%;
+  padding:16px;
+  background:#0ba345;
+  color:#fff;
+  border:0;
+  border-radius:13px;
+  font-weight:bold;
+}
+
+.confirm-btn:disabled{
+  background:#aaa;
 }
 
 .login-box{
-  padding:20px;background:#fff;border-radius:15px;
-  margin-bottom:14px;text-align:center
-}
-
-.market-disabled{
-  opacity:.55;
-  pointer-events:none
+  background:#fff;
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:14px;
+  text-align:center;
+  font-size:13px;
 }
 
 @media(min-width:601px){
-  .app{box-shadow:0 0 30px #00000014}
+  .app{
+    box-shadow:0 0 30px #00000014;
+  }
 }
 </style>
 </head>
@@ -194,14 +615,16 @@ button{cursor:pointer}
 <div class="app">
 
 <header class="header">
+
   <button class="back" onclick="history.back()">‹</button>
 
   <div class="title">
-    <h2 id="headerTitle">Loading match...</h2>
+    <h2 id="headerTitle">Loading...</h2>
     <div class="live" id="headerStatus">● CONNECTING</div>
   </div>
 
   <button class="wallet-btn" onclick="openWallet()">▣</button>
+
 </header>
 
 
@@ -211,25 +634,25 @@ button{cursor:pointer}
 
     <div class="team">
       <span id="teamA">TEAM A</span>
-      <strong id="indiaScore">-</strong>
+      <strong id="scoreA">-</strong>
       <small id="oversA"></small>
     </div>
 
     <div class="match-center">
       <strong>🏏</strong>
-      <span id="matchStatus">LIVE</span>
+      <span id="matchStatus">-</span>
     </div>
 
     <div class="team">
       <span id="teamB">TEAM B</span>
-      <strong id="ausScore">-</strong>
+      <strong id="scoreB">-</strong>
       <small id="oversB"></small>
     </div>
 
   </div>
 
   <div class="score-info" id="scoreInfo">
-    Connecting to Firebase...
+    Connecting to live Firebase data...
   </div>
 
   <div class="balls" id="balls"></div>
@@ -238,10 +661,10 @@ button{cursor:pointer}
 
 
 <div class="tabs">
-  <button class="tab active" onclick="setTab(this)">All</button>
-  <button class="tab" onclick="setTab(this)">Match</button>
-  <button class="tab" onclick="setTab(this)">Overs</button>
-  <button class="tab" onclick="setTab(this)">Wickets</button>
+  <button class="tab active" onclick="filterMarkets('ALL',this)">All</button>
+  <button class="tab" onclick="filterMarkets('MATCH',this)">Match</button>
+  <button class="tab" onclick="filterMarkets('OVER',this)">Overs</button>
+  <button class="tab" onclick="filterMarkets('WICKET',this)">Wickets</button>
 </div>
 
 
@@ -253,7 +676,7 @@ button{cursor:pointer}
       <div class="wallet-label">Available Balance</div>
       <div class="balance" id="balance">₹0.00</div>
       <div class="wallet-status" id="walletStatus">
-        Checking account...
+        Checking authentication...
       </div>
     </div>
 
@@ -265,27 +688,20 @@ button{cursor:pointer}
 <main class="content">
 
   <div class="notice">
-    ⚠️ Firebase-connected market. Wallet balance is read from your authenticated account.
+    Firebase-backed paper trading interface. Wallet settlement and matching should be performed by a trusted backend.
   </div>
-
 
   <div id="loginBox" class="login-box" style="display:none">
     <strong>Login required</strong>
-    <p style="font-size:12px;color:#777;margin-top:8px">
-      Please sign in to place or view your trades.
-    </p>
+    <div style="color:#777;margin-top:7px">
+      Sign in to view your trades and place orders.
+    </div>
   </div>
 
-
-  <div id="pageError"></div>
-
+  <div id="errorBox"></div>
 
   <section id="marketsContainer">
-
-    <div class="loading">
-      Loading markets from Firebase...
-    </div>
-
+    <div class="loading">Loading markets...</div>
   </section>
 
 
@@ -296,19 +712,23 @@ button{cursor:pointer}
       <button onclick="renderOrderBook()">↻</button>
     </div>
 
+    <select id="bookMarket" class="book-select" onchange="renderOrderBook()">
+      <option value="">Select market</option>
+    </select>
+
     <div class="book-grid">
 
       <div class="book-col yes">
-        <h4>PRICE &nbsp; QTY YES</h4>
+        <h4>YES PRICE &nbsp; QTY</h4>
         <div id="yesBook">
-          <div class="empty">No data</div>
+          <div class="empty">Select market</div>
         </div>
       </div>
 
       <div class="book-col no">
-        <h4>PRICE &nbsp; QTY NO</h4>
+        <h4>NO PRICE &nbsp; QTY</h4>
         <div id="noBook">
-          <div class="empty">No data</div>
+          <div class="empty">Select market</div>
         </div>
       </div>
 
@@ -320,12 +740,26 @@ button{cursor:pointer}
   <section class="card">
 
     <div class="order-title">
-      <h3>My Trades</h3>
-      <button onclick="renderPortfolio()">↻</button>
+      <h3>📋 My Trades</h3>
+      <button onclick="loadMyTrades()">↻</button>
     </div>
 
     <div id="portfolio">
       <div class="empty">Loading trades...</div>
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <div class="order-title">
+      <h3>💳 Recent Transactions</h3>
+      <button onclick="loadTransactions()">↻</button>
+    </div>
+
+    <div id="transactions">
+      <div class="empty">Loading transactions...</div>
     </div>
 
   </section>
@@ -339,12 +773,12 @@ button{cursor:pointer}
     🏠<br>Home
   </button>
 
-  <button onclick="document.getElementById('marketsContainer').scrollIntoView({behavior:'smooth'})">
+  <button onclick="scrollToMarkets()">
     📊<br>Market
   </button>
 
-  <button onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
-    📋<br>My Trades
+  <button onclick="scrollToTrades()">
+    📋<br>Trades
   </button>
 
   <button onclick="openWallet()">
@@ -364,7 +798,7 @@ button{cursor:pointer}
 
     <button class="close-btn" onclick="closeTrade()">✕</button>
 
-    <h2 id="tradeModalTitle">Place Trade</h2>
+    <h2 id="tradeTitle">Place Order</h2>
 
     <div class="field">
 
@@ -397,19 +831,17 @@ button{cursor:pointer}
 
       <div class="price-row">
 
-        <button onclick="changePrice(-.5)">−</button>
+        <button onclick="changePrice(-0.5)">−</button>
 
         <input
           id="priceInput"
           class="price-input"
           type="number"
-          step=".5"
-          min=".5"
-          max="99.5"
-          value="1"
+          min="0.01"
+          step="0.01"
           oninput="updateSummary()">
 
-        <button onclick="changePrice(.5)">+</button>
+        <button onclick="changePrice(0.5)">+</button>
 
       </div>
 
@@ -435,6 +867,7 @@ button{cursor:pointer}
         style="margin-top:10px"
         type="number"
         min="1"
+        step="1"
         value="1"
         oninput="updateSummary()">
 
@@ -460,11 +893,11 @@ button{cursor:pointer}
 
       <p>
         <span>Total</span>
-        <strong id="sumInvestment">₹0.00</strong>
+        <strong id="sumAmount">₹0.00</strong>
       </p>
 
       <p>
-        <span>Balance</span>
+        <span>Available</span>
         <strong id="sumBalance">₹0.00</strong>
       </p>
 
@@ -472,10 +905,10 @@ button{cursor:pointer}
 
 
     <button
-      class="confirm-btn"
       id="confirmBtn"
-      onclick="confirmTrade()">
-      Confirm Trade
+      class="confirm-btn"
+      onclick="submitTrade()">
+      Submit Order
     </button>
 
   </div>
@@ -483,7 +916,7 @@ button{cursor:pointer}
 </div>
 
 
-<!-- WALLET -->
+<!-- WALLET MODAL -->
 
 <div class="modal-bg" id="walletModal">
 
@@ -496,7 +929,7 @@ button{cursor:pointer}
     <div class="summary">
 
       <p>
-        <span>Available Balance</span>
+        <span>Balance</span>
         <strong id="walletBalance">₹0.00</strong>
       </p>
 
@@ -507,8 +940,9 @@ button{cursor:pointer}
 
     </div>
 
-    <p style="font-size:12px;color:#888;margin-top:18px">
-      Wallet values are loaded directly from your Firebase account.
+    <p style="font-size:12px;color:#777">
+      Wallet information is read from Firebase.
+      Balance changes should be performed only by your trusted backend/admin system.
     </p>
 
   </div>
@@ -516,14 +950,16 @@ button{cursor:pointer}
 </div>
 
 
-<!-- FIREBASE -->
-
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 
 
 <script>
+
+/* =========================================================
+   FIREBASE
+========================================================= */
 
 const firebaseConfig = {
   apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
@@ -540,41 +976,51 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 
-const params = new URLSearchParams(location.search);
-const matchId = params.get("id");
+const params =
+  new URLSearchParams(location.search);
+
+const matchId =
+  params.get("id");
 
 
-/* -------------------------
+/* =========================================================
    STATE
-------------------------- */
+========================================================= */
 
 let currentUser = null;
-let matchData = null;
+
+let matchData = {};
+
 let marketsData = {};
+
+let currentMarketFilter = "ALL";
+
 let selectedMarketId = null;
+
 let selectedSide = "YES";
-let selectedPrice = 1;
 
-let balanceValue = 0;
-let winningValue = 0;
+let balance = 0;
+
+let winning = 0;
 
 
-/* -------------------------
+/* =========================================================
    HELPERS
-------------------------- */
+========================================================= */
 
-const $ = id => document.getElementById(id);
+function $(id){
+  return document.getElementById(id);
+}
 
 function money(value){
 
   const n = Number(value);
 
-  return "₹" + (
-    Number.isFinite(n) ? n : 0
-  ).toFixed(2);
+  return "₹" +
+    (Number.isFinite(n) ? n : 0)
+      .toFixed(2);
 
 }
-
 
 function escapeHTML(value){
 
@@ -587,25 +1033,23 @@ function escapeHTML(value){
 
 }
 
+function error(message){
 
-function showError(message){
-
-  $("pageError").innerHTML =
+  $("errorBox").innerHTML =
     `<div class="error">${escapeHTML(message)}</div>`;
 
 }
 
-
 function clearError(){
 
-  $("pageError").innerHTML = "";
+  $("errorBox").innerHTML = "";
 
 }
 
 
-/* -------------------------
+/* =========================================================
    AUTH
-------------------------- */
+========================================================= */
 
 auth.onAuthStateChanged(user => {
 
@@ -618,9 +1062,15 @@ auth.onAuthStateChanged(user => {
     $("walletStatus").textContent =
       "Login required";
 
-    renderPortfolio();
+    $("portfolio").innerHTML =
+      `<div class="empty">
+        Please login to view trades.
+      </div>`;
 
-    updateTradeButtons();
+    $("transactions").innerHTML =
+      `<div class="empty">
+        Please login to view transactions.
+      </div>`;
 
     return;
 
@@ -631,75 +1081,65 @@ auth.onAuthStateChanged(user => {
   $("walletStatus").textContent =
     user.email || "Authenticated";
 
-  listenWallet(user.uid);
+  listenWallet();
 
-  renderPortfolio();
+  loadMyTrades();
 
-  updateTradeButtons();
+  loadTransactions();
 
 });
 
 
-/* -------------------------
+/* =========================================================
    MATCH
-------------------------- */
+========================================================= */
 
 function listenMatch(){
 
   if(!matchId){
 
-    showError(
-      "Match ID missing. URL should contain ?id=MATCH_ID"
+    error(
+      "Match ID missing. URL must contain ?id=MATCH_ID"
     );
-
-    $("headerTitle").textContent = "Match not found";
 
     return;
 
   }
 
-  const ref =
-    db.ref("matches/" + matchId);
+  db.ref("matches/" + matchId)
+    .on("value", snapshot => {
 
-  ref.on("value", snapshot => {
+      if(!snapshot.exists()){
 
-    if(!snapshot.exists()){
+        error(
+          "Match not found in Firebase."
+        );
 
-      showError(
-        "This match does not exist in Firebase."
-      );
+        return;
 
-      $("headerTitle").textContent =
-        "Match not found";
+      }
 
-      return;
+      clearError();
 
-    }
+      matchData =
+        snapshot.val() || {};
 
-    clearError();
+      renderMatch();
 
-    matchData = snapshot.val();
+    }, err => {
 
-    renderMatch();
+      error(err.message);
 
-  }, error => {
-
-    showError(
-      "Unable to load match: " + error.message
-    );
-
-  });
+    });
 
 }
 
 
-/* -------------------------
+/* =========================================================
    MATCH UI
-------------------------- */
+========================================================= */
 
 function renderMatch(){
-
-  if(!matchData) return;
 
   const teamA =
     matchData.teamA || "TEAM A";
@@ -710,13 +1150,16 @@ function renderMatch(){
   $("headerTitle").textContent =
     teamA + " vs " + teamB;
 
-  $("teamA").textContent = teamA;
-  $("teamB").textContent = teamB;
+  $("teamA").textContent =
+    teamA;
 
-  $("indiaScore").textContent =
+  $("teamB").textContent =
+    teamB;
+
+  $("scoreA").textContent =
     matchData.scoreA || "-";
 
-  $("ausScore").textContent =
+  $("scoreB").textContent =
     matchData.scoreB || "-";
 
   $("oversA").textContent =
@@ -741,29 +1184,32 @@ function renderMatch(){
   $("scoreInfo").textContent =
     matchData.overs
       ? "Overs: " + matchData.overs
-      : "Live match data";
+      : "Firebase live match data";
 
-  renderBalls(matchData.lastBalls);
+  renderBalls(
+    matchData.lastBalls
+  );
 
 }
 
 
-/* -------------------------
+/* =========================================================
    BALLS
-------------------------- */
+========================================================= */
 
-function renderBalls(lastBalls){
+function renderBalls(data){
 
-  const container = $("balls");
+  const box =
+    $("balls");
 
-  container.innerHTML = "";
+  box.innerHTML = "";
 
-  if(!lastBalls){
+  if(!data){
 
-    container.innerHTML =
-      `<div style="font-size:12px;color:#bbb">
-        No ball data
-      </div>`;
+    box.innerHTML =
+      `<span style="font-size:11px;color:#aaa">
+        No recent balls
+      </span>`;
 
     return;
 
@@ -771,68 +1217,102 @@ function renderBalls(lastBalls){
 
   let values = [];
 
-  if(Array.isArray(lastBalls)){
+  if(Array.isArray(data)){
 
-    values = lastBalls;
+    values = data;
 
   }else{
 
-    values = Object.keys(lastBalls)
-      .sort((a,b) => Number(a)-Number(b))
-      .map(key => lastBalls[key]);
+    values =
+      Object.keys(data)
+        .sort((a,b) => Number(a)-Number(b))
+        .map(k => data[k]);
 
   }
 
-  values.slice(-6).forEach((ball,index) => {
+  values.slice(-6)
+    .forEach((value,index,array) => {
 
-    const el =
-      document.createElement("div");
+      const el =
+        document.createElement("div");
 
-    el.className =
-      "ball" +
-      (
-        index === values.slice(-6).length - 1
-          ? " active"
-          : ""
-      );
+      el.className =
+        "ball" +
+        (
+          index === array.length - 1
+            ? " active"
+            : ""
+        );
 
-    el.textContent =
-      String(ball);
+      el.textContent =
+        value;
 
-    container.appendChild(el);
+      box.appendChild(el);
+
+    });
+
+}
+
+
+/* =========================================================
+   MARKETS
+========================================================= */
+
+function listenMarkets(){
+
+  if(!matchId) return;
+
+  db.ref(
+    "matches/" +
+    matchId +
+    "/markets"
+  ).on("value", snapshot => {
+
+    marketsData =
+      snapshot.val() || {};
+
+    populateBookMarkets();
+
+    renderMarkets();
+
+    renderOrderBook();
 
   });
 
 }
 
 
-/* -------------------------
-   MARKETS
-------------------------- */
+function getPrice(market,side){
 
-function listenMarkets(){
+  const liquidity =
+    market &&
+    market.liquidity &&
+    market.liquidity[side.toLowerCase()];
 
-  if(!matchId) return;
-
-  const ref =
-    db.ref("matches/" + matchId + "/markets");
-
-  ref.on("value", snapshot => {
-
-    marketsData =
-      snapshot.val() || {};
-
-    renderMarkets();
-
-    renderOrderBook();
-
-  }, error => {
-
-    showError(
-      "Unable to load markets: " + error.message
+  const price =
+    Number(
+      liquidity &&
+      liquidity.price
     );
 
-  });
+  return Number.isFinite(price)
+    ? price
+    : 0;
+
+}
+
+
+function getQty(market,side){
+
+  const liquidity =
+    market &&
+    market.liquidity &&
+    market.liquidity[side.toLowerCase()];
+
+  return Number(
+    liquidity &&
+    liquidity.qty
+  ) || 0;
 
 }
 
@@ -847,137 +1327,128 @@ function renderMarkets(){
   const ids =
     Object.keys(marketsData);
 
-  if(!ids.length){
-
-    container.innerHTML =
-      `<section class="card">
-        <div class="empty">
-          No active markets available.
-        </div>
-      </section>`;
-
-    return;
-
-  }
-
-  let activeCount = 0;
+  let shown = 0;
 
   ids.forEach(marketId => {
 
     const market =
       marketsData[marketId];
 
-    if(!market || market.active === false)
-      return;
+    if(!market) return;
 
-    activeCount++;
+    if(
+      currentMarketFilter !== "ALL" &&
+      String(market.type || "")
+        .toUpperCase() !== currentMarketFilter
+    ){
+      return;
+    }
+
+    shown++;
+
+    const active =
+      market.active !== false;
 
     const yesPrice =
-      Number(
-        market.liquidity &&
-        market.liquidity.yes &&
-        market.liquidity.yes.price
-      );
+      getPrice(market,"YES");
 
     const noPrice =
-      Number(
-        market.liquidity &&
-        market.liquidity.no &&
-        market.liquidity.no.price
-      );
-
-    const yes =
-      Number.isFinite(yesPrice)
-        ? yesPrice
-        : 0;
-
-    const no =
-      Number.isFinite(noPrice)
-        ? noPrice
-        : 0;
-
-    const yesLabel =
-      market.yesLabel || "YES";
-
-    const noLabel =
-      market.noLabel || "NO";
-
-    const title =
-      market.title || "Market";
+      getPrice(market,"NO");
 
     const yesQty =
-      Number(
-        market.liquidity &&
-        market.liquidity.yes &&
-        market.liquidity.yes.qty
-      ) || 0;
+      getQty(market,"YES");
 
     const noQty =
-      Number(
-        market.liquidity &&
-        market.liquidity.no &&
-        market.liquidity.no.qty
-      ) || 0;
+      getQty(market,"NO");
 
     const card =
       document.createElement("section");
 
-    card.className = "card";
+    card.className =
+      "card market-card";
 
     card.innerHTML = `
 
-      <div class="trade-count">
-        Firebase Market • ${escapeHTML(market.type || "prediction")}
+      <div class="market-top">
+
+        <div class="market-title">
+
+          <span class="market-type">
+            ${escapeHTML(
+              market.type || "MATCH"
+            )}
+          </span>
+
+          <h3>
+            ${escapeHTML(
+              market.title || "Market"
+            )}
+          </h3>
+
+        </div>
+
+        <span class="market-status ${
+          active ? "" : "closed"
+        }">
+
+          ${active ? "ACTIVE" : "CLOSED"}
+
+        </span>
+
       </div>
 
-      <div class="question-row">
-
-        <h3>${escapeHTML(title)}</h3>
-
-        <div class="market-img">🏏</div>
-
-      </div>
 
       <div class="prediction">
 
         <button
           class="yes-btn"
+          ${active ? "" : "disabled"}
           onclick="openTrade(
             '${escapeHTML(marketId)}',
             'YES',
-            ${yes}
+            ${yesPrice}
           )">
 
-          ${escapeHTML(yesLabel)}
-          | ${money(yes)}
+          ${escapeHTML(
+            market.yesLabel || "YES"
+          )}
+
+          | ${money(yesPrice)}
 
         </button>
 
+
         <button
           class="no-btn"
+          ${active ? "" : "disabled"}
           onclick="openTrade(
             '${escapeHTML(marketId)}',
             'NO',
-            ${no}
+            ${noPrice}
           )">
 
-          ${escapeHTML(noLabel)}
-          | ${money(no)}
+          ${escapeHTML(
+            market.noLabel || "NO"
+          )}
+
+          | ${money(noPrice)}
 
         </button>
 
       </div>
 
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        margin-top:12px;
-        color:#999;
-        font-size:11px
-      ">
 
-        <span>YES Qty: ${yesQty}</span>
-        <span>NO Qty: ${noQty}</span>
+      <div class="market-meta">
+
+        <div class="meta">
+          YES liquidity
+          <strong>${yesQty}</strong>
+        </div>
+
+        <div class="meta">
+          NO liquidity
+          <strong>${noQty}</strong>
+        </div>
 
       </div>
 
@@ -988,68 +1459,296 @@ function renderMarkets(){
   });
 
 
-  if(!activeCount){
+  if(shown === 0){
 
     container.innerHTML =
-      `<section class="card">
+      `<div class="card">
         <div class="empty">
-          No active markets available.
+          No markets available for this filter.
         </div>
-      </section>`;
+      </div>`;
 
   }
 
 }
 
 
-/* -------------------------
-   WALLET
-------------------------- */
+/* =========================================================
+   FILTER
+========================================================= */
 
-function listenWallet(uid){
+function filterMarkets(type,button){
 
-  db.ref("users/" + uid + "/wallet")
-    .on("value", snapshot => {
+  currentMarketFilter =
+    type;
 
-      const wallet =
-        snapshot.val() || {};
+  document
+    .querySelectorAll(".tab")
+    .forEach(el =>
+      el.classList.remove("active")
+    );
 
-      balanceValue =
-        Number(wallet.balance) || 0;
+  button.classList.add("active");
 
-      winningValue =
-        Number(wallet.winning) || 0;
-
-      updateWalletUI();
-
-    }, error => {
-
-      showError(
-        "Unable to load wallet: " + error.message
-      );
-
-    });
+  renderMarkets();
 
 }
 
 
-function updateWalletUI(){
+/* =========================================================
+   BOOK MARKET SELECT
+========================================================= */
+
+function populateBookMarkets(){
+
+  const select =
+    $("bookMarket");
+
+  const previous =
+    select.value;
+
+  select.innerHTML =
+    `<option value="">
+      Select market
+    </option>`;
+
+  Object.keys(marketsData)
+    .forEach(id => {
+
+      const market =
+        marketsData[id];
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        id;
+
+      option.textContent =
+        market.title || id;
+
+      select.appendChild(option);
+
+    });
+
+  if(
+    previous &&
+    marketsData[previous]
+  ){
+
+    select.value =
+      previous;
+
+  }else{
+
+    const first =
+      Object.keys(marketsData)[0];
+
+    if(first)
+      select.value = first;
+
+  }
+
+}
+
+
+/* =========================================================
+   ORDER BOOK
+========================================================= */
+
+function renderOrderBook(){
+
+  const marketId =
+    $("bookMarket").value;
+
+  if(!marketId){
+
+    $("yesBook").innerHTML =
+      `<div class="empty">
+        Select market
+      </div>`;
+
+    $("noBook").innerHTML =
+      `<div class="empty">
+        Select market
+      </div>`;
+
+    return;
+
+  }
+
+  const market =
+    marketsData[marketId];
+
+  if(!market){
+
+    return;
+
+  }
+
+  renderBookSide(
+    market,
+    "yes",
+    "yesBook"
+  );
+
+  renderBookSide(
+    market,
+    "no",
+    "noBook"
+  );
+
+}
+
+
+function renderBookSide(
+  market,
+  side,
+  elementId
+){
+
+  const sideBook =
+    market.orderbook &&
+    market.orderbook[side];
+
+  let rows = [];
+
+  if(sideBook){
+
+    ["buys","sells"]
+      .forEach(type => {
+
+        const orders =
+          sideBook[type] || {};
+
+        Object.keys(orders)
+          .forEach(orderId => {
+
+            const order =
+              orders[orderId];
+
+            const qty =
+              Math.max(
+                0,
+                Number(order.qty || 0) -
+                Number(order.filled || 0)
+              );
+
+            if(qty <= 0) return;
+
+            rows.push({
+
+              price:
+                Number(order.price || 0),
+
+              qty
+
+            });
+
+          });
+
+      });
+
+  }
+
+
+  rows.sort(
+    side === "yes"
+      ? (a,b) => b.price-a.price
+      : (a,b) => a.price-b.price
+  );
+
+
+  if(!rows.length){
+
+    $(elementId).innerHTML =
+      `<div class="empty">
+        No orders
+      </div>`;
+
+    return;
+
+  }
+
+
+  $(elementId).innerHTML =
+    rows.slice(0,10)
+      .map(row => `
+
+        <div class="book-row">
+
+          <span class="${
+            side === "yes"
+              ? "yes-price"
+              : "no-price"
+          }">
+
+            ${money(row.price)}
+
+          </span>
+
+          <strong>
+            ${row.qty}
+          </strong>
+
+        </div>
+
+      `)
+      .join("");
+
+}
+
+
+/* =========================================================
+   WALLET
+========================================================= */
+
+function listenWallet(){
+
+  if(!currentUser) return;
+
+  db.ref(
+    "users/" +
+    currentUser.uid +
+    "/wallet"
+  ).on("value",snapshot => {
+
+    const wallet =
+      snapshot.val() || {};
+
+    balance =
+      Number(wallet.balance) || 0;
+
+    winning =
+      Number(wallet.winning) || 0;
+
+    updateWallet();
+
+  });
+
+}
+
+
+function updateWallet(){
 
   $("balance").textContent =
-    money(balanceValue);
+    money(balance);
 
   $("walletBalance").textContent =
-    money(balanceValue);
+    money(balance);
 
   $("walletWinning").textContent =
-    money(winningValue);
+    money(winning);
 
   $("sumBalance").textContent =
-    money(balanceValue);
+    money(balance);
 
   $("walletStatus").textContent =
     currentUser
-      ? (currentUser.email || "Authenticated")
+      ? (
+        currentUser.email ||
+        "Authenticated"
+      )
       : "Login required";
 
   updateSummary();
@@ -1057,11 +1756,15 @@ function updateWalletUI(){
 }
 
 
-/* -------------------------
+/* =========================================================
    TRADE MODAL
-------------------------- */
+========================================================= */
 
-function openTrade(marketId, side, price){
+function openTrade(
+  marketId,
+  side,
+  price
+){
 
   if(!currentUser){
 
@@ -1084,7 +1787,7 @@ function openTrade(marketId, side, price){
 
   if(market.active === false){
 
-    alert("This market is closed.");
+    alert("Market is closed.");
 
     return;
 
@@ -1096,19 +1799,17 @@ function openTrade(marketId, side, price){
   selectedSide =
     side;
 
-  selectedPrice =
-    Number(price) || 0;
-
-  $("tradeModalTitle").textContent =
-    market.title || "Place Trade";
+  $("tradeTitle").textContent =
+    market.title || "Place Order";
 
   $("priceInput").value =
-    selectedPrice;
+    Number(price) || 0;
 
   $("qtyInput").value =
     1;
 
-  $("tradeModal").classList.add("show");
+  $("tradeModal")
+    .classList.add("show");
 
   selectSide(side);
 
@@ -1146,24 +1847,13 @@ function selectSide(side){
   if(market){
 
     const price =
-      side === "YES"
-        ? Number(
-            market.liquidity &&
-            market.liquidity.yes &&
-            market.liquidity.yes.price
-          )
-        : Number(
-            market.liquidity &&
-            market.liquidity.no &&
-            market.liquidity.no.price
-          );
+      getPrice(
+        market,
+        side
+      );
 
-    if(Number.isFinite(price)){
-
-      $("priceInput").value =
-        price;
-
-    }
+    $("priceInput").value =
+      price;
 
   }
 
@@ -1179,8 +1869,10 @@ function changePrice(amount){
 
   price =
     Math.max(
-      0.01,
-      Math.round((price + amount) * 100) / 100
+      .01,
+      Math.round(
+        (price + amount) * 100
+      ) / 100
     );
 
   $("priceInput").value =
@@ -1209,7 +1901,7 @@ function updateSummary(){
   const qty =
     Number($("qtyInput").value) || 0;
 
-  const total =
+  const amount =
     price * qty;
 
   $("sumSide").textContent =
@@ -1221,35 +1913,27 @@ function updateSummary(){
   $("sumQty").textContent =
     qty;
 
-  $("sumInvestment").textContent =
-    money(total);
+  $("sumAmount").textContent =
+    money(amount);
 
   $("sumBalance").textContent =
-    money(balanceValue);
+    money(balance);
 
   $("confirmBtn").disabled =
     !currentUser ||
     price <= 0 ||
     qty < 1 ||
     !Number.isInteger(qty) ||
-    total > balanceValue;
+    amount > balance;
 
 }
 
 
-function updateTradeButtons(){
+/* =========================================================
+   SUBMIT TRADE
+========================================================= */
 
-  $("confirmBtn").disabled =
-    !currentUser;
-
-}
-
-
-/* -------------------------
-   CREATE TRADE
-------------------------- */
-
-async function confirmTrade(){
+async function submitTrade(){
 
   if(!currentUser){
 
@@ -1259,20 +1943,20 @@ async function confirmTrade(){
 
   }
 
-  if(!selectedMarketId){
+  const market =
+    marketsData[selectedMarketId];
 
-    alert("Market select karo.");
+  if(!market){
+
+    alert("Market not found.");
 
     return;
 
   }
 
-  const market =
-    marketsData[selectedMarketId];
+  if(market.active === false){
 
-  if(!market || market.active === false){
-
-    alert("Market unavailable hai.");
+    alert("Market closed.");
 
     return;
 
@@ -1293,45 +1977,38 @@ async function confirmTrade(){
     price <= 0
   ){
 
-    alert("Valid price enter karo.");
+    alert("Invalid price.");
 
     return;
 
   }
-
 
   if(
     !Number.isInteger(qty) ||
     qty < 1
   ){
 
-    alert("Valid quantity enter karo.");
+    alert("Invalid quantity.");
+
+    return;
+
+  }
+
+  if(amount > balance){
+
+    alert("Insufficient available balance.");
 
     return;
 
   }
 
 
-  /*
-    IMPORTANT:
+  const tradeRef =
+    db.ref("trades").push();
 
-    We do NOT directly change:
+  const tradeId =
+    tradeRef.key;
 
-    users/{uid}/wallet/balance
-
-    from this browser.
-
-    Your current rules allow that, but it is
-    unsafe for a real-money system.
-
-    The trade is created with status PENDING.
-    A trusted backend should validate it,
-    deduct/escrow funds and match the order.
-  */
-
-
-  const tradeKey =
-    db.ref("trades").push().key;
 
   const trade = {
 
@@ -1409,25 +2086,23 @@ async function confirmTrade(){
 
   try{
 
-    await db.ref(
-      "trades/" + tradeKey
-    ).set(trade);
+    await tradeRef.set(trade);
 
     closeTrade();
 
     alert(
-      "Trade request Firebase mein save ho gaya."
+      "Order submitted successfully."
     );
 
-    renderPortfolio();
+    loadMyTrades();
 
-  }catch(error){
+  }catch(err){
 
-    console.error(error);
+    console.error(err);
 
     alert(
-      "Trade save nahi hua: " +
-      error.message
+      "Order failed: " +
+      err.message
     );
 
   }
@@ -1435,21 +2110,13 @@ async function confirmTrade(){
 }
 
 
-/* -------------------------
+/* =========================================================
    MY TRADES
-------------------------- */
+========================================================= */
 
-function renderPortfolio(){
-
-  const container =
-    $("portfolio");
+function loadMyTrades(){
 
   if(!currentUser){
-
-    container.innerHTML =
-      `<div class="empty">
-        Login required to view trades.
-      </div>`;
 
     return;
 
@@ -1478,28 +2145,27 @@ function renderPortfolio(){
 
       if(!trades.length){
 
-        container.innerHTML =
+        $("portfolio").innerHTML =
           `<div class="empty">
-            📋<br><br>
-            No Firebase trades found.
+            No trades yet.
           </div>`;
 
         return;
 
       }
 
-      container.innerHTML =
+      $("portfolio").innerHTML =
         trades.map(renderTrade).join("");
 
     })
-    .catch(error => {
+    .catch(err => {
 
-      container.innerHTML =
+      console.error(err);
+
+      $("portfolio").innerHTML =
         `<div class="empty">
-          Unable to load trades.
+          Could not load trades.
         </div>`;
-
-      console.error(error);
 
     });
 
@@ -1508,6 +2174,11 @@ function renderPortfolio(){
 
 function renderTrade(trade){
 
+  const status =
+    String(
+      trade.status || "UNKNOWN"
+    ).toLowerCase();
+
   const date =
     trade.createdAt
       ? new Date(
@@ -1515,57 +2186,79 @@ function renderTrade(trade){
         ).toLocaleString()
       : "-";
 
-  const status =
-    String(trade.status || "UNKNOWN")
-      .toUpperCase();
+  const price =
+    trade.avgPrice ||
+    trade.buyPrice ||
+    trade.limitPrice ||
+    0;
 
   const canExit =
-    status === "OPEN" ||
-    status === "MATCHED";
+    status === "open" ||
+    status === "matched";
+
 
   return `
 
     <div class="portfolio-row">
 
-      <div>
+      <div class="trade-main">
 
-        <strong>
+        <div class="trade-side">
+
           ${escapeHTML(
             trade.side || "-"
           )}
+
           •
-          ${Number(trade.qty || 0)} Qty
-        </strong>
 
-        <div style="color:#888;margin-top:5px">
-          ${money(
-            trade.avgPrice ||
-            trade.buyPrice ||
-            0
-          )} per unit
+          ${Number(
+            trade.qty || 0
+          )} Qty
+
         </div>
 
-        <div style="color:#888;margin-top:5px">
+        <div class="trade-meta">
+
+          ${escapeHTML(
+            trade.marketTitle ||
+            "Market"
+          )}
+
+        </div>
+
+        <div class="trade-meta">
+
+          Price: ${money(price)}
+
+        </div>
+
+        <div class="trade-meta">
+
+          Amount: ${money(
+            trade.amount
+          )}
+
+        </div>
+
+        <div class="trade-meta">
+
           ${escapeHTML(date)}
+
         </div>
 
-        <div style="color:#888;margin-top:5px">
-          Amount: ${money(trade.amount)}
-        </div>
+        <span class="status ${statusClass(status)}">
 
-        <div style="
-          margin-top:5px;
-          font-weight:bold;
-          color:${
-            status === "SETTLED"
-              ? "#0a9d45"
-              : "#777"
-          }
-        ">
-          ${escapeHTML(status)}
-        </div>
+          ${escapeHTML(
+            String(
+              trade.status ||
+              "UNKNOWN"
+            ).toUpperCase()
+          )}
+
+        </span>
 
       </div>
+
 
       ${
         canExit
@@ -1586,50 +2279,63 @@ function renderTrade(trade){
 }
 
 
-/* -------------------------
+function statusClass(status){
+
+  if(status === "pending")
+    return "pending";
+
+  if(
+    status === "open" ||
+    status === "matched"
+  )
+    return "open";
+
+  if(status === "settled")
+    return "settled";
+
+  if(
+    status === "exit_request"
+  )
+    return "exit";
+
+  return "pending";
+
+}
+
+
+/* =========================================================
    EXIT REQUEST
-------------------------- */
+========================================================= */
 
 async function requestExit(tradeId){
 
   if(!currentUser){
 
-    alert("Please login first.");
+    alert("Please login.");
 
     return;
 
   }
-
-  /*
-    Do not directly refund wallet from client.
-    Marking the trade EXIT_REQUEST is safer.
-    Trusted backend should calculate exit value,
-    update wallet and settle the trade.
-  */
 
   try{
 
     await db.ref(
-      "trades/" + tradeId + "/status"
+      "trades/" +
+      tradeId +
+      "/status"
     ).set("EXIT_REQUEST");
 
-    await db.ref(
-      "trades/" + tradeId + "/settledBy"
-    ).set(currentUser.uid);
-
     alert(
-      "Exit request Firebase mein submit ho gayi."
+      "Exit request submitted."
     );
 
-    renderPortfolio();
+    loadMyTrades();
 
-  }catch(error){
-
-    console.error(error);
+  }catch(err){
 
     alert(
       "Exit request failed: " +
-      error.message
+      err.message
     );
 
   }
@@ -1637,148 +2343,117 @@ async function requestExit(tradeId){
 }
 
 
-/* -------------------------
-   ORDER BOOK
-------------------------- */
+/* =========================================================
+   TRANSACTIONS
+========================================================= */
 
-function renderOrderBook(){
+function loadTransactions(){
 
-  if(!marketsData){
+  if(!currentUser){
 
     return;
 
   }
 
-  let yes = [];
-  let no = [];
+  db.ref("transactions")
+    .orderByChild("userId")
+    .equalTo(currentUser.uid)
+    .once("value")
+    .then(snapshot => {
 
-  Object.keys(marketsData).forEach(marketId => {
+      const data =
+        snapshot.val() || {};
 
-    const market =
-      marketsData[marketId];
+      const rows =
+        Object.keys(data)
+          .map(id => ({
+            id,
+            ...data[id]
+          }))
+          .sort(
+            (a,b) =>
+              Number(b.date || 0) -
+              Number(a.date || 0)
+          )
+          .slice(0,20);
 
-    if(!market || market.active === false)
-      return;
 
-    const orderbook =
-      market.orderbook || {};
+      if(!rows.length){
 
-    ["yes","no"].forEach(side => {
+        $("transactions").innerHTML =
+          `<div class="empty">
+            No transactions.
+          </div>`;
 
-      const sideBook =
-        orderbook[side];
-
-      if(!sideBook)
         return;
 
-      ["buys","sells"].forEach(type => {
+      }
 
-        const orders =
-          sideBook[type] || {};
 
-        Object.keys(orders).forEach(orderId => {
+      $("transactions").innerHTML =
+        rows.map(tx => `
 
-          const order =
-            orders[orderId];
+          <div class="portfolio-row">
 
-          if(!order)
-            return;
+            <div class="trade-main">
 
-          const remaining =
-            Math.max(
-              0,
-              Number(order.qty || 0) -
-              Number(order.filled || 0)
-            );
+              <strong>
+                ${escapeHTML(
+                  tx.type || "TRANSACTION"
+                )}
+              </strong>
 
-          if(remaining <= 0)
-            return;
+              <div class="trade-meta">
+                ${escapeHTML(
+                  tx.description || ""
+                )}
+              </div>
 
-          const row = {
+              <div class="trade-meta">
+                ${
+                  tx.date
+                    ? new Date(
+                        Number(tx.date)
+                      ).toLocaleString()
+                    : "-"
+                }
+              </div>
 
-            price:
-              Number(order.price || 0),
+            </div>
 
-            qty:
-              remaining
+            <strong>
+              ${money(tx.amount)}
+            </strong>
 
-          };
+          </div>
 
-          if(side === "yes")
-            yes.push(row);
-          else
-            no.push(row);
+        `).join("");
 
-        });
+    })
+    .catch(err => {
 
-      });
+      console.error(err);
+
+      $("transactions").innerHTML =
+        `<div class="empty">
+          Could not load transactions.
+        </div>`;
 
     });
-
-  });
-
-
-  yes.sort(
-    (a,b) => b.price - a.price
-  );
-
-  no.sort(
-    (a,b) => a.price - b.price
-  );
-
-
-  $("yesBook").innerHTML =
-    yes.length
-      ? yes.slice(0,10).map(row => `
-
-          <div class="book-row">
-
-            <span class="yes-price">
-              ${money(row.price)}
-            </span>
-
-            <strong>
-              ${row.qty}
-            </strong>
-
-          </div>
-
-        `).join("")
-      : `<div class="empty">No YES orders</div>`;
-
-
-  $("noBook").innerHTML =
-    no.length
-      ? no.slice(0,10).map(row => `
-
-          <div class="book-row">
-
-            <span class="no-price">
-              ${money(row.price)}
-            </span>
-
-            <strong>
-              ${row.qty}
-            </strong>
-
-          </div>
-
-        `).join("")
-      : `<div class="empty">No NO orders</div>`;
 
 }
 
 
-/* -------------------------
+/* =========================================================
    WALLET MODAL
-------------------------- */
+========================================================= */
 
 function openWallet(){
 
   $("walletModal")
     .classList.add("show");
 
-  updateWalletUI();
+  updateWallet();
 
 }
 
@@ -1791,9 +2466,9 @@ function closeWallet(){
 }
 
 
-/* -------------------------
+/* =========================================================
    NAVIGATION
-------------------------- */
+========================================================= */
 
 function scrollToTop(){
 
@@ -1805,24 +2480,32 @@ function scrollToTop(){
 }
 
 
-function setTab(button){
+function scrollToMarkets(){
 
-  document
-    .querySelectorAll(".tab")
-    .forEach(tab =>
-      tab.classList.remove("active")
-    );
-
-  button.classList.add("active");
+  $("marketsContainer")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
 
 }
 
 
-/* -------------------------
+function scrollToTrades(){
+
+  $("portfolio")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
    START
-------------------------- */
+========================================================= */
 
 listenMatch();
+
 listenMarkets();
 
 </script>
