@@ -169,10 +169,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 }
 .pred-btn.yes{background:#e6f7ec;color:#0a9c46;border-color:#c7ebd5;}
 .pred-btn.no{background:#fdecec;color:var(--red);border-color:#f5cfcf;}
-.pred-btn small{
-  display:block;font-size:10px;font-weight:600;
-  color:#8b9098;margin-top:4px;
-}
 
 .pred-progress{display:flex;gap:10px;margin-bottom:12px;}
 .pp-box{
@@ -309,33 +305,17 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 .pill.active.y{background:#0aa84f;color:#fff;border-color:#0aa84f;}
 .pill.active.n{background:var(--red);color:#fff;border-color:var(--red);}
 
+/* ===== FIXED PRICE (no edit) ===== */
 .price-line{
   display:flex;justify-content:space-between;
-  align-items:end;margin:6px 0 14px;
+  align-items:end;margin:6px 0 16px;
 }
 .price-line .label{font-size:12px;color:#8b9098;font-weight:600;margin-bottom:4px;}
-.price-big{font-size:26px;font-weight:800;color:#16181d;}
-.price-big small{font-size:11px;color:#8a9098;font-weight:500;}
+.price-big{font-size:28px;font-weight:800;color:#16181d;}
+.price-big small{font-size:11px;color:#8a9098;font-weight:500;margin-left:4px;}
 .available{color:#0a9c46;font-size:11px;font-weight:700;}
 
-.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-.slider-row .minus,
-.slider-row .plus{
-  width:36px;height:36px;border-radius:50%;
-  background:#fff;border:1px solid var(--line);
-  font-size:18px;display:flex;align-items:center;
-  justify-content:center;color:#555;
-}
-.slider-row .slider{
-  flex:1;-webkit-appearance:none;height:6px;
-  border-radius:4px;background:#e6e8ec;outline:none;
-}
-.slider-row .slider::-webkit-slider-thumb{
-  -webkit-appearance:none;width:20px;height:20px;
-  border-radius:50%;background:#fff;border:2px solid var(--red);
-  box-shadow:0 1px 4px #0003;
-}
-
+/* qty */
 .qty-box{
   border:1px solid var(--line);border-radius:12px;
   padding:12px;margin-bottom:12px;
@@ -391,6 +371,12 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 .note{
   font-size:9px;color:#8b9098;
   text-align:center;margin-top:8px;line-height:1.4;
+}
+
+/* ===== SWIPE INSIDE SHEET ===== */
+.sheet-swipe-wrap{
+  margin-top:10px;
+  margin-bottom:6px;
 }
 
 /* ================= TOAST ================= */
@@ -593,11 +579,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
       </button>
     </div>
 
-    <div class="swipe" id="swipe">
-      <span>Swipe To Confirm</span>
-      <div class="knob" id="knob">»</div>
-    </div>
-
     <div class="balance-line">
       <span>Balance: <b id="walletTop">₹0.00</b></span>
       <span>Commission on net winnings: 15%</span>
@@ -635,28 +616,15 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
       </button>
     </div>
 
+    <!-- FIXED PRICE (no edit) -->
     <div class="price-line">
       <div>
-        <div class="label">Price</div>
+        <div class="label">Price (Fixed)</div>
         <div class="price-big" id="sheetPrice">₹0</div>
       </div>
       <div style="text-align:right">
         <b class="available" id="sheetAvailable">0 qty available</b>
       </div>
-    </div>
-
-    <div class="slider-row">
-      <button class="minus" onclick="changePrice(-.5)">−</button>
-      <input
-        id="priceInput"
-        class="slider"
-        type="range"
-        min="0.5"
-        max="9.5"
-        step="0.5"
-        value="0"
-        oninput="syncPrice()">
-      <button class="plus" onclick="changePrice(.5)">+</button>
     </div>
 
     <div class="qty-box">
@@ -701,6 +669,14 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
       <button class="addcash" onclick="location.href='wallet.html'">
         + Add Funds
       </button>
+    </div>
+
+    <!-- SWIPE INSIDE SHEET -->
+    <div class="sheet-swipe-wrap">
+      <div class="swipe" id="swipe">
+        <span>Swipe To Confirm</span>
+        <div class="knob" id="knob">»</div>
+      </div>
     </div>
 
     <div class="note">
@@ -789,7 +765,7 @@ function toast(msg){
 }
 
 /* =====================================================
-   RENDER — SAB FIREBASE SE
+   RENDER
    ===================================================== */
 function render(){
   const m=state.match || {};
@@ -807,18 +783,14 @@ function render(){
   document.getElementById('scoreA').textContent = m.scoreA || '—';
   document.getElementById('scoreB').textContent = m.scoreB || '—';
 
-  /* LIVE TAG */
   const isLive = String(m.status || '').toUpperCase() === 'LIVE';
   document.getElementById('headerLiveTag').style.display = isLive ? 'inline-flex' : 'none';
   document.getElementById('liveDot').style.display = isLive ? 'inline-flex' : 'none';
 
-  /* SCOREBOARD SHOW */
   document.getElementById('scoreboard').style.display = m.teamA ? 'block' : 'none';
 
-  /* COMMENTARY */
   document.getElementById('commentary').textContent = m.commentary || '';
 
-  /* BATSMAN / BOWLER */
   const bA = m.batsmanA || {};
   const bB = m.batsmanB || {};
   const bw = m.bowler || {};
@@ -831,7 +803,6 @@ function render(){
   document.getElementById('bowlA').textContent = bw.name || '—';
   document.getElementById('bowlAStats').textContent = bw.stats || '';
 
-  /* BALLS */
   const ballsEl = document.getElementById('sbBalls');
   const balls = Array.isArray(m.balls) ? m.balls : [];
   const activeBall = Number(m.activeBall ?? -1);
@@ -843,26 +814,20 @@ function render(){
     ballsEl.innerHTML = '';
   }
 
-  /* WALLET */
   document.getElementById('walletTop').textContent = money(state.balance);
 
-  /* LOGIN BANNER */
   document.getElementById('loginBanner').style.display =
     state.loggedIn ? 'none' : 'flex';
 
-  /* MARKETS */
   renderMarkets();
-
-  /* ORDER BOOK */
   renderBook();
   renderTrades();
 
-  /* BOTTOM BAR */
   document.getElementById('bottomBar').style.display = m.teamA ? 'block' : 'none';
 }
 
 /* =====================================================
-   RENDER MARKETS (Firebase se)
+   RENDER MARKETS
    ===================================================== */
 function renderMarkets(){
   const container = document.getElementById('marketsContainer');
@@ -881,7 +846,6 @@ function renderMarkets(){
     const tradesCount = Number(mk.tradesCount || 0);
     const probText = mk.probText || '';
 
-    /* progress boxes (optional) */
     let progressHtml = '';
     if(Array.isArray(mk.progress) && mk.progress.length){
       progressHtml = `
@@ -899,7 +863,6 @@ function renderMarkets(){
       `;
     }
 
-    /* probability bar */
     let probHtml = '';
     if(probText){
       probHtml = `
@@ -938,7 +901,7 @@ function renderMarkets(){
 }
 
 /* =====================================================
-   ORDER BOOK (Firebase se)
+   ORDER BOOK
    ===================================================== */
 function renderBook(){
   const sourceTrades=state.allTrades || [];
@@ -1002,7 +965,6 @@ function openTrade(side, marketIdx){
     return;
   }
 
-  /* set active market */
   const idx = typeof marketIdx === 'number' ? marketIdx : 0;
   state.activeMarket = state.markets[idx] || null;
 
@@ -1011,7 +973,7 @@ function openTrade(side, marketIdx){
     return;
   }
 
-  /* set prices from active market */
+  /* FIXED prices from active market */
   state.yesPrice = Number(state.activeMarket.yesPrice ?? state.activeMarket.price ?? 0);
   state.noPrice = Number(state.activeMarket.noPrice ?? 0);
   state.yesAvailable = Number(state.activeMarket.yesAvailable ?? 0);
@@ -1027,6 +989,10 @@ function openTrade(side, marketIdx){
 
   setSide(side);
   setQty(state.qty || 5);
+
+  /* reset swipe when sheet opens */
+  resetSwipe();
+  setTimeout(()=>{ swipeState.maxX=getSwipeMax(); }, 100);
 }
 
 /* CLOSE */
@@ -1072,22 +1038,6 @@ function setQty(q){
 function changeQty(d){ setQty(state.qty+d); }
 function syncQty(){ setQty(document.getElementById('qtyInput').value); }
 
-/* PRICE */
-function changePrice(n){
-  let p = price() + n;
-  p = Math.max(0.5, Math.min(9.5, Math.round(p*2)/2));
-  if(state.side==='YES') state.yesPrice=p;
-  else state.noPrice=p;
-  document.getElementById('priceInput').value=p;
-  updateSheet();
-}
-function syncPrice(){
-  const p = Number(document.getElementById('priceInput').value);
-  if(state.side==='YES') state.yesPrice=p;
-  else state.noPrice=p;
-  updateSheet();
-}
-
 /* SHEET */
 function updateSheet(){
   const p = price();
@@ -1100,7 +1050,6 @@ function updateSheet(){
     available().toLocaleString('en-IN') + ' qty available';
   document.getElementById('pillYesPrice').textContent = state.yesPrice;
   document.getElementById('pillNoPrice').textContent = state.noPrice;
-  document.getElementById('priceInput').value = p;
   document.getElementById('investment').textContent = '₹' + inv.toFixed(1);
   document.getElementById('winning').textContent = '₹' + ret.toFixed(0);
   document.getElementById('availQty').textContent = available().toLocaleString('en-IN');
@@ -1196,7 +1145,7 @@ window.addEventListener('resize', ()=>{
 });
 
 /* =====================================================
-   CONFIRM TRADE (Firebase me save)
+   CONFIRM TRADE
    ===================================================== */
 async function confirmTrade(){
   const inv = price() * state.qty;
@@ -1258,7 +1207,6 @@ async function confirmTrade(){
     newYes=Number(newYes.toFixed(2));
     newNo=Number(newNo.toFixed(2));
 
-    /* active market index */
     const idx = state.markets.indexOf(state.activeMarket);
     const path = idx>=0 ? `matches/${matchId}/markets/${idx}` : null;
 
@@ -1377,7 +1325,7 @@ auth.onAuthStateChanged(user=>{
 });
 
 /* =====================================================
-   MATCH LIVE SYNC — SAB FIREBASE SE
+   MATCH LIVE SYNC
    ===================================================== */
 if(matchId){
   marketRef=db.ref('matches/'+matchId);
@@ -1392,11 +1340,9 @@ if(matchId){
     state.match=s.val();
     const m = state.match;
 
-    /* MARKETS — Firebase se */
     let marketsArr = [];
 
     if(m.markets && typeof m.markets === 'object'){
-      /* agar object form me hai */
       marketsArr = Object.keys(m.markets).map(k=>({
         id:k,
         ...m.markets[k]
@@ -1405,7 +1351,6 @@ if(matchId){
       marketsArr = m.markets;
     }
 
-    /* agar markets nahi hai, to single market se bana do */
     if(!marketsArr.length && (m.market || m.oddsA !== undefined)){
       marketsArr = [{
         id:'default',
@@ -1422,7 +1367,6 @@ if(matchId){
 
     state.markets = marketsArr;
 
-    /* DEFAULT PRICES — pehle market se */
     if(marketsArr.length){
       state.yesPrice = Number(marketsArr[0].yesPrice ?? 0);
       state.noPrice = Number(marketsArr[0].noPrice ?? 0);
@@ -1430,7 +1374,6 @@ if(matchId){
       state.noAvailable = Number(marketsArr[0].noAvailable ?? 0);
     }
 
-    /* HIDE LOADING, SHOW MARKET */
     document.getElementById('loadingView').style.display='none';
     document.getElementById('marketView').style.display='block';
 
@@ -1439,7 +1382,6 @@ if(matchId){
     updateBalanceAlert();
   });
 
-  /* ALL TRADES */
   allTradesRef=db.ref('trades').orderByChild('matchId').equalTo(matchId);
   allTradesRef.on('value', s=>{
     const arr=[];
