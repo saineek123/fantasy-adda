@@ -11,30 +11,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+*{box-sizing:border-box;margin:0;padding:0;}
 
 :root{
   --green:#0aa84f;
-  --green2:#08b85a;
-  --red:#d92d20;
-  --red-dark:#8b0000;
+  --red:#d32f2f;
   --bg:#f4f6f8;
   --text:#16181d;
   --muted:#777d87;
   --line:#e7e9ed;
   --blue:#2a6df4;
-  --blue-light:#e8f0fe;
   --dark-maroon:#3d0a0f;
 }
 
-html,body{
-  width:100%;
-  min-height:100%;
-}
+html,body{width:100%;min-height:100%;}
 
 body{
   font-family:Inter,Arial,sans-serif;
@@ -45,1026 +35,407 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-button,input{
-  font:inherit;
-  outline:none;
-}
-
-button{
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  border:0;
-}
+button,input{font:inherit;outline:none;}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 
 /* ================= HEADER ================= */
-
 .header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  background:#b71c1c;
-  height:60px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:0 14px;
+  position:sticky;top:0;z-index:20;
+  background:#b71c1c;height:60px;
+  display:flex;align-items:center;gap:12px;padding:0 14px;
 }
-
 .header .back{
-  background:transparent;
-  color:#fff;
-  font-size:22px;
-  width:36px;
-  height:36px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  background:transparent;color:#fff;font-size:22px;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
 }
-
-.header .title-block{
-  flex:1;
-  color:#fff;
-  line-height:1.2;
-}
-
+.header .title-block{flex:1;color:#fff;line-height:1.2;min-width:0;}
 .header .title-block h2{
-  font-size:16px;
-  font-weight:800;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  font-size:16px;font-weight:800;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-
 .header .title-block .live-tag{
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  font-size:10px;
-  color:#ffd6d6;
-  font-weight:600;
-  margin-top:2px;
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;color:#ffd6d6;font-weight:600;margin-top:2px;
 }
-
 .header .title-block .live-tag .dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#ff4d4d;
+  width:6px;height:6px;border-radius:50%;background:#ff4d4d;
 }
-
 .header .wallet-icon{
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  width:36px;
-  height:36px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:16px;
+  background:rgba(255,255,255,.15);color:#fff;
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
 }
 
-/* ================= SCORE BOARD ================= */
-
-.scoreboard{
-  background:var(--dark-maroon);
-  color:#fff;
-  padding:14px 14px 16px;
-}
-
-.sb-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:6px;
-}
-
-.sb-team{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex:1;
-  min-width:0;
-}
-
-.sb-team.right{
-  justify-content:flex-end;
-  text-align:right;
-}
-
+/* ================= SCOREBOARD ================= */
+.scoreboard{background:var(--dark-maroon);color:#fff;padding:14px 14px 16px;}
+.sb-top{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.sb-team{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.sb-team.right{justify-content:flex-end;text-align:right;}
 .sb-team .logo{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#fff;
-  flex-shrink:0;
+  width:38px;height:38px;border-radius:50%;
+  object-fit:cover;background:#fff;flex-shrink:0;
 }
-
-.sb-team .info{
-  min-width:0;
-}
-
+.sb-team .info{min-width:0;}
 .sb-team .info b{
-  display:block;
-  font-size:12px;
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  display:block;font-size:12px;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-
-.sb-team .info span{
-  display:block;
-  font-size:15px;
-  font-weight:800;
-  margin-top:1px;
-}
-
-.sb-center{
-  text-align:center;
-  flex-shrink:0;
-  padding:0 4px;
-}
-
+.sb-team .info span{display:block;font-size:15px;font-weight:800;margin-top:1px;}
+.sb-center{text-align:center;flex-shrink:0;padding:0 4px;}
 .sb-center .web11{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  font-size:11px;
-  font-weight:800;
-  color:#fff;
-  margin-bottom:3px;
+  display:flex;align-items:center;justify-content:center;gap:3px;
+  font-size:11px;font-weight:800;color:#fff;margin-bottom:3px;
 }
-
 .sb-center .web11 .w-icon{
-  width:16px;
-  height:16px;
-  background:#d32f2f;
-  border-radius:50%;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  font-size:9px;
-  font-weight:900;
+  width:16px;height:16px;background:#d32f2f;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:900;
 }
-
 .sb-center .live-dot{
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  font-size:10px;
-  color:#ff8a80;
-  font-weight:700;
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;color:#ff8a80;font-weight:700;
 }
-
-.sb-center .live-dot .d{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#ff4d4d;
-}
-
+.sb-center .live-dot .d{width:6px;height:6px;border-radius:50%;background:#ff4d4d;}
 .sb-commentary{
-  text-align:center;
-  font-size:11px;
-  color:#e0c8c8;
-  margin:12px 0 10px;
+  text-align:center;font-size:11px;color:#e0c8c8;
+  margin:12px 0 10px;min-height:14px;
 }
-
 .sb-stats{
-  display:flex;
-  justify-content:space-between;
-  font-size:11px;
-  color:#fff;
-  margin-bottom:10px;
+  display:flex;justify-content:space-between;
+  font-size:11px;color:#fff;margin-bottom:10px;gap:8px;
 }
-
-.sb-stats .col{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-
-.sb-stats .col.right{
-  text-align:right;
-}
-
-.sb-stats .col b{
-  font-weight:700;
-}
-
-.sb-balls{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-}
-
+.sb-stats .col{display:flex;flex-direction:column;gap:4px;}
+.sb-stats .col.right{text-align:right;}
+.sb-stats .col b{font-weight:700;}
+.sb-balls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
 .sb-balls .ball{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  background:#5c3a3d;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:11px;
-  font-weight:700;
-  color:#fff;
+  width:32px;height:32px;border-radius:50%;
+  background:#5c3a3d;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;
 }
-
-.sb-balls .ball.active{
-  background:#2a6df4;
-}
+.sb-balls .ball.active{background:#2a6df4;}
 
 /* ================= TABS ================= */
-
 .tabs{
-  display:flex;
-  background:#fff;
-  border-bottom:1px solid var(--line);
-  overflow-x:auto;
-  scrollbar-width:none;
+  display:flex;background:#fff;border-bottom:1px solid var(--line);
+  overflow-x:auto;scrollbar-width:none;
 }
-
 .tabs::-webkit-scrollbar{display:none;}
-
 .tab{
-  flex:1;
-  min-width:75px;
-  padding:14px 8px;
-  background:#fff;
-  font-size:13px;
-  font-weight:600;
-  color:#8b9098;
-  border-bottom:3px solid transparent;
-  white-space:nowrap;
+  flex:1;min-width:75px;padding:14px 8px;background:#fff;
+  font-size:13px;font-weight:600;color:#8b9098;
+  border-bottom:3px solid transparent;white-space:nowrap;
 }
-
-.tab.active{
-  color:#d32f2f;
-  font-weight:800;
-  border-bottom:3px solid #d32f2f;
-}
+.tab.active{color:var(--red);font-weight:800;border-bottom:3px solid var(--red);}
 
 /* ================= CONTAINER ================= */
-
-.container{
-  max-width:560px;
-  margin:auto;
-  padding:0 0 10px;
-}
+.container{max-width:560px;margin:auto;padding:0 0 10px;}
 
 /* ================= MARKET CARD ================= */
-
 .market-card{
-  background:#fff;
-  border-radius:0;
-  padding:16px 14px 18px;
-  border-bottom:8px solid #eef0f3;
+  background:#fff;border-radius:0;
+  padding:16px 14px 18px;border-bottom:8px solid #eef0f3;
 }
-
 .trade-count{
-  display:flex;
-  align-items:center;
-  gap:5px;
-  font-size:11px;
-  color:#8b9098;
-  margin-bottom:12px;
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:#8b9098;margin-bottom:12px;
 }
-
-.market-row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:16px;
-}
-
+.market-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
 .market-row .q-text{
-  flex:1;
-  font-size:14px;
-  font-weight:700;
-  line-height:1.45;
-  color:#16181d;
+  flex:1;font-size:14px;font-weight:700;
+  line-height:1.45;color:#16181d;
 }
-
 .market-row .q-img{
-  width:60px;
-  height:60px;
-  border-radius:14px;
-  background:#edf1ff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:32px;
-  flex-shrink:0;
+  width:60px;height:60px;border-radius:14px;
+  background:#edf1ff;display:flex;align-items:center;justify-content:center;
+  font-size:32px;flex-shrink:0;
 }
 
-/* probability bar */
 .prob-bar{
-  background:#e8f0fe;
-  border-radius:12px;
-  padding:11px 14px;
-  text-align:center;
-  margin-bottom:14px;
+  background:#e8f0fe;border-radius:12px;
+  padding:11px 14px;text-align:center;margin-bottom:14px;
 }
-
 .prob-bar small{
-  display:block;
-  font-size:11px;
-  color:#5a6472;
-  font-weight:600;
-  margin-bottom:3px;
+  display:block;font-size:11px;color:#5a6472;
+  font-weight:600;margin-bottom:3px;
 }
+.prob-bar b{color:var(--blue);font-size:13px;font-weight:800;}
 
-.prob-bar b{
-  color:#2a6df4;
-  font-size:13px;
-  font-weight:800;
-}
-
-/* prediction buttons (small style) */
-.prediction{
-  display:flex;
-  gap:10px;
-}
-
+.prediction{display:flex;gap:10px;}
 .pred-btn{
-  flex:1;
-  padding:14px 6px;
-  border-radius:10px;
-  font-size:14px;
-  font-weight:800;
-  text-align:center;
+  flex:1;padding:14px 6px;border-radius:10px;
+  font-size:14px;font-weight:800;text-align:center;
   border:1px solid transparent;
 }
-
-.pred-btn.yes{
-  background:#e6f7ec;
-  color:#0a9c46;
-  border-color:#c7ebd5;
-}
-
-.pred-btn.no{
-  background:#fdecec;
-  color:#d32f2f;
-  border-color:#f5cfcf;
-}
-
+.pred-btn.yes{background:#e6f7ec;color:#0a9c46;border-color:#c7ebd5;}
+.pred-btn.no{background:#fdecec;color:var(--red);border-color:#f5cfcf;}
 .pred-btn small{
-  display:block;
-  font-size:10px;
-  font-weight:600;
-  color:#8b9098;
-  margin-top:4px;
+  display:block;font-size:10px;font-weight:600;
+  color:#8b9098;margin-top:4px;
 }
 
-/* prediction with progress (for runs/wickets) */
-.pred-progress{
-  display:flex;
-  gap:10px;
-  margin-bottom:12px;
-}
-
+.pred-progress{display:flex;gap:10px;margin-bottom:12px;}
 .pp-box{
-  flex:1;
-  border:1px solid #e3e5e8;
-  border-radius:10px;
-  padding:9px 10px;
-  background:#fff;
+  flex:1;border:1px solid #e3e5e8;border-radius:10px;
+  padding:9px 10px;background:#fff;
 }
-
 .pp-box .pp-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:12px;
-  font-weight:800;
-  margin-bottom:6px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;font-weight:800;margin-bottom:6px;
 }
-
-.pp-box .pp-top .runs{
-  color:#16181d;
-}
-
-.pp-box .pp-top .pct{
-  color:#0a9c46;
-  font-size:11px;
-}
-
-.pp-bar{
-  height:5px;
-  background:#eef0f3;
-  border-radius:4px;
-  overflow:hidden;
-}
-
+.pp-box .pp-top .runs{color:#16181d;}
+.pp-box .pp-top .pct{color:#0a9c46;font-size:11px;}
+.pp-bar{height:5px;background:#eef0f3;border-radius:4px;overflow:hidden;}
 .pp-bar span{
-  display:block;
-  height:100%;
-  background:linear-gradient(90deg,#0aa84f,#08b85a);
-  border-radius:4px;
+  display:block;height:100%;
+  background:linear-gradient(90deg,#0aa84f,#08b85a);border-radius:4px;
 }
 
 /* ================= ORDER BOOK ================= */
-
 .book{
-  background:#fff;
-  border-radius:14px;
-  padding:14px;
-  margin:10px 12px;
-  box-shadow:0 1px 6px #00000008;
+  background:#fff;border-radius:14px;padding:14px;
+  margin:10px 12px;box-shadow:0 1px 6px #00000008;
 }
-
 .book-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:12px;
 }
-
-.book-title b{
-  font-size:14px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
+.book-title b{font-size:14px;display:flex;align-items:center;gap:6px;}
 .book-title .chev{
-  border:0;
-  background:#f1f3f5;
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  font-size:12px;
-  color:#555;
+  border:0;background:#f1f3f5;width:26px;height:26px;
+  border-radius:50%;font-size:12px;color:#555;
 }
-
-.book-head,
-.book-row{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr;
-  font-size:11px;
-  align-items:center;
-  text-align:right;
-  padding:9px 2px;
+.book-head,.book-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr 1fr;
+  font-size:11px;align-items:center;text-align:right;padding:9px 2px;
 }
-
 .book-head{
-  color:#5a6472;
-  font-weight:700;
-  border-bottom:1px solid #eef0f3;
+  color:#5a6472;font-weight:700;border-bottom:1px solid #eef0f3;
 }
-
-.book-row{
-  border-bottom:1px solid #f5f6f8;
-}
-
+.book-row{border-bottom:1px solid #f5f6f8;}
 .yesc{color:#0a9c46;font-weight:700;}
-.noc{color:#d32f2f;font-weight:700;}
-
-.book-row div:first-child{
-  text-align:left;
-  font-weight:700;
-}
+.noc{color:var(--red);font-weight:700;}
+.book-row div:first-child{text-align:left;font-weight:700;}
 
 /* ================= STATS ================= */
-
 .stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin:10px 12px;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin:10px 12px;
 }
+.stat{background:#fff;border-radius:12px;padding:12px;box-shadow:0 1px 6px #00000008;}
+.stat small{display:block;color:#8b9098;font-size:10px;margin-bottom:4px;}
+.stat b{font-size:14px;display:block;}
 
-.stat{
-  background:#fff;
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 1px 6px #00000008;
-}
-
-.stat small{
-  display:block;
-  color:#8b9098;
-  font-size:10px;
-  margin-bottom:4px;
-}
-
-.stat b{
-  font-size:14px;
-  display:block;
-}
-
-/* ================= BOTTOM BAR (Insufficient / Add cash) ================= */
-
+/* ================= BOTTOM BAR ================= */
 .bottom-bar{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:40;
-  background:#fff;
-  border-top:1px solid var(--line);
-  padding:8px 12px 10px;
-  box-shadow:0 -5px 20px #00000010;
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:#fff;border-top:1px solid var(--line);
+  padding:8px 12px 10px;box-shadow:0 -5px 20px #00000010;
 }
-
-.bottom-bar-inner{
-  max-width:560px;
-  margin:auto;
-}
-
+.bottom-bar-inner{max-width:560px;margin:auto;}
 .balance-alert{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:#fff5f5;
-  border-radius:10px;
-  padding:10px 12px;
-  margin-bottom:8px;
-  gap:8px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:#fff5f5;border-radius:10px;padding:10px 12px;
+  margin-bottom:8px;gap:8px;
 }
-
 .balance-alert .msg{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:12px;
-  font-weight:700;
-  color:#16181d;
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:700;color:#16181d;
 }
-
 .balance-alert .msg .warn{
-  width:22px;
-  height:22px;
-  background:#ffe7c2;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
+  width:22px;height:22px;background:#ffe7c2;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:12px;
 }
-
 .balance-alert .add-cash{
-  background:#0aa84f;
-  color:#fff;
-  padding:7px 14px;
-  border-radius:9px;
-  font-size:11px;
-  font-weight:800;
-  white-space:nowrap;
+  background:#0aa84f;color:#fff;padding:7px 14px;
+  border-radius:9px;font-size:11px;font-weight:800;white-space:nowrap;
 }
 
-/* swipe */
 .swipe{
-  height:56px;
-  background:#0aa84f;
-  color:#fff;
-  border-radius:28px;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-  font-size:15px;
-  overflow:hidden;
-  user-select:none;
-  -webkit-user-select:none;
-  -webkit-touch-callout:none;
-  touch-action:none;
-  -ms-touch-action:none;
-  cursor:grab;
+  height:56px;background:#0aa84f;color:#fff;border-radius:28px;
+  position:relative;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:15px;overflow:hidden;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  touch-action:none;-ms-touch-action:none;cursor:grab;
 }
-
 .swipe:active{cursor:grabbing;}
-
 .swipe .knob{
-  position:absolute;
-  left:5px;
-  top:5px;
-  width:46px;
-  height:46px;
-  background:#fff;
-  color:#0a9c46;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
-  box-shadow:0 2px 7px #0002;
-  transform:translateX(0);
-  transition:transform .15s ease;
-  will-change:transform;
-  pointer-events:none;
+  position:absolute;left:5px;top:5px;width:46px;height:46px;
+  background:#fff;color:#0a9c46;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;box-shadow:0 2px 7px #0002;
+  transform:translateX(0);transition:transform .15s ease;
+  will-change:transform;pointer-events:none;
 }
-
 .swipe.disabled{background:#a7abb1;}
 .swipe.disabled .knob{display:none;}
 
 .balance-line{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:10px;
-  color:#8b9098;
-  margin-top:7px;
-  padding:0 4px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:10px;color:#8b9098;margin-top:7px;padding:0 4px;
 }
-
 .balance-line b{color:#16181d;}
 
 /* ================= TRADE SHEET ================= */
-
 .overlay{
-  position:fixed;
-  inset:0;
-  background:#0007;
-  z-index:50;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
+  position:fixed;inset:0;background:#0007;z-index:50;
+  opacity:0;pointer-events:none;transition:.25s;
 }
-
-.overlay.show{
-  opacity:1;
-  pointer-events:auto;
-}
-
+.overlay.show{opacity:1;pointer-events:auto;}
 .sheet{
-  position:absolute;
-  left:50%;
-  bottom:0;
-  transform:translate(-50%,105%);
-  width:min(560px,100%);
-  max-height:92vh;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-  background:#fff;
-  border-radius:22px 22px 0 0;
-  padding:10px 15px 20px;
+  position:absolute;left:50%;bottom:0;transform:translate(-50%,105%);
+  width:min(560px,100%);max-height:92vh;overflow:auto;
+  -webkit-overflow-scrolling:touch;background:#fff;
+  border-radius:22px 22px 0 0;padding:10px 15px 20px;
   transition:.3s cubic-bezier(.2,.8,.2,1);
 }
-
-.overlay.show .sheet{
-  transform:translate(-50%,0);
-}
-
+.overlay.show .sheet{transform:translate(-50%,0);}
 .handle{
-  width:42px;
-  height:4px;
-  background:#d9dce1;
-  border-radius:20px;
-  margin:0 auto 12px;
+  width:42px;height:4px;background:#d9dce1;
+  border-radius:20px;margin:0 auto 12px;
 }
-
-.sheet-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.sheet-head h3{
-  font-size:16px;
-  font-weight:700;
-  flex:1;
-  padding-right:8px;
-}
-
+.sheet-head{display:flex;justify-content:space-between;align-items:center;}
+.sheet-head h3{font-size:16px;font-weight:700;flex:1;padding-right:8px;}
 .close{
-  border:0;
-  background:#f1f2f4;
-  border-radius:50%;
-  width:32px;
-  height:32px;
-  font-size:14px;
+  border:0;background:#f1f2f4;border-radius:50%;
+  width:32px;height:32px;font-size:14px;
 }
-
-.selected-pill{
-  display:flex;
-  gap:8px;
-  margin:14px 0;
-}
-
+.selected-pill{display:flex;gap:8px;margin:14px 0;}
 .pill{
-  flex:1;
-  border-radius:10px;
-  border:1px solid var(--line);
-  padding:11px;
-  text-align:center;
-  font-weight:800;
-  font-size:13px;
-  background:#fff;
-  color:#555;
+  flex:1;border-radius:10px;border:1px solid var(--line);
+  padding:11px;text-align:center;font-weight:800;
+  font-size:13px;background:#fff;color:#555;
 }
-
-.pill.active.y{
-  background:#0aa84f;
-  color:#fff;
-  border-color:#0aa84f;
-}
-
-.pill.active.n{
-  background:#d32f2f;
-  color:#fff;
-  border-color:#d32f2f;
-}
+.pill.active.y{background:#0aa84f;color:#fff;border-color:#0aa84f;}
+.pill.active.n{background:var(--red);color:#fff;border-color:var(--red);}
 
 .price-line{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  margin:6px 0 14px;
+  display:flex;justify-content:space-between;
+  align-items:end;margin:6px 0 14px;
 }
+.price-line .label{font-size:12px;color:#8b9098;font-weight:600;margin-bottom:4px;}
+.price-big{font-size:26px;font-weight:800;color:#16181d;}
+.price-big small{font-size:11px;color:#8a9098;font-weight:500;}
+.available{color:#0a9c46;font-size:11px;font-weight:700;}
 
-.price-line .label{
-  font-size:12px;
-  color:#8b9098;
-  font-weight:600;
-  margin-bottom:4px;
-}
-
-.price-big{
-  font-size:26px;
-  font-weight:800;
-  color:#16181d;
-}
-
-.price-big small{
-  font-size:11px;
-  color:#8a9098;
-  font-weight:500;
-}
-
-.available{
-  color:#0a9c46;
-  font-size:11px;
-  font-weight:700;
-}
-
-/* price slider */
-.slider-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:16px;
-}
-
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
 .slider-row .minus,
 .slider-row .plus{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:#fff;
-  border:1px solid var(--line);
-  font-size:18px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#555;
+  width:36px;height:36px;border-radius:50%;
+  background:#fff;border:1px solid var(--line);
+  font-size:18px;display:flex;align-items:center;
+  justify-content:center;color:#555;
 }
-
 .slider-row .slider{
-  flex:1;
-  -webkit-appearance:none;
-  height:6px;
-  border-radius:4px;
-  background:#e6e8ec;
-  outline:none;
+  flex:1;-webkit-appearance:none;height:6px;
+  border-radius:4px;background:#e6e8ec;outline:none;
 }
-
 .slider-row .slider::-webkit-slider-thumb{
-  -webkit-appearance:none;
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  background:#fff;
-  border:2px solid #d32f2f;
+  -webkit-appearance:none;width:20px;height:20px;
+  border-radius:50%;background:#fff;border:2px solid var(--red);
   box-shadow:0 1px 4px #0003;
 }
 
-/* quantity */
 .qty-box{
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px;
-  margin-bottom:12px;
+  border:1px solid var(--line);border-radius:12px;
+  padding:12px;margin-bottom:12px;
 }
-
 .qty-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;
   margin-bottom:8px;
 }
-
-.qty-row .q-label{
-  font-size:13px;
-  font-weight:700;
-  color:#16181d;
-}
-
-.qty-control{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
+.qty-row .q-label{font-size:13px;font-weight:700;color:#16181d;}
+.qty-control{display:flex;align-items:center;gap:8px;}
 .qty-control button{
-  width:32px;
-  height:32px;
-  border-radius:8px;
-  background:#f5f6f7;
-  font-size:16px;
-  font-weight:700;
-  color:#333;
+  width:32px;height:32px;border-radius:8px;
+  background:#f5f6f7;font-size:16px;font-weight:700;color:#333;
 }
-
 .qty-control input{
-  width:60px;
-  height:32px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  text-align:center;
-  font-weight:800;
-  font-size:14px;
+  width:60px;height:32px;border:1px solid var(--line);
+  border-radius:8px;text-align:center;font-weight:800;font-size:14px;
 }
-
 .qty-sub{
-  display:flex;
-  justify-content:space-between;
-  font-size:10px;
-  color:#8b9098;
-  margin-bottom:8px;
+  display:flex;justify-content:space-between;
+  font-size:10px;color:#8b9098;margin-bottom:8px;
 }
-
-.quick{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:7px;
-}
-
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
 .quick button{
-  border:1px solid #dfe2e6;
-  background:#fafbfc;
-  border-radius:8px;
-  padding:8px 2px;
-  font-size:11px;
-  font-weight:800;
-  color:#333;
+  border:1px solid #dfe2e6;background:#fafbfc;
+  border-radius:8px;padding:8px 2px;font-size:11px;
+  font-weight:800;color:#333;
 }
 
-/* summary */
 .summary{
   background:linear-gradient(110deg,#eef4ff,#eafaff);
-  border-radius:12px;
-  padding:14px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-bottom:12px;
+  border-radius:12px;padding:14px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:12px;margin-bottom:12px;
 }
-
 .summary .s-item small{
-  display:block;
-  font-size:11px;
-  color:#5a6472;
-  font-weight:600;
-  margin-bottom:4px;
+  display:block;font-size:11px;color:#5a6472;
+  font-weight:600;margin-bottom:4px;
 }
-
-.summary .s-item b{
-  font-size:17px;
-  font-weight:800;
-}
-
+.summary .s-item b{font-size:17px;font-weight:800;}
 .summary .win{color:#0aa84f;}
 
 .balance-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#fff7ed;
-  border-radius:10px;
-  padding:11px;
-  margin-bottom:10px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:#fff7ed;border-radius:10px;padding:11px;margin-bottom:10px;
 }
-
-.balance-row small{
-  font-size:10px;
-  color:#777;
-}
-
-.balance-row b{
-  font-size:14px;
-  display:block;
-  margin-top:2px;
-}
-
+.balance-row small{font-size:10px;color:#777;}
+.balance-row b{font-size:14px;display:block;margin-top:2px;}
 .addcash{
-  border:0;
-  background:#12a94f;
-  color:#fff;
-  border-radius:9px;
-  padding:8px 12px;
-  font-weight:800;
-  font-size:11px;
+  border:0;background:#12a94f;color:#fff;border-radius:9px;
+  padding:8px 12px;font-weight:800;font-size:11px;
 }
-
 .note{
-  font-size:9px;
-  color:#8b9098;
-  text-align:center;
-  margin-top:8px;
-  line-height:1.4;
+  font-size:9px;color:#8b9098;
+  text-align:center;margin-top:8px;line-height:1.4;
 }
 
 /* ================= TOAST ================= */
-
 .toast{
-  position:fixed;
-  top:72px;
-  left:50%;
+  position:fixed;top:72px;left:50%;
   transform:translateX(-50%) translateY(-15px);
-  z-index:100;
-  display:none;
-  background:#20242a;
-  color:#fff;
-  padding:10px 15px;
-  border-radius:10px;
-  font-size:12px;
-  font-weight:600;
-  box-shadow:0 5px 20px #0003;
-  max-width:90%;
-  text-align:center;
+  z-index:100;display:none;background:#20242a;color:#fff;
+  padding:10px 15px;border-radius:10px;font-size:12px;
+  font-weight:600;box-shadow:0 5px 20px #0003;
+  max-width:90%;text-align:center;
 }
+.toast.show{display:block;animation:toast .25s forwards;}
+@keyframes toast{to{transform:translateX(-50%) translateY(0);}}
 
-.toast.show{
-  display:block;
-  animation:toast .25s forwards;
-}
-
-@keyframes toast{
-  to{transform:translateX(-50%) translateY(0);}
-}
-
-.empty{
-  padding:24px 16px;
-  text-align:center;
-  color:#8a9098;
-  font-size:12px;
-}
-
+.empty{padding:24px 16px;text-align:center;color:#8a9098;font-size:12px;}
 .empty .web11-logo{
-  font-size:24px;
-  font-weight:900;
-  color:#d32f2f;
-  margin-bottom:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
+  font-size:24px;font-weight:900;color:var(--red);
+  margin-bottom:10px;display:flex;align-items:center;
+  justify-content:center;gap:6px;
 }
-
 .empty .web11-logo .w-icon{
-  width:28px;
-  height:28px;
-  background:#d32f2f;
-  border-radius:50%;
-  color:#fff;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  font-size:14px;
+  width:28px;height:28px;background:var(--red);
+  border-radius:50%;color:#fff;display:inline-flex;
+  align-items:center;justify-content:center;font-size:14px;
 }
 
 /* ================= LOGIN BANNER ================= */
-
 .login-banner{
-  background:#fff3cd;
-  border:1px solid #ffeaa7;
-  border-radius:12px;
-  padding:12px;
-  margin:10px 12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:12px;
+  background:#fff3cd;border:1px solid #ffeaa7;border-radius:12px;
+  padding:12px;margin:10px 12px;
+  display:flex;justify-content:space-between;
+  align-items:center;font-size:12px;
+}
+.login-banner a{
+  background:var(--green);color:#fff;padding:7px 14px;
+  border-radius:9px;text-decoration:none;font-weight:700;font-size:12px;
 }
 
-.login-banner a{
-  background:var(--green);
-  color:#fff;
-  padding:7px 14px;
-  border-radius:9px;
-  text-decoration:none;
-  font-weight:700;
-  font-size:12px;
+/* ================= LOADING ================= */
+.loading-card{
+  background:#fff;padding:40px 16px;text-align:center;
+  color:#8b9098;font-size:13px;
 }
 
 /* ================= RESPONSIVE ================= */
-
 @media(max-width:380px){
   .quick button{font-size:10px;}
   .sheet{padding-left:12px;padding-right:12px;}
@@ -1082,8 +453,8 @@ button{
   </button>
 
   <div class="title-block">
-    <h2 id="pageTitle">IND-A-W vs AUS-A-W</h2>
-    <span class="live-tag">
+    <h2 id="pageTitle">Loading...</h2>
+    <span class="live-tag" id="headerLiveTag" style="display:none">
       <span class="dot"></span> LIVE
     </span>
   </div>
@@ -1094,14 +465,13 @@ button{
 </header>
 
 <!-- SCOREBOARD -->
-<section class="scoreboard">
+<section class="scoreboard" id="scoreboard" style="display:none">
   <div class="sb-top">
-
     <div class="sb-team">
       <img id="logoA" class="logo" alt="">
       <div class="info">
-        <b id="nameA">IND-A-W</b>
-        <span id="scoreA">338/6(50)</span>
+        <b id="nameA">—</b>
+        <span id="scoreA">—</span>
       </div>
     </div>
 
@@ -1109,47 +479,37 @@ button{
       <div class="web11">
         <span class="w-icon">W</span> Web11
       </div>
-      <div class="live-dot">
+      <div class="live-dot" id="liveDot">
         <span class="d"></span> LIVE
       </div>
     </div>
 
     <div class="sb-team right">
       <div class="info">
-        <b id="nameB">AUS-A-W</b>
-        <span id="scoreB">22/0(4.5)</span>
+        <b id="nameB">—</b>
+        <span id="scoreB">—</span>
       </div>
       <img id="logoB" class="logo" alt="">
     </div>
-
   </div>
 
-  <div class="sb-commentary" id="commentary">
-    Sayali Satghare to Tahila Wilson, 1 leg bye,
-  </div>
+  <div class="sb-commentary" id="commentary"></div>
 
-  <div class="sb-stats">
+  <div class="sb-stats" id="sbStats" style="display:none">
     <div class="col">
-      <b id="batA">N Fatum</b> <span id="batAStats">7(14)</span>
-      <b id="batB">T Wilson</b> <span id="batBStats">13(15)</span>
+      <div><b id="batA">—</b> <span id="batAStats"></span></div>
+      <div><b id="batB">—</b> <span id="batBStats"></span></div>
     </div>
     <div class="col right">
-      <b id="bowlA">S Satghare</b> <span id="bowlAStats">0/16(2.5)</span>
+      <div><b id="bowlA">—</b> <span id="bowlAStats"></span></div>
     </div>
   </div>
 
-  <div class="sb-balls">
-    <div class="ball">0</div>
-    <div class="ball">0</div>
-    <div class="ball">0</div>
-    <div class="ball active">4</div>
-    <div class="ball">0</div>
-    <div class="ball">0</div>
-  </div>
+  <div class="sb-balls" id="sbBalls"></div>
 </section>
 
 <!-- TABS -->
-<div class="tabs">
+<div class="tabs" id="tabs">
   <button class="tab active" onclick="switchTab('market',this)">All</button>
   <button class="tab" onclick="switchTab('market',this)">Match</button>
   <button class="tab" onclick="switchTab('market',this)">Overs</button>
@@ -1164,92 +524,15 @@ button{
     <a href="login.html">Login</a>
   </div>
 
-  <div id="marketView">
+  <!-- LOADING -->
+  <div id="loadingView" class="loading-card">
+    <i class="fa fa-spinner fa-spin"></i> Loading market...
+  </div>
 
-    <!-- MARKET 1 -->
-    <section class="market-card">
-      <div class="trade-count">
-        <i class="fa fa-user"></i> 599692 trades
-      </div>
+  <!-- MARKET VIEW -->
+  <div id="marketView" style="display:none">
+    <div id="marketsContainer"></div>
 
-      <div class="market-row">
-        <div class="q-text" id="question">
-          IND-A-W to win the ODI match vs AUS-A-W ?
-        </div>
-        <div class="q-img">🏏</div>
-      </div>
-
-      <div class="prob-bar">
-        <small>The Market Predicts</small>
-        <b id="probText">75% probability of Yes</b>
-      </div>
-
-      <div class="prediction">
-        <button class="pred-btn yes" onclick="openTrade('YES')">
-          YES | <span id="yesPrice">₹7.5</span>
-        </button>
-        <button class="pred-btn no" onclick="openTrade('NO')">
-          NO | <span id="noPrice">₹2.5</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- MARKET 2 -->
-    <section class="market-card">
-      <div class="trade-count">
-        <i class="fa fa-user"></i> 1035 trades
-      </div>
-
-      <div class="market-row">
-        <div class="q-text">
-          AUS-A-W to score 42 or more runs at the end of 10 overs vs IND-A-W ? ( Match 02 )
-        </div>
-        <div class="q-img">🏏</div>
-      </div>
-
-      <div class="pred-progress">
-        <div class="pp-box">
-          <div class="pp-top">
-            <span class="runs">42 RUNS</span>
-            <span class="pct">YES 55%</span>
-          </div>
-          <div class="pp-bar"><span style="width:55%"></span></div>
-        </div>
-        <div class="pp-box">
-          <div class="pp-top">
-            <span class="runs">49 RUNS</span>
-            <span class="pct">YES 55%</span>
-          </div>
-          <div class="pp-bar"><span style="width:55%"></span></div>
-        </div>
-      </div>
-
-      <div class="prediction">
-        <button class="pred-btn yes" onclick="openTrade('YES')">YES | ₹5.5</button>
-        <button class="pred-btn no" onclick="openTrade('NO')">NO | ₹4.5</button>
-      </div>
-    </section>
-
-    <!-- MARKET 3 -->
-    <section class="market-card">
-      <div class="trade-count">
-        <i class="fa fa-user"></i> 20621 trades
-      </div>
-
-      <div class="market-row">
-        <div class="q-text">
-          IND-A-W to take 2 or more wickets at the end of 14 overs vs AUS-A-W ? ( Match 02 )
-        </div>
-        <div class="q-img">🏏</div>
-      </div>
-
-      <div class="prediction">
-        <button class="pred-btn yes" onclick="openTrade('YES')">YES | ₹4.5</button>
-        <button class="pred-btn no" onclick="openTrade('NO')">NO | ₹5.5</button>
-      </div>
-    </section>
-
-    <!-- ORDER BOOK -->
     <section class="book">
       <div class="book-title">
         <b>📖 Order Book</b>
@@ -1268,41 +551,37 @@ button{
       <div id="orderRows"></div>
     </section>
 
-    <!-- STATS -->
     <section class="stats">
       <div class="stat">
         <small>Last YES</small>
-        <b id="lastYes">₹7.5</b>
+        <b id="lastYes">—</b>
       </div>
       <div class="stat">
         <small>Last NO</small>
-        <b id="lastNo">₹2.5</b>
+        <b id="lastNo">—</b>
       </div>
       <div class="stat">
         <small>24h Volume</small>
         <b id="volume">₹0</b>
       </div>
     </section>
-
   </div>
 
+  <!-- ACTIVITY VIEW -->
   <div id="activityView" style="display:none">
-
     <section class="book">
       <div class="book-title">
         <b>My Trades</b>
         <span id="tradeCount" style="font-size:11px;color:#888"></span>
       </div>
-
       <div id="tradeList"></div>
     </section>
-
   </div>
 
 </main>
 
 <!-- BOTTOM BAR -->
-<div class="bottom-bar">
+<div class="bottom-bar" id="bottomBar" style="display:none">
   <div class="bottom-bar-inner">
 
     <div class="balance-alert" id="balanceAlert" style="display:none">
@@ -1334,7 +613,7 @@ button{
     <div class="handle"></div>
 
     <div class="sheet-head">
-      <h3 id="sheetQuestion">Who will win?</h3>
+      <h3 id="sheetQuestion">—</h3>
       <div style="display:flex;gap:6px">
         <button
           onclick="exitTrade()"
@@ -1349,17 +628,17 @@ button{
 
     <div class="selected-pill">
       <button class="pill y active" id="pillYes" onclick="setSide('YES')">
-        YES ₹<span id="pillYesPrice">7.5</span>
+        YES ₹<span id="pillYesPrice">0</span>
       </button>
       <button class="pill n" id="pillNo" onclick="setSide('NO')">
-        NO ₹<span id="pillNoPrice">2.5</span>
+        NO ₹<span id="pillNoPrice">0</span>
       </button>
     </div>
 
     <div class="price-line">
       <div>
         <div class="label">Price</div>
-        <div class="price-big" id="sheetPrice">₹7.5</div>
+        <div class="price-big" id="sheetPrice">₹0</div>
       </div>
       <div style="text-align:right">
         <b class="available" id="sheetAvailable">0 qty available</b>
@@ -1375,7 +654,7 @@ button{
         min="0.5"
         max="9.5"
         step="0.5"
-        value="7.5"
+        value="0"
         oninput="syncPrice()">
       <button class="plus" onclick="changePrice(.5)">+</button>
     </div>
@@ -1392,7 +671,7 @@ button{
 
       <div class="qty-sub">
         <span>Joined Qty: 0</span>
-        <span>Available Qty : <b id="availQty">1000000</b></span>
+        <span>Available Qty : <b id="availQty">0</b></span>
       </div>
 
       <div class="quick">
@@ -1406,11 +685,11 @@ button{
     <div class="summary">
       <div class="s-item">
         <small>Investment</small>
-        <b id="investment">₹37.5</b>
+        <b id="investment">₹0</b>
       </div>
       <div class="s-item" style="text-align:right">
         <small>Winnings</small>
-        <b class="win" id="winning">₹50</b>
+        <b class="win" id="winning">₹0</b>
       </div>
     </div>
 
@@ -1473,14 +752,16 @@ if(!sessionStorage.getItem('tradeReturnUrl')){
 let state = {
   side:'YES',
   qty:5,
-  yesPrice:7.5,
-  noPrice:2.5,
-  yesAvailable:1000000,
-  noAvailable:1000000,
+  yesPrice:0,
+  noPrice:0,
+  yesAvailable:0,
+  noAvailable:0,
   balance:0,
   myTrades:[],
   allTrades:[],
   match:null,
+  markets:[],
+  activeMarket:null,
   uid:null,
   loggedIn:false
 };
@@ -1507,11 +788,14 @@ function toast(msg){
   window.tt=setTimeout(()=>{ t.classList.remove('show'); },2500);
 }
 
-/* RENDER */
+/* =====================================================
+   RENDER — SAB FIREBASE SE
+   ===================================================== */
 function render(){
   const m=state.match || {};
-  const a=m.teamA || 'IND-A-W';
-  const b=m.teamB || 'AUS-A-W';
+
+  const a=m.teamA || 'Team A';
+  const b=m.teamB || 'Team B';
 
   document.getElementById('nameA').textContent=a;
   document.getElementById('nameB').textContent=b;
@@ -1520,38 +804,142 @@ function render(){
   document.getElementById('logoA').src = m.teamALogo || FALLBACK;
   document.getElementById('logoB').src = m.teamBLogo || FALLBACK;
 
-  document.getElementById('scoreA').textContent = m.scoreA || '338/6(50)';
-  document.getElementById('scoreB').textContent = m.scoreB || '22/0(4.5)';
+  document.getElementById('scoreA').textContent = m.scoreA || '—';
+  document.getElementById('scoreB').textContent = m.scoreB || '—';
 
-  document.getElementById('yesPrice').textContent = '₹' + state.yesPrice;
-  document.getElementById('noPrice').textContent = '₹' + state.noPrice;
+  /* LIVE TAG */
+  const isLive = String(m.status || '').toUpperCase() === 'LIVE';
+  document.getElementById('headerLiveTag').style.display = isLive ? 'inline-flex' : 'none';
+  document.getElementById('liveDot').style.display = isLive ? 'inline-flex' : 'none';
 
+  /* SCOREBOARD SHOW */
+  document.getElementById('scoreboard').style.display = m.teamA ? 'block' : 'none';
+
+  /* COMMENTARY */
+  document.getElementById('commentary').textContent = m.commentary || '';
+
+  /* BATSMAN / BOWLER */
+  const bA = m.batsmanA || {};
+  const bB = m.batsmanB || {};
+  const bw = m.bowler || {};
+  const hasStats = bA.name || bB.name || bw.name;
+  document.getElementById('sbStats').style.display = hasStats ? 'flex' : 'none';
+  document.getElementById('batA').textContent = bA.name || '—';
+  document.getElementById('batAStats').textContent = bA.stats || '';
+  document.getElementById('batB').textContent = bB.name || '—';
+  document.getElementById('batBStats').textContent = bB.stats || '';
+  document.getElementById('bowlA').textContent = bw.name || '—';
+  document.getElementById('bowlAStats').textContent = bw.stats || '';
+
+  /* BALLS */
+  const ballsEl = document.getElementById('sbBalls');
+  const balls = Array.isArray(m.balls) ? m.balls : [];
+  const activeBall = Number(m.activeBall ?? -1);
+  if(balls.length){
+    ballsEl.innerHTML = balls.map((v,i)=>
+      `<div class="ball${i===activeBall?' active':''}">${v}</div>`
+    ).join('');
+  }else{
+    ballsEl.innerHTML = '';
+  }
+
+  /* WALLET */
   document.getElementById('walletTop').textContent = money(state.balance);
 
-  const yesPct = Math.round((state.noPrice / (state.yesPrice + state.noPrice)) * 100);
-  document.getElementById('probText').textContent = yesPct + '% probability of Yes';
-
+  /* LOGIN BANNER */
   document.getElementById('loginBanner').style.display =
     state.loggedIn ? 'none' : 'flex';
 
+  /* MARKETS */
+  renderMarkets();
+
+  /* ORDER BOOK */
   renderBook();
   renderTrades();
-  updateSheet();
-  updateBalanceAlert();
+
+  /* BOTTOM BAR */
+  document.getElementById('bottomBar').style.display = m.teamA ? 'block' : 'none';
 }
 
-/* BALANCE ALERT */
-function updateBalanceAlert(){
-  const alertBox = document.getElementById('balanceAlert');
-  const inv = (state.side==='YES'?state.yesPrice:state.noPrice) * state.qty;
-  if(inv > state.balance){
-    alertBox.style.display='flex';
-  }else{
-    alertBox.style.display='none';
+/* =====================================================
+   RENDER MARKETS (Firebase se)
+   ===================================================== */
+function renderMarkets(){
+  const container = document.getElementById('marketsContainer');
+  const markets = state.markets || [];
+
+  if(!markets.length){
+    container.innerHTML = '<div class="loading-card">No markets available for this match.</div>';
+    return;
   }
+
+  container.innerHTML = markets.map((mk, idx) => {
+    const q = mk.question || 'Market';
+    const icon = mk.icon || '🏏';
+    const yesP = Number(mk.yesPrice ?? mk.price ?? 0);
+    const noP = Number(mk.noPrice ?? 0);
+    const tradesCount = Number(mk.tradesCount || 0);
+    const probText = mk.probText || '';
+
+    /* progress boxes (optional) */
+    let progressHtml = '';
+    if(Array.isArray(mk.progress) && mk.progress.length){
+      progressHtml = `
+        <div class="pred-progress">
+          ${mk.progress.map(p=>`
+            <div class="pp-box">
+              <div class="pp-top">
+                <span class="runs">${p.label || ''}</span>
+                <span class="pct">YES ${p.pct || 0}%</span>
+              </div>
+              <div class="pp-bar"><span style="width:${p.pct || 0}%"></span></div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    /* probability bar */
+    let probHtml = '';
+    if(probText){
+      probHtml = `
+        <div class="prob-bar">
+          <small>The Market Predicts</small>
+          <b>${probText}</b>
+        </div>
+      `;
+    }
+
+    return `
+      <section class="market-card">
+        <div class="trade-count">
+          <i class="fa fa-user"></i> ${tradesCount.toLocaleString('en-IN')} trades
+        </div>
+
+        <div class="market-row">
+          <div class="q-text">${q}</div>
+          <div class="q-img">${icon}</div>
+        </div>
+
+        ${progressHtml}
+        ${probHtml}
+
+        <div class="prediction">
+          <button class="pred-btn yes" onclick="openTrade('YES', ${idx})">
+            YES | ₹${yesP}
+          </button>
+          <button class="pred-btn no" onclick="openTrade('NO', ${idx})">
+            NO | ₹${noP}
+          </button>
+        </div>
+      </section>
+    `;
+  }).join('');
 }
 
-/* ORDER BOOK */
+/* =====================================================
+   ORDER BOOK (Firebase se)
+   ===================================================== */
 function renderBook(){
   const sourceTrades=state.allTrades || [];
   const yesOrders={};
@@ -1590,15 +978,17 @@ function renderBook(){
     document.getElementById('orderRows').innerHTML=html;
   }
 
-  document.getElementById('lastYes').textContent = '₹' + state.yesPrice;
-  document.getElementById('lastNo').textContent = '₹' + state.noPrice;
+  document.getElementById('lastYes').textContent = state.yesPrice ? '₹' + state.yesPrice : '—';
+  document.getElementById('lastNo').textContent = state.noPrice ? '₹' + state.noPrice : '—';
 
   const vol=sourceTrades.reduce((s,t)=>s+Number(t.amount || 0),0);
   document.getElementById('volume').textContent = money(vol);
 }
 
-/* OPEN TRADE */
-function openTrade(side){
+/* =====================================================
+   OPEN TRADE
+   ===================================================== */
+function openTrade(side, marketIdx){
   if(!state.loggedIn){
     toast('Please login to trade');
     setTimeout(()=>{
@@ -1606,15 +996,35 @@ function openTrade(side){
     },1200);
     return;
   }
+
   if(!state.match){
     toast('Match not loaded');
     return;
   }
+
+  /* set active market */
+  const idx = typeof marketIdx === 'number' ? marketIdx : 0;
+  state.activeMarket = state.markets[idx] || null;
+
+  if(!state.activeMarket){
+    toast('Market not found');
+    return;
+  }
+
+  /* set prices from active market */
+  state.yesPrice = Number(state.activeMarket.yesPrice ?? state.activeMarket.price ?? 0);
+  state.noPrice = Number(state.activeMarket.noPrice ?? 0);
+  state.yesAvailable = Number(state.activeMarket.yesAvailable ?? 0);
+  state.noAvailable = Number(state.activeMarket.noAvailable ?? 0);
+
   state.side=side;
+
   document.getElementById('overlay').classList.add('show');
   document.body.style.overflow='hidden';
+
   document.getElementById('sheetQuestion').textContent =
-    (state.match?.teamA || 'IND-A-W') + ' to win?';
+    state.activeMarket.question || 'Trade';
+
   setSide(side);
   setQty(state.qty || 5);
 }
@@ -1664,25 +1074,26 @@ function syncQty(){ setQty(document.getElementById('qtyInput').value); }
 
 /* PRICE */
 function changePrice(n){
-  let p = (state.side==='YES' ? state.yesPrice : state.noPrice) + n;
+  let p = price() + n;
   p = Math.max(0.5, Math.min(9.5, Math.round(p*2)/2));
-  state.side==='YES' ? state.yesPrice=p : state.noPrice=p;
+  if(state.side==='YES') state.yesPrice=p;
+  else state.noPrice=p;
   document.getElementById('priceInput').value=p;
   updateSheet();
 }
 function syncPrice(){
   const p = Number(document.getElementById('priceInput').value);
-  state.side==='YES' ? state.yesPrice=p : state.noPrice=p;
+  if(state.side==='YES') state.yesPrice=p;
+  else state.noPrice=p;
   updateSheet();
 }
 
 /* SHEET */
 function updateSheet(){
-  const p = state.side==='YES' ? state.yesPrice : state.noPrice;
+  const p = price();
   const q = state.qty;
   const inv = p*q;
   const ret = q*10;
-  const profit = ret-inv;
 
   document.getElementById('sheetPrice').textContent = '₹' + p;
   document.getElementById('sheetAvailable').textContent =
@@ -1697,6 +1108,13 @@ function updateSheet(){
 
   document.getElementById('swipe').classList.toggle('disabled',
     inv>state.balance || q>available());
+}
+
+/* BALANCE ALERT */
+function updateBalanceAlert(){
+  const alertBox = document.getElementById('balanceAlert');
+  const inv = price() * state.qty;
+  alertBox.style.display = (inv > state.balance) ? 'flex' : 'none';
 }
 
 /* =====================================================
@@ -1719,7 +1137,7 @@ function setKnobPosition(x, animate=false){
 }
 function startSwipe(e){
   if(!swipeEl || swipeEl.classList.contains('disabled')) return;
-  const inv = (state.side==='YES'?state.yesPrice:state.noPrice) * state.qty;
+  const inv = price() * state.qty;
   if(inv>state.balance){ toast('Insufficient balance'); return; }
   if(state.qty>available()){ toast('Not enough quantity available'); return; }
   swipeState.active=true;
@@ -1778,10 +1196,10 @@ window.addEventListener('resize', ()=>{
 });
 
 /* =====================================================
-   CONFIRM TRADE
+   CONFIRM TRADE (Firebase me save)
    ===================================================== */
 async function confirmTrade(){
-  const inv = (state.side==='YES'?state.yesPrice:state.noPrice) * state.qty;
+  const inv = price() * state.qty;
 
   if(inv>state.balance){ toast('Insufficient balance'); resetSwipe(); return; }
   if(state.qty>available()){ toast('Not enough quantity available'); resetSwipe(); return; }
@@ -1796,16 +1214,18 @@ async function confirmTrade(){
 
     const key=db.ref('trades').push().key;
     const sideLabel = state.side==='YES' ? (state.match?.teamA || 'Team A') : (state.match?.teamB || 'Team B');
+    const activeQ = state.activeMarket?.question || '';
 
     const trade={
       userId:state.uid,
       matchId:matchId,
+      marketQuestion:activeQ,
       teamA:state.match?.teamA || 'Team A',
       teamB:state.match?.teamB || 'Team B',
       selectedTeam:sideLabel,
       side:state.side,
       amount:Number(inv.toFixed(2)),
-      odds: state.side==='YES'?state.yesPrice:state.noPrice,
+      odds:price(),
       qty:state.qty,
       winAmount:Number((state.qty*10).toFixed(2)),
       status:'pending',
@@ -1823,41 +1243,36 @@ async function confirmTrade(){
       date:firebase.database.ServerValue.TIMESTAMP
     };
 
-    const oldYes=state.yesPrice;
-    const oldNo=state.noPrice;
+    /* PRICE MOVEMENT — Firebase me update */
     const shift=Math.min(0.5, (inv/1000)*0.1);
-    let newYes=oldYes, newNo=oldNo;
+    let newYes = state.yesPrice;
+    let newNo = state.noPrice;
 
     if(state.side==='YES'){
-      newYes=Math.min(9, oldYes+shift);
-      newNo=Math.max(1, oldNo-shift);
+      newYes=Math.min(9, newYes+shift);
+      newNo=Math.max(1, newNo-shift);
     }else{
-      newNo=Math.min(9, oldNo+shift);
-      newYes=Math.max(1, oldYes-shift);
+      newNo=Math.min(9, newNo+shift);
+      newYes=Math.max(1, newYes-shift);
     }
     newYes=Number(newYes.toFixed(2));
     newNo=Number(newNo.toFixed(2));
 
-    updates['matches/'+matchId+'/oddsA']=newYes;
-    updates['matches/'+matchId+'/oddsB']=newNo;
-    updates['matches/'+matchId+'/market/yes/price']=newYes;
-    updates['matches/'+matchId+'/market/no/price']=newNo;
+    /* active market index */
+    const idx = state.markets.indexOf(state.activeMarket);
+    const path = idx>=0 ? `matches/${matchId}/markets/${idx}` : null;
 
-    const yesSnap=await db.ref('matches/'+matchId+'/market/yes/available').once('value');
-    const noSnap=await db.ref('matches/'+matchId+'/market/no/available').once('value');
-    let yesAvail=Number(yesSnap.val() ?? 1000000);
-    let noAvail=Number(noSnap.val() ?? 1000000);
-
-    if(state.side==='YES') yesAvail=Math.max(0, yesAvail-state.qty);
-    else noAvail=Math.max(0, noAvail-state.qty);
-
-    updates['matches/'+matchId+'/market/yes/available']=yesAvail;
-    updates['matches/'+matchId+'/market/no/available']=noAvail;
+    if(path){
+      updates[`${path}/yesPrice`]=newYes;
+      updates[`${path}/noPrice`]=newNo;
+      updates[`${path}/yesAvailable`]=Math.max(0, state.yesAvailable-state.qty);
+      updates[`${path}/noAvailable`]=Math.max(0, state.noAvailable-state.qty);
+    }
 
     await db.ref().update(updates);
 
     closeTrade();
-    toast('✅ Trade placed! Price updated');
+    toast('✅ Trade placed!');
 
     setTimeout(()=>{
       const returnUrl=sessionStorage.getItem('tradeReturnUrl') || 'wallet.html';
@@ -1934,6 +1349,7 @@ auth.onAuthStateChanged(user=>{
       state.balance=Number(s.val() || 0);
       render();
       updateSheet();
+      updateBalanceAlert();
     }, err=>{
       console.error('Balance read error:', err);
       toast('Cannot read wallet balance');
@@ -1961,26 +1377,69 @@ auth.onAuthStateChanged(user=>{
 });
 
 /* =====================================================
-   MATCH LIVE SYNC
+   MATCH LIVE SYNC — SAB FIREBASE SE
    ===================================================== */
 if(matchId){
   marketRef=db.ref('matches/'+matchId);
   marketRef.on('value', s=>{
-    if(!s.exists()){ toast('Match not found'); return; }
-    state.match=s.val();
-    const m=state.match.market || {};
-    const yes=m.yes || {};
-    const no=m.no || {};
+    if(!s.exists()){
+      toast('Match not found');
+      document.getElementById('loadingView').innerHTML =
+        '<i class="fa fa-exclamation-circle"></i> Match not found';
+      return;
+    }
 
-    state.yesPrice=Number(yes.price ?? state.match.oddsA ?? 7.5);
-    state.noPrice=Number(no.price ?? state.match.oddsB ?? 2.5);
-    state.yesAvailable=Number(yes.available ?? 1000000);
-    state.noAvailable=Number(no.available ?? 1000000);
+    state.match=s.val();
+    const m = state.match;
+
+    /* MARKETS — Firebase se */
+    let marketsArr = [];
+
+    if(m.markets && typeof m.markets === 'object'){
+      /* agar object form me hai */
+      marketsArr = Object.keys(m.markets).map(k=>({
+        id:k,
+        ...m.markets[k]
+      }));
+    }else if(Array.isArray(m.markets)){
+      marketsArr = m.markets;
+    }
+
+    /* agar markets nahi hai, to single market se bana do */
+    if(!marketsArr.length && (m.market || m.oddsA !== undefined)){
+      marketsArr = [{
+        id:'default',
+        question: (m.teamA || 'Team A') + ' to win vs ' + (m.teamB || 'Team B'),
+        icon: '🏏',
+        yesPrice: Number(m.market?.yes?.price ?? m.oddsA ?? 0),
+        noPrice: Number(m.market?.no?.price ?? m.oddsB ?? 0),
+        yesAvailable: Number(m.market?.yes?.available ?? 0),
+        noAvailable: Number(m.market?.no?.available ?? 0),
+        tradesCount: Number(m.tradesCount || 0),
+        probText: m.probText || ''
+      }];
+    }
+
+    state.markets = marketsArr;
+
+    /* DEFAULT PRICES — pehle market se */
+    if(marketsArr.length){
+      state.yesPrice = Number(marketsArr[0].yesPrice ?? 0);
+      state.noPrice = Number(marketsArr[0].noPrice ?? 0);
+      state.yesAvailable = Number(marketsArr[0].yesAvailable ?? 0);
+      state.noAvailable = Number(marketsArr[0].noAvailable ?? 0);
+    }
+
+    /* HIDE LOADING, SHOW MARKET */
+    document.getElementById('loadingView').style.display='none';
+    document.getElementById('marketView').style.display='block';
 
     render();
     updateSheet();
+    updateBalanceAlert();
   });
 
+  /* ALL TRADES */
   allTradesRef=db.ref('trades').orderByChild('matchId').equalTo(matchId);
   allTradesRef.on('value', s=>{
     const arr=[];
@@ -1991,7 +1450,8 @@ if(matchId){
 
 }else{
   toast('No match ID in URL');
-  render();
+  document.getElementById('loadingView').innerHTML =
+    '<i class="fa fa-exclamation-circle"></i> No match ID in URL';
 }
 
 /* INITIAL */
