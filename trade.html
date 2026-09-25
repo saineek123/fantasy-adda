@@ -21,14 +21,17 @@
   --green:#0aa84f;
   --green2:#08b85a;
   --red:#d92d20;
+  --red-dark:#8b0000;
   --bg:#f4f6f8;
   --text:#16181d;
   --muted:#777d87;
   --line:#e7e9ed;
+  --blue:#2a6df4;
+  --blue-light:#e8f0fe;
+  --dark-maroon:#3d0a0f;
 }
 
-html,
-body{
+html,body{
   width:100%;
   min-height:100%;
 }
@@ -37,254 +40,465 @@ body{
   font-family:Inter,Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
-  padding-bottom:84px;
+  padding-bottom:100px;
   overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
 }
 
-button,
-input{
+button,input{
   font:inherit;
+  outline:none;
 }
 
 button{
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  border:0;
 }
+
+/* ================= HEADER ================= */
 
 .header{
   position:sticky;
   top:0;
   z-index:20;
-  background:#fff;
-  height:62px;
+  background:#b71c1c;
+  height:60px;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  padding:0 15px;
-  border-bottom:1px solid var(--line);
+  gap:12px;
+  padding:0 14px;
 }
 
-.header h2{
-  font-size:18px;
+.header .back{
+  background:transparent;
+  color:#fff;
+  font-size:22px;
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.header .title-block{
+  flex:1;
+  color:#fff;
+  line-height:1.2;
+}
+
+.header .title-block h2{
+  font-size:16px;
+  font-weight:800;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  max-width:55%;
 }
 
-.back{
-  border:0;
-  background:transparent;
-  font-size:22px;
-  width:40px;
-  height:40px;
+.header .title-block .live-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size:10px;
+  color:#ffd6d6;
+  font-weight:600;
+  margin-top:2px;
 }
 
-.wallet{
-  background:#f0fff5;
-  color:#08783b;
-  border:1px solid #ccefd9;
-  padding:8px 11px;
-  border-radius:12px;
+.header .title-block .live-tag .dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#ff4d4d;
+}
+
+.header .wallet-icon{
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+}
+
+/* ================= SCORE BOARD ================= */
+
+.scoreboard{
+  background:var(--dark-maroon);
+  color:#fff;
+  padding:14px 14px 16px;
+}
+
+.sb-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+}
+
+.sb-team{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:1;
+  min-width:0;
+}
+
+.sb-team.right{
+  justify-content:flex-end;
+  text-align:right;
+}
+
+.sb-team .logo{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  flex-shrink:0;
+}
+
+.sb-team .info{
+  min-width:0;
+}
+
+.sb-team .info b{
+  display:block;
   font-size:12px;
   font-weight:700;
-  cursor:pointer;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
+
+.sb-team .info span{
+  display:block;
+  font-size:15px;
+  font-weight:800;
+  margin-top:1px;
+}
+
+.sb-center{
+  text-align:center;
+  flex-shrink:0;
+  padding:0 4px;
+}
+
+.sb-center .web11{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  font-size:11px;
+  font-weight:800;
+  color:#fff;
+  margin-bottom:3px;
+}
+
+.sb-center .web11 .w-icon{
+  width:16px;
+  height:16px;
+  background:#d32f2f;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:9px;
+  font-weight:900;
+}
+
+.sb-center .live-dot{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size:10px;
+  color:#ff8a80;
+  font-weight:700;
+}
+
+.sb-center .live-dot .d{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#ff4d4d;
+}
+
+.sb-commentary{
+  text-align:center;
+  font-size:11px;
+  color:#e0c8c8;
+  margin:12px 0 10px;
+}
+
+.sb-stats{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:#fff;
+  margin-bottom:10px;
+}
+
+.sb-stats .col{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.sb-stats .col.right{
+  text-align:right;
+}
+
+.sb-stats .col b{
+  font-weight:700;
+}
+
+.sb-balls{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+
+.sb-balls .ball{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#5c3a3d;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:700;
+  color:#fff;
+}
+
+.sb-balls .ball.active{
+  background:#2a6df4;
+}
+
+/* ================= TABS ================= */
+
+.tabs{
+  display:flex;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.tabs::-webkit-scrollbar{display:none;}
+
+.tab{
+  flex:1;
+  min-width:75px;
+  padding:14px 8px;
+  background:#fff;
+  font-size:13px;
+  font-weight:600;
+  color:#8b9098;
+  border-bottom:3px solid transparent;
+  white-space:nowrap;
+}
+
+.tab.active{
+  color:#d32f2f;
+  font-weight:800;
+  border-bottom:3px solid #d32f2f;
+}
+
+/* ================= CONTAINER ================= */
 
 .container{
   max-width:560px;
   margin:auto;
-  padding:10px 12px;
+  padding:0 0 10px;
 }
 
-.match{
+/* ================= MARKET CARD ================= */
+
+.market-card{
   background:#fff;
-  border-radius:16px;
-  padding:14px;
-  box-shadow:0 2px 10px #00000008;
-  margin-bottom:10px;
+  border-radius:0;
+  padding:16px 14px 18px;
+  border-bottom:8px solid #eef0f3;
 }
 
-.match-top{
+.trade-count{
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  gap:5px;
   font-size:11px;
-  color:#858a92;
+  color:#8b9098;
+  margin-bottom:12px;
 }
 
-.teams{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:18px;
-  margin:10px 0 8px;
-}
-
-.team{
-  text-align:center;
-  min-width:90px;
-}
-
-.team img{
-  width:45px;
-  height:45px;
-  object-fit:contain;
-  border-radius:50%;
-  background:#f4f4f4;
-}
-
-.team b{
-  display:block;
-  font-size:13px;
-  margin-top:4px;
-}
-
-.vs{
-  font-weight:800;
-  color:#999;
-  font-size:13px;
-}
-
-.live{
-  background:#151a20;
-  color:#fff;
-  border-radius:13px;
-  padding:10px 12px;
+.market-row{
   display:flex;
   align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:16px;
 }
 
-.live .score{
-  font-weight:800;
-}
-
-.live small{
-  color:#aeb5bf;
-}
-
-.dot{
-  width:7px;
-  height:7px;
-  background:#19c463;
-  border-radius:50%;
-  display:inline-block;
-}
-
-.tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  background:#e9ecef;
-  border-radius:11px;
-  padding:3px;
-  margin:10px 0;
-}
-
-.tab{
-  border:0;
-  background:transparent;
-  padding:10px;
-  border-radius:9px;
-  font-weight:700;
-  font-size:13px;
-}
-
-.tab.active{
-  background:#fff;
-  box-shadow:0 1px 5px #00000012;
-}
-
-.market{
-  background:#fff;
-  border-radius:16px;
-  padding:13px;
-  margin-bottom:10px;
-}
-
-.market-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.market-head b{
-  font-size:15px;
-}
-
-.market-head span{
-  font-size:11px;
-  color:#858a92;
-}
-
-.choice-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-}
-
-.choice{
-  border:1px solid #e3e5e8;
-  background:#fafbfc;
-  border-radius:12px;
-  padding:12px;
-  text-align:left;
-  transition:.2s;
-}
-
-.choice:hover{
-  transform:translateY(-1px);
-}
-
-.choice.yes.selected{
-  border-color:var(--green);
-  background:#effcf4;
-}
-
-.choice.no.selected{
-  border-color:var(--red);
-  background:#fff3f2;
-}
-
-.choice .top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.choice strong{
+.market-row .q-text{
+  flex:1;
   font-size:14px;
+  font-weight:700;
+  line-height:1.45;
+  color:#16181d;
 }
 
-.choice .price{
-  font-size:20px;
+.market-row .q-img{
+  width:60px;
+  height:60px;
+  border-radius:14px;
+  background:#edf1ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  flex-shrink:0;
+}
+
+/* probability bar */
+.prob-bar{
+  background:#e8f0fe;
+  border-radius:12px;
+  padding:11px 14px;
+  text-align:center;
+  margin-bottom:14px;
+}
+
+.prob-bar small{
+  display:block;
+  font-size:11px;
+  color:#5a6472;
+  font-weight:600;
+  margin-bottom:3px;
+}
+
+.prob-bar b{
+  color:#2a6df4;
+  font-size:13px;
   font-weight:800;
+}
+
+/* prediction buttons (small style) */
+.prediction{
+  display:flex;
+  gap:10px;
+}
+
+.pred-btn{
+  flex:1;
+  padding:14px 6px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:800;
+  text-align:center;
+  border:1px solid transparent;
+}
+
+.pred-btn.yes{
+  background:#e6f7ec;
+  color:#0a9c46;
+  border-color:#c7ebd5;
+}
+
+.pred-btn.no{
+  background:#fdecec;
+  color:#d32f2f;
+  border-color:#f5cfcf;
+}
+
+.pred-btn small{
+  display:block;
+  font-size:10px;
+  font-weight:600;
+  color:#8b9098;
   margin-top:4px;
 }
 
-.choice small{
-  color:#7c828b;
-  font-size:10px;
+/* prediction with progress (for runs/wickets) */
+.pred-progress{
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
 }
+
+.pp-box{
+  flex:1;
+  border:1px solid #e3e5e8;
+  border-radius:10px;
+  padding:9px 10px;
+  background:#fff;
+}
+
+.pp-box .pp-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.pp-box .pp-top .runs{
+  color:#16181d;
+}
+
+.pp-box .pp-top .pct{
+  color:#0a9c46;
+  font-size:11px;
+}
+
+.pp-bar{
+  height:5px;
+  background:#eef0f3;
+  border-radius:4px;
+  overflow:hidden;
+}
+
+.pp-bar span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#0aa84f,#08b85a);
+  border-radius:4px;
+}
+
+/* ================= ORDER BOOK ================= */
 
 .book{
   background:#fff;
-  border-radius:16px;
-  padding:13px;
-  margin-bottom:10px;
+  border-radius:14px;
+  padding:14px;
+  margin:10px 12px;
+  box-shadow:0 1px 6px #00000008;
 }
 
 .book-title{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:8px;
+  margin-bottom:12px;
 }
 
 .book-title b{
   font-size:14px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.book-title .chev{
+  border:0;
+  background:#f1f3f5;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  font-size:12px;
+  color:#555;
 }
 
 .book-head,
@@ -294,91 +508,174 @@ button{
   font-size:11px;
   align-items:center;
   text-align:right;
-  padding:7px 2px;
+  padding:9px 2px;
 }
 
 .book-head{
-  color:#8b9098;
-  font-weight:600;
+  color:#5a6472;
+  font-weight:700;
+  border-bottom:1px solid #eef0f3;
 }
 
 .book-row{
-  border-top:1px solid #f0f1f3;
+  border-bottom:1px solid #f5f6f8;
 }
 
-.yesc{
-  color:#159b4c;
-}
-
-.noc{
-  color:#c52c25;
-}
+.yesc{color:#0a9c46;font-weight:700;}
+.noc{color:#d32f2f;font-weight:700;}
 
 .book-row div:first-child{
   text-align:left;
+  font-weight:700;
 }
+
+/* ================= STATS ================= */
 
 .stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:7px;
-  margin-bottom:10px;
+  gap:8px;
+  margin:10px 12px;
 }
 
 .stat{
   background:#fff;
-  border-radius:13px;
-  padding:11px;
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 1px 6px #00000008;
 }
 
 .stat small{
   display:block;
   color:#8b9098;
   font-size:10px;
+  margin-bottom:4px;
 }
 
 .stat b{
   font-size:14px;
   display:block;
-  margin-top:4px;
 }
 
-.bottom-trade{
+/* ================= BOTTOM BAR (Insufficient / Add cash) ================= */
+
+.bottom-bar{
   position:fixed;
   left:0;
   right:0;
   bottom:0;
-  z-index:30;
+  z-index:40;
   background:#fff;
   border-top:1px solid var(--line);
-  padding:10px 12px 12px;
+  padding:8px 12px 10px;
   box-shadow:0 -5px 20px #00000010;
 }
 
-.bottom-inner{
+.bottom-bar-inner{
   max-width:560px;
   margin:auto;
+}
+
+.balance-alert{
   display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#fff5f5;
+  border-radius:10px;
+  padding:10px 12px;
+  margin-bottom:8px;
   gap:8px;
 }
 
-.trade-btn{
-  flex:1;
-  border:0;
-  border-radius:13px;
-  padding:13px;
+.balance-alert .msg{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  font-weight:700;
+  color:#16181d;
+}
+
+.balance-alert .msg .warn{
+  width:22px;
+  height:22px;
+  background:#ffe7c2;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+}
+
+.balance-alert .add-cash{
+  background:#0aa84f;
   color:#fff;
+  padding:7px 14px;
+  border-radius:9px;
+  font-size:11px;
   font-weight:800;
-  font-size:14px;
+  white-space:nowrap;
 }
 
-.trade-btn.yes{
-  background:var(--green);
+/* swipe */
+.swipe{
+  height:56px;
+  background:#0aa84f;
+  color:#fff;
+  border-radius:28px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:15px;
+  overflow:hidden;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  touch-action:none;
+  -ms-touch-action:none;
+  cursor:grab;
 }
 
-.trade-btn.no{
-  background:var(--red);
+.swipe:active{cursor:grabbing;}
+
+.swipe .knob{
+  position:absolute;
+  left:5px;
+  top:5px;
+  width:46px;
+  height:46px;
+  background:#fff;
+  color:#0a9c46;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  box-shadow:0 2px 7px #0002;
+  transform:translateX(0);
+  transition:transform .15s ease;
+  will-change:transform;
+  pointer-events:none;
 }
+
+.swipe.disabled{background:#a7abb1;}
+.swipe.disabled .knob{display:none;}
+
+.balance-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:10px;
+  color:#8b9098;
+  margin-top:7px;
+  padding:0 4px;
+}
+
+.balance-line b{color:#16181d;}
+
+/* ================= TRADE SHEET ================= */
 
 .overlay{
   position:fixed;
@@ -429,7 +726,10 @@ button{
 }
 
 .sheet-head h3{
-  font-size:17px;
+  font-size:16px;
+  font-weight:700;
+  flex:1;
+  padding-right:8px;
 }
 
 .close{
@@ -438,46 +738,57 @@ button{
   border-radius:50%;
   width:32px;
   height:32px;
+  font-size:14px;
 }
 
 .selected-pill{
   display:flex;
   gap:8px;
-  margin:12px 0;
+  margin:14px 0;
 }
 
 .pill{
   flex:1;
-  border-radius:11px;
+  border-radius:10px;
   border:1px solid var(--line);
-  padding:10px;
+  padding:11px;
   text-align:center;
-  font-weight:700;
+  font-weight:800;
   font-size:13px;
+  background:#fff;
+  color:#555;
 }
 
 .pill.active.y{
-  background:#ecfff4;
-  color:#078a40;
-  border-color:#bde9ce;
+  background:#0aa84f;
+  color:#fff;
+  border-color:#0aa84f;
 }
 
 .pill.active.n{
-  background:#fff0ef;
-  color:#c32820;
-  border-color:#f0c1bd;
+  background:#d32f2f;
+  color:#fff;
+  border-color:#d32f2f;
 }
 
 .price-line{
   display:flex;
   justify-content:space-between;
   align-items:end;
-  margin:10px 0;
+  margin:6px 0 14px;
+}
+
+.price-line .label{
+  font-size:12px;
+  color:#8b9098;
+  font-weight:600;
+  margin-bottom:4px;
 }
 
 .price-big{
-  font-size:27px;
+  font-size:26px;
   font-weight:800;
+  color:#16181d;
 }
 
 .price-big small{
@@ -487,110 +798,168 @@ button{
 }
 
 .available{
-  color:#159b4c;
-  font-size:10px;
+  color:#0a9c46;
+  font-size:11px;
+  font-weight:700;
 }
 
+/* price slider */
+.slider-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.slider-row .minus,
+.slider-row .plus{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:#fff;
+  border:1px solid var(--line);
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#555;
+}
+
+.slider-row .slider{
+  flex:1;
+  -webkit-appearance:none;
+  height:6px;
+  border-radius:4px;
+  background:#e6e8ec;
+  outline:none;
+}
+
+.slider-row .slider::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid #d32f2f;
+  box-shadow:0 1px 4px #0003;
+}
+
+/* quantity */
 .qty-box{
   border:1px solid var(--line);
-  border-radius:14px;
-  padding:11px;
-  margin-bottom:10px;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:12px;
 }
 
 .qty-row{
   display:flex;
   align-items:center;
   justify-content:space-between;
+  margin-bottom:8px;
 }
 
-.qty-row span{
-  font-size:12px;
-  color:#7d828a;
+.qty-row .q-label{
+  font-size:13px;
+  font-weight:700;
+  color:#16181d;
 }
 
 .qty-control{
   display:flex;
   align-items:center;
-  border:1px solid #dfe2e6;
-  border-radius:10px;
-  overflow:hidden;
+  gap:8px;
 }
 
 .qty-control button{
-  width:39px;
-  height:38px;
-  border:0;
+  width:32px;
+  height:32px;
+  border-radius:8px;
   background:#f5f6f7;
-  font-size:20px;
+  font-size:16px;
+  font-weight:700;
+  color:#333;
 }
 
 .qty-control input{
-  width:70px;
-  height:38px;
-  border:0;
+  width:60px;
+  height:32px;
+  border:1px solid var(--line);
+  border-radius:8px;
   text-align:center;
-  outline:0;
   font-weight:800;
+  font-size:14px;
+}
+
+.qty-sub{
+  display:flex;
+  justify-content:space-between;
+  font-size:10px;
+  color:#8b9098;
+  margin-bottom:8px;
 }
 
 .quick{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:7px;
-  margin-top:9px;
 }
 
 .quick button{
   border:1px solid #dfe2e6;
-  background:#fff;
+  background:#fafbfc;
   border-radius:8px;
   padding:8px 2px;
   font-size:11px;
-  font-weight:700;
+  font-weight:800;
+  color:#333;
 }
 
+/* summary */
 .summary{
-  background:linear-gradient(110deg,#edf3ff,#eafaff);
-  border-radius:13px;
-  padding:13px;
+  background:linear-gradient(110deg,#eef4ff,#eafaff);
+  border-radius:12px;
+  padding:14px;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:10px;
+  gap:12px;
+  margin-bottom:12px;
 }
 
-.summary small{
-  font-size:10px;
-}
-
-.summary b{
+.summary .s-item small{
   display:block;
+  font-size:11px;
+  color:#5a6472;
+  font-weight:600;
+  margin-bottom:4px;
+}
+
+.summary .s-item b{
   font-size:17px;
-  margin-top:4px;
+  font-weight:800;
 }
 
-.summary .win{
-  color:#0aa84f;
-}
+.summary .win{color:#0aa84f;}
 
-.balance{
+.balance-row{
   display:flex;
   justify-content:space-between;
   align-items:center;
   background:#fff7ed;
-  border-radius:12px;
+  border-radius:10px;
   padding:11px;
   margin-bottom:10px;
 }
 
-.balance small{
+.balance-row small{
   font-size:10px;
   color:#777;
 }
 
-.balance b{
+.balance-row b{
   font-size:14px;
+  display:block;
+  margin-top:2px;
 }
 
 .addcash{
@@ -598,80 +967,9 @@ button{
   background:#12a94f;
   color:#fff;
   border-radius:9px;
-  padding:8px 11px;
-  font-weight:700;
-  font-size:11px;
-}
-
-/* ================= MOBILE SAFE SWIPE ================= */
-
-.swipe{
-  height:58px;
-  background:#10a94f;
-  color:#fff;
-  border-radius:30px;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  padding:8px 12px;
   font-weight:800;
-  margin-top:7px;
-
-  overflow:hidden;
-  user-select:none;
-  -webkit-user-select:none;
-  -webkit-touch-callout:none;
-
-  /*
-    Important:
-    Browser ko swipe gesture handle karne ke bajay
-    hum khud pointer movement handle karenge.
-  */
-  touch-action:none;
-  -ms-touch-action:none;
-
-  cursor:grab;
-}
-
-.swipe:active{
-  cursor:grabbing;
-}
-
-.swipe .knob{
-  position:absolute;
-  left:5px;
-  top:5px;
-  width:48px;
-  height:48px;
-
-  background:#fff;
-  color:#0a9c46;
-  border-radius:50%;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:24px;
-  box-shadow:0 2px 7px #0002;
-
-  transform:translateX(0);
-  transition:transform .15s ease;
-
-  will-change:transform;
-
-  /*
-    Finger event sirf parent ko milega.
-  */
-  pointer-events:none;
-}
-
-.swipe.disabled{
-  background:#a7abb1;
-}
-
-.swipe.disabled .knob{
-  display:none;
+  font-size:11px;
 }
 
 .note{
@@ -681,6 +979,8 @@ button{
   margin-top:8px;
   line-height:1.4;
 }
+
+/* ================= TOAST ================= */
 
 .toast{
   position:fixed;
@@ -706,24 +1006,47 @@ button{
 }
 
 @keyframes toast{
-  to{
-    transform:translateX(-50%) translateY(0);
-  }
+  to{transform:translateX(-50%) translateY(0);}
 }
 
 .empty{
-  padding:20px;
+  padding:24px 16px;
   text-align:center;
   color:#8a9098;
   font-size:12px;
 }
+
+.empty .web11-logo{
+  font-size:24px;
+  font-weight:900;
+  color:#d32f2f;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+
+.empty .web11-logo .w-icon{
+  width:28px;
+  height:28px;
+  background:#d32f2f;
+  border-radius:50%;
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+}
+
+/* ================= LOGIN BANNER ================= */
 
 .login-banner{
   background:#fff3cd;
   border:1px solid #ffeaa7;
   border-radius:12px;
   padding:12px;
-  margin-bottom:10px;
+  margin:10px 12px;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -740,45 +1063,99 @@ button{
   font-size:12px;
 }
 
+/* ================= RESPONSIVE ================= */
+
 @media(max-width:380px){
-
-  .team{
-    min-width:75px;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .stats .stat:last-child{
-    grid-column:span 2;
-  }
-
-  .quick button{
-    font-size:10px;
-  }
-
-  .sheet{
-    padding-left:12px;
-    padding-right:12px;
-  }
+  .quick button{font-size:10px;}
+  .sheet{padding-left:12px;padding-right:12px;}
+  .sb-team .info span{font-size:13px;}
 }
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="header">
   <button class="back" onclick="exitPage()">
     <i class="fa fa-arrow-left"></i>
   </button>
 
-  <h2 id="pageTitle">Loading...</h2>
-
-  <div class="wallet" id="walletTop" onclick="location.href='wallet.html'">
-    ₹0.00
+  <div class="title-block">
+    <h2 id="pageTitle">IND-A-W vs AUS-A-W</h2>
+    <span class="live-tag">
+      <span class="dot"></span> LIVE
+    </span>
   </div>
+
+  <button class="wallet-icon" onclick="location.href='wallet.html'">
+    <i class="fa fa-wallet"></i>
+  </button>
 </header>
+
+<!-- SCOREBOARD -->
+<section class="scoreboard">
+  <div class="sb-top">
+
+    <div class="sb-team">
+      <img id="logoA" class="logo" alt="">
+      <div class="info">
+        <b id="nameA">IND-A-W</b>
+        <span id="scoreA">338/6(50)</span>
+      </div>
+    </div>
+
+    <div class="sb-center">
+      <div class="web11">
+        <span class="w-icon">W</span> Web11
+      </div>
+      <div class="live-dot">
+        <span class="d"></span> LIVE
+      </div>
+    </div>
+
+    <div class="sb-team right">
+      <div class="info">
+        <b id="nameB">AUS-A-W</b>
+        <span id="scoreB">22/0(4.5)</span>
+      </div>
+      <img id="logoB" class="logo" alt="">
+    </div>
+
+  </div>
+
+  <div class="sb-commentary" id="commentary">
+    Sayali Satghare to Tahila Wilson, 1 leg bye,
+  </div>
+
+  <div class="sb-stats">
+    <div class="col">
+      <b id="batA">N Fatum</b> <span id="batAStats">7(14)</span>
+      <b id="batB">T Wilson</b> <span id="batBStats">13(15)</span>
+    </div>
+    <div class="col right">
+      <b id="bowlA">S Satghare</b> <span id="bowlAStats">0/16(2.5)</span>
+    </div>
+  </div>
+
+  <div class="sb-balls">
+    <div class="ball">0</div>
+    <div class="ball">0</div>
+    <div class="ball">0</div>
+    <div class="ball active">4</div>
+    <div class="ball">0</div>
+    <div class="ball">0</div>
+  </div>
+</section>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('market',this)">All</button>
+  <button class="tab" onclick="switchTab('market',this)">Match</button>
+  <button class="tab" onclick="switchTab('market',this)">Overs</button>
+  <button class="tab" onclick="switchTab('market',this)">Wickets</button>
+  <button class="tab" onclick="switchTab('activity',this)">My Trades</button>
+</div>
 
 <main class="container">
 
@@ -787,134 +1164,124 @@ button{
     <a href="login.html">Login</a>
   </div>
 
-  <section class="match">
-
-    <div class="match-top">
-      <span id="league">Cricket</span>
-      <span id="statusText">UPCOMING</span>
-    </div>
-
-    <div class="teams">
-
-      <div class="team">
-        <img id="logoA" alt="">
-        <b id="nameA">Team A</b>
-      </div>
-
-      <div class="vs">VS</div>
-
-      <div class="team">
-        <img id="logoB" alt="">
-        <b id="nameB">Team B</b>
-      </div>
-
-    </div>
-
-    <div class="live">
-
-      <span class="dot"></span>
-      <small>LIVE SCORE</small>
-
-      <span class="score" id="scoreA">—</span>
-      <span>•</span>
-      <span class="score" id="scoreB">—</span>
-
-      <small id="overs">— ov</small>
-
-    </div>
-
-  </section>
-
-  <div class="tabs">
-
-    <button class="tab active" onclick="switchTab('market',this)">
-      Markets
-    </button>
-
-    <button class="tab" onclick="switchTab('activity',this)">
-      My Trades
-    </button>
-
-  </div>
-
   <div id="marketView">
 
-    <section class="market">
-
-      <div class="market-head">
-        <b id="question">Who will win?</b>
-        <span>Virtual trading</span>
+    <!-- MARKET 1 -->
+    <section class="market-card">
+      <div class="trade-count">
+        <i class="fa fa-user"></i> 599692 trades
       </div>
 
-      <div class="choice-grid">
-
-        <button class="choice yes" id="yesCard" onclick="openTrade('YES')">
-
-          <div class="top">
-            <strong>YES</strong>
-            <small id="yesQty">0 available</small>
-          </div>
-
-          <div class="price" id="yesPrice">₹0.00</div>
-
-          <small>Tap to trade</small>
-
-        </button>
-
-        <button class="choice no" id="noCard" onclick="openTrade('NO')">
-
-          <div class="top">
-            <strong>NO</strong>
-            <small id="noQty">0 available</small>
-          </div>
-
-          <div class="price" id="noPrice">₹0.00</div>
-
-          <small>Tap to trade</small>
-
-        </button>
-
+      <div class="market-row">
+        <div class="q-text" id="question">
+          IND-A-W to win the ODI match vs AUS-A-W ?
+        </div>
+        <div class="q-img">🏏</div>
       </div>
 
+      <div class="prob-bar">
+        <small>The Market Predicts</small>
+        <b id="probText">75% probability of Yes</b>
+      </div>
+
+      <div class="prediction">
+        <button class="pred-btn yes" onclick="openTrade('YES')">
+          YES | <span id="yesPrice">₹7.5</span>
+        </button>
+        <button class="pred-btn no" onclick="openTrade('NO')">
+          NO | <span id="noPrice">₹2.5</span>
+        </button>
+      </div>
     </section>
 
-    <section class="stats">
-
-      <div class="stat">
-        <small>Last YES</small>
-        <b id="lastYes">₹0.00</b>
+    <!-- MARKET 2 -->
+    <section class="market-card">
+      <div class="trade-count">
+        <i class="fa fa-user"></i> 1035 trades
       </div>
 
-      <div class="stat">
-        <small>Last NO</small>
-        <b id="lastNo">₹0.00</b>
+      <div class="market-row">
+        <div class="q-text">
+          AUS-A-W to score 42 or more runs at the end of 10 overs vs IND-A-W ? ( Match 02 )
+        </div>
+        <div class="q-img">🏏</div>
       </div>
 
-      <div class="stat">
-        <small>24h Volume</small>
-        <b id="volume">₹0</b>
+      <div class="pred-progress">
+        <div class="pp-box">
+          <div class="pp-top">
+            <span class="runs">42 RUNS</span>
+            <span class="pct">YES 55%</span>
+          </div>
+          <div class="pp-bar"><span style="width:55%"></span></div>
+        </div>
+        <div class="pp-box">
+          <div class="pp-top">
+            <span class="runs">49 RUNS</span>
+            <span class="pct">YES 55%</span>
+          </div>
+          <div class="pp-bar"><span style="width:55%"></span></div>
+        </div>
       </div>
 
+      <div class="prediction">
+        <button class="pred-btn yes" onclick="openTrade('YES')">YES | ₹5.5</button>
+        <button class="pred-btn no" onclick="openTrade('NO')">NO | ₹4.5</button>
+      </div>
     </section>
 
+    <!-- MARKET 3 -->
+    <section class="market-card">
+      <div class="trade-count">
+        <i class="fa fa-user"></i> 20621 trades
+      </div>
+
+      <div class="market-row">
+        <div class="q-text">
+          IND-A-W to take 2 or more wickets at the end of 14 overs vs AUS-A-W ? ( Match 02 )
+        </div>
+        <div class="q-img">🏏</div>
+      </div>
+
+      <div class="prediction">
+        <button class="pred-btn yes" onclick="openTrade('YES')">YES | ₹4.5</button>
+        <button class="pred-btn no" onclick="openTrade('NO')">NO | ₹5.5</button>
+      </div>
+    </section>
+
+    <!-- ORDER BOOK -->
     <section class="book">
-
       <div class="book-title">
         <b>📖 Order Book</b>
-        <span style="font-size:11px;color:#888">
-          Real live orders
-        </span>
+        <button class="chev" onclick="renderBook()">
+          <i class="fa fa-chevron-up"></i>
+        </button>
       </div>
 
       <div class="book-head">
-        <div>PRICE</div>
+        <div style="text-align:left">PRICE</div>
         <div class="yesc">QTY YES</div>
         <div>PRICE</div>
         <div class="noc">QTY NO</div>
       </div>
 
       <div id="orderRows"></div>
+    </section>
 
+    <!-- STATS -->
+    <section class="stats">
+      <div class="stat">
+        <small>Last YES</small>
+        <b id="lastYes">₹7.5</b>
+      </div>
+      <div class="stat">
+        <small>Last NO</small>
+        <b id="lastNo">₹2.5</b>
+      </div>
+      <div class="stat">
+        <small>24h Volume</small>
+        <b id="volume">₹0</b>
+      </div>
     </section>
 
   </div>
@@ -922,195 +1289,139 @@ button{
   <div id="activityView" style="display:none">
 
     <section class="book">
-
       <div class="book-title">
         <b>My Trades</b>
         <span id="tradeCount" style="font-size:11px;color:#888"></span>
       </div>
 
       <div id="tradeList"></div>
-
     </section>
 
   </div>
 
 </main>
 
-<div class="bottom-trade">
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <div class="bottom-bar-inner">
 
-  <div class="bottom-inner">
+    <div class="balance-alert" id="balanceAlert" style="display:none">
+      <div class="msg">
+        <span class="warn">⚠️</span> Insufficient Balance
+      </div>
+      <button class="add-cash" onclick="location.href='wallet.html'">
+        Add Cash
+      </button>
+    </div>
 
-    <button class="trade-btn yes" onclick="openTrade('YES')">
-      YES <span id="bottomYes">₹0.00</span>
-    </button>
+    <div class="swipe" id="swipe">
+      <span>Swipe To Confirm</span>
+      <div class="knob" id="knob">»</div>
+    </div>
 
-    <button class="trade-btn no" onclick="openTrade('NO')">
-      NO <span id="bottomNo">₹0.00</span>
-    </button>
+    <div class="balance-line">
+      <span>Balance: <b id="walletTop">₹0.00</b></span>
+      <span>Commission on net winnings: 15%</span>
+    </div>
 
   </div>
-
 </div>
 
 <!-- TRADE SHEET -->
-
 <div class="overlay" id="overlay" onclick="outsideClose(event)">
-
   <div class="sheet">
 
     <div class="handle"></div>
 
     <div class="sheet-head">
-
-      <h3 id="sheetQuestion">
-        Who will win?
-      </h3>
-
+      <h3 id="sheetQuestion">Who will win?</h3>
       <div style="display:flex;gap:6px">
-
         <button
           onclick="exitTrade()"
           style="border:0;background:#fff3cd;color:#856404;padding:0 12px;height:32px;border-radius:9px;font-size:12px;font-weight:700">
           Exit
         </button>
-
         <button class="close" onclick="closeTrade()">
           <i class="fa fa-times"></i>
         </button>
-
       </div>
-
     </div>
 
     <div class="selected-pill">
-
-      <button
-        class="pill y"
-        id="pillYes"
-        onclick="setSide('YES')">
-        YES <span id="pillYesPrice">₹0.00</span>
+      <button class="pill y active" id="pillYes" onclick="setSide('YES')">
+        YES ₹<span id="pillYesPrice">7.5</span>
       </button>
-
-      <button
-        class="pill n"
-        id="pillNo"
-        onclick="setSide('NO')">
-        NO <span id="pillNoPrice">₹0.00</span>
+      <button class="pill n" id="pillNo" onclick="setSide('NO')">
+        NO ₹<span id="pillNoPrice">2.5</span>
       </button>
-
     </div>
 
     <div class="price-line">
-
       <div>
-
-        <small style="font-size:11px;color:#777">
-          Price
-        </small>
-
-        <div class="price-big" id="sheetPrice">
-          ₹0.00
-        </div>
-
+        <div class="label">Price</div>
+        <div class="price-big" id="sheetPrice">₹7.5</div>
       </div>
-
       <div style="text-align:right">
-        <b class="available" id="sheetAvailable">
-          0 qty available
-        </b>
+        <b class="available" id="sheetAvailable">0 qty available</b>
       </div>
+    </div>
 
+    <div class="slider-row">
+      <button class="minus" onclick="changePrice(-.5)">−</button>
+      <input
+        id="priceInput"
+        class="slider"
+        type="range"
+        min="0.5"
+        max="9.5"
+        step="0.5"
+        value="7.5"
+        oninput="syncPrice()">
+      <button class="plus" onclick="changePrice(.5)">+</button>
     </div>
 
     <div class="qty-box">
-
       <div class="qty-row">
-
-        <span>Quantity</span>
-
+        <span class="q-label">Quantity ⚙</span>
         <div class="qty-control">
-
-          <button onclick="changeQty(-1)">
-            −
-          </button>
-
-          <input
-            id="qtyInput"
-            type="number"
-            min="1"
-            value="5"
-            oninput="syncQty()">
-
-          <button onclick="changeQty(1)">
-            +
-          </button>
-
+          <button onclick="changeQty(-1)">−</button>
+          <input id="qtyInput" type="number" min="1" value="5" oninput="syncQty()">
+          <button onclick="changeQty(1)">+</button>
         </div>
+      </div>
 
+      <div class="qty-sub">
+        <span>Joined Qty: 0</span>
+        <span>Available Qty : <b id="availQty">1000000</b></span>
       </div>
 
       <div class="quick">
-
         <button onclick="setQty(20)">20+</button>
         <button onclick="setQty(100)">100+</button>
         <button onclick="setQty(500)">500+</button>
         <button onclick="setQty(1000)">1000+</button>
-
       </div>
-
     </div>
 
     <div class="summary">
-
-      <div>
+      <div class="s-item">
         <small>Investment</small>
-        <b id="investment">₹0.00</b>
+        <b id="investment">₹37.5</b>
       </div>
-
-      <div>
-        <small>Potential Return</small>
-        <b class="win" id="winning">₹0.00</b>
+      <div class="s-item" style="text-align:right">
+        <small>Winnings</small>
+        <b class="win" id="winning">₹50</b>
       </div>
-
-      <div>
-        <small>Potential Profit</small>
-        <b class="win" id="profit">₹0.00</b>
-      </div>
-
-      <div>
-        <small>Avg. Price</small>
-        <b id="avgPrice">₹0.00</b>
-      </div>
-
     </div>
 
-    <div class="balance">
-
+    <div class="balance-row">
       <div>
         <small>Wallet Balance</small>
         <b id="sheetBalance">₹0.00</b>
       </div>
-
-      <button
-        class="addcash"
-        onclick="location.href='wallet.html'">
+      <button class="addcash" onclick="location.href='wallet.html'">
         + Add Funds
       </button>
-
-    </div>
-
-    <!-- FIXED MOBILE SWIPE -->
-
-    <div class="swipe" id="swipe">
-
-      <span>
-        Swipe To Confirm
-      </span>
-
-      <div class="knob" id="knob">
-        »
-      </div>
-
     </div>
 
     <div class="note">
@@ -1118,7 +1429,6 @@ button{
     </div>
 
   </div>
-
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1150,1696 +1460,541 @@ const matchId = params.get('id');
 const FALLBACK =
 "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23eee'/%3E%3Cpath d='M40 15v50M15 40h50' stroke='%23aaa' stroke-width='4'/%3E%3C/svg%3E";
 
-
 /* RETURN URL */
-
 if(!sessionStorage.getItem('tradeReturnUrl')){
-
-  if(
-    document.referrer &&
-    !document.referrer.includes('trade.html')
-  ){
-
-    sessionStorage.setItem(
-      'tradeReturnUrl',
-      document.referrer
-    );
-
+  if(document.referrer && !document.referrer.includes('trade.html')){
+    sessionStorage.setItem('tradeReturnUrl', document.referrer);
   }else{
-
-    sessionStorage.setItem(
-      'tradeReturnUrl',
-      'wallet.html'
-    );
-
+    sessionStorage.setItem('tradeReturnUrl', 'wallet.html');
   }
-
 }
 
-
 /* STATE */
-
 let state = {
-
   side:'YES',
-
   qty:5,
-
-  yesPrice:5,
-
-  noPrice:5,
-
+  yesPrice:7.5,
+  noPrice:2.5,
   yesAvailable:1000000,
-
   noAvailable:1000000,
-
   balance:0,
-
   myTrades:[],
-
   allTrades:[],
-
   match:null,
-
   uid:null,
-
   loggedIn:false
-
 };
-
 
 let walletRef=null;
 let myTradesRef=null;
 let allTradesRef=null;
 let marketRef=null;
 
-
 /* MONEY */
-
 function money(n){
-
-  return '₹' +
-    Number(n || 0).toLocaleString(
-      'en-IN',
-      {
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
-      }
-    );
-
+  return '₹' + Number(n || 0).toLocaleString('en-IN',{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
 }
-
 
 /* TOAST */
-
 function toast(msg){
-
   const t=document.getElementById('toast');
-
   t.textContent=msg;
-
   t.classList.add('show');
-
   clearTimeout(window.tt);
-
-  window.tt=setTimeout(
-    ()=>{
-      t.classList.remove('show');
-    },
-    2500
-  );
-
+  window.tt=setTimeout(()=>{ t.classList.remove('show'); },2500);
 }
 
-
 /* RENDER */
-
 function render(){
-
   const m=state.match || {};
-
-  const a=m.teamA || 'Team A';
-  const b=m.teamB || 'Team B';
+  const a=m.teamA || 'IND-A-W';
+  const b=m.teamB || 'AUS-A-W';
 
   document.getElementById('nameA').textContent=a;
   document.getElementById('nameB').textContent=b;
+  document.getElementById('pageTitle').textContent = a + ' vs ' + b;
 
-  document.getElementById('pageTitle').textContent =
-    a + ' vs ' + b;
+  document.getElementById('logoA').src = m.teamALogo || FALLBACK;
+  document.getElementById('logoB').src = m.teamBLogo || FALLBACK;
 
-  document.getElementById('league').textContent =
-    m.league || 'Cricket';
+  document.getElementById('scoreA').textContent = m.scoreA || '338/6(50)';
+  document.getElementById('scoreB').textContent = m.scoreB || '22/0(4.5)';
 
-  document.getElementById('statusText').textContent =
-    String(m.status || 'UPCOMING').toUpperCase();
+  document.getElementById('yesPrice').textContent = '₹' + state.yesPrice;
+  document.getElementById('noPrice').textContent = '₹' + state.noPrice;
 
-  document.getElementById('logoA').src =
-    m.teamALogo || FALLBACK;
+  document.getElementById('walletTop').textContent = money(state.balance);
 
-  document.getElementById('logoB').src =
-    m.teamBLogo || FALLBACK;
-
-  document.getElementById('scoreA').textContent =
-    m.scoreA || '—';
-
-  document.getElementById('scoreB').textContent =
-    m.scoreB || '—';
-
-  document.getElementById('overs').textContent =
-    (m.overs || '—') + ' ov';
-
-
-  document.getElementById('yesPrice').textContent =
-    money(state.yesPrice);
-
-  document.getElementById('noPrice').textContent =
-    money(state.noPrice);
-
-  document.getElementById('bottomYes').textContent =
-    money(state.yesPrice);
-
-  document.getElementById('bottomNo').textContent =
-    money(state.noPrice);
-
-
-  document.getElementById('yesQty').textContent =
-    state.yesAvailable.toLocaleString('en-IN') +
-    ' available';
-
-  document.getElementById('noQty').textContent =
-    state.noAvailable.toLocaleString('en-IN') +
-    ' available';
-
-
-  document.getElementById('walletTop').textContent =
-    money(state.balance);
-
+  const yesPct = Math.round((state.noPrice / (state.yesPrice + state.noPrice)) * 100);
+  document.getElementById('probText').textContent = yesPct + '% probability of Yes';
 
   document.getElementById('loginBanner').style.display =
     state.loggedIn ? 'none' : 'flex';
 
-
   renderBook();
   renderTrades();
-
+  updateSheet();
+  updateBalanceAlert();
 }
 
+/* BALANCE ALERT */
+function updateBalanceAlert(){
+  const alertBox = document.getElementById('balanceAlert');
+  const inv = (state.side==='YES'?state.yesPrice:state.noPrice) * state.qty;
+  if(inv > state.balance){
+    alertBox.style.display='flex';
+  }else{
+    alertBox.style.display='none';
+  }
+}
 
 /* ORDER BOOK */
-
 function renderBook(){
-
   const sourceTrades=state.allTrades || [];
-
   const yesOrders={};
   const noOrders={};
 
-
   sourceTrades.forEach(t=>{
-
     const side=(t.side || '').toUpperCase();
-
     const p=Number(t.odds || 0);
     const q=Number(t.qty || 0);
-
     if(!p || !q) return;
-
-    if(side==='YES'){
-
-      yesOrders[p]=(yesOrders[p] || 0)+q;
-
-    }
-
-    else if(side==='NO'){
-
-      noOrders[p]=(noOrders[p] || 0)+q;
-
-    }
-
+    if(side==='YES') yesOrders[p]=(yesOrders[p] || 0)+q;
+    else if(side==='NO') noOrders[p]=(noOrders[p] || 0)+q;
   });
 
+  const yesRows=Object.entries(yesOrders).map(([price,qty])=>({price:Number(price),qty})).sort((a,b)=>b.price-a.price).slice(0,5);
+  const noRows=Object.entries(noOrders).map(([price,qty])=>({price:Number(price),qty})).sort((a,b)=>a.price-b.price).slice(0,5);
 
-  const yesRows=
-
-    Object.entries(yesOrders)
-
-    .map(([price,qty])=>({
-      price:Number(price),
-      qty
-    }))
-
-    .sort((a,b)=>b.price-a.price)
-
-    .slice(0,5);
-
-
-  const noRows=
-
-    Object.entries(noOrders)
-
-    .map(([price,qty])=>({
-      price:Number(price),
-      qty
-    }))
-
-    .sort((a,b)=>a.price-b.price)
-
-    .slice(0,5);
-
-
-  const maxRows=Math.max(
-    yesRows.length,
-    noRows.length
-  );
-
+  const maxRows=Math.max(yesRows.length, noRows.length);
 
   if(maxRows===0){
-
     document.getElementById('orderRows').innerHTML=
       '<div class="empty" style="padding:14px;font-size:11px">No orders yet. Be the first to trade!</div>';
-
   }else{
-
     let html='';
-
     for(let i=0;i<maxRows;i++){
-
       const y=yesRows[i];
       const n=noRows[i];
-
       html+=`
-
         <div class="book-row">
-
-          <div>
-            ${y ? money(y.price) : '—'}
-          </div>
-
-          <div class="yesc">
-            ${y ? y.qty.toLocaleString('en-IN') : '—'}
-          </div>
-
-          <div>
-            ${n ? money(n.price) : '—'}
-          </div>
-
-          <div class="noc">
-            ${n ? n.qty.toLocaleString('en-IN') : '—'}
-          </div>
-
-        </div>
-
-      `;
-
+          <div>${y ? '₹'+y.price.toFixed(1) : '—'}</div>
+          <div class="yesc">${y ? y.qty.toLocaleString('en-IN') : '—'}</div>
+          <div>${n ? '₹'+n.price.toFixed(1) : '—'}</div>
+          <div class="noc">${n ? n.qty.toLocaleString('en-IN') : '—'}</div>
+        </div>`;
     }
-
     document.getElementById('orderRows').innerHTML=html;
-
   }
 
+  document.getElementById('lastYes').textContent = '₹' + state.yesPrice;
+  document.getElementById('lastNo').textContent = '₹' + state.noPrice;
 
-  document.getElementById('lastYes').textContent =
-    money(state.yesPrice);
-
-  document.getElementById('lastNo').textContent =
-    money(state.noPrice);
-
-
-  const vol=sourceTrades.reduce(
-    (s,t)=>s+Number(t.amount || 0),
-    0
-  );
-
-  document.getElementById('volume').textContent =
-    money(vol);
-
+  const vol=sourceTrades.reduce((s,t)=>s+Number(t.amount || 0),0);
+  document.getElementById('volume').textContent = money(vol);
 }
-
 
 /* OPEN TRADE */
-
 function openTrade(side){
-
   if(!state.loggedIn){
-
     toast('Please login to trade');
-
-    setTimeout(
-      ()=>{
-        location.href =
-          'login.html?redirect=' +
-          encodeURIComponent(location.href);
-      },
-      1200
-    );
-
+    setTimeout(()=>{
+      location.href = 'login.html?redirect=' + encodeURIComponent(location.href);
+    },1200);
     return;
   }
-
-
   if(!state.match){
-
     toast('Match not loaded');
-
     return;
   }
-
-
   state.side=side;
-
-
-  document.getElementById(
-    'overlay'
-  ).classList.add('show');
-
-
+  document.getElementById('overlay').classList.add('show');
   document.body.style.overflow='hidden';
-
-
-  document.getElementById(
-    'sheetQuestion'
-  ).textContent=
-    (state.match?.teamA || 'Team A') +
-    ' to win?';
-
-
+  document.getElementById('sheetQuestion').textContent =
+    (state.match?.teamA || 'IND-A-W') + ' to win?';
   setSide(side);
-
   setQty(state.qty || 5);
-
 }
-
 
 /* CLOSE */
-
 function closeTrade(){
-
-  document.getElementById(
-    'overlay'
-  ).classList.remove('show');
-
+  document.getElementById('overlay').classList.remove('show');
   document.body.style.overflow='';
-
   resetSwipe();
-
 }
-
-
 function outsideClose(e){
-
-  if(e.target.id==='overlay'){
-
-    closeTrade();
-
-  }
-
+  if(e.target.id==='overlay') closeTrade();
 }
-
-
 function exitTrade(){
-
   closeTrade();
-
-  setTimeout(
-    exitPage,
-    200
-  );
-
+  setTimeout(exitPage,200);
 }
-
-
 function exitPage(){
-
-  const returnUrl =
-    sessionStorage.getItem('tradeReturnUrl') ||
-    'wallet.html';
-
+  const returnUrl = sessionStorage.getItem('tradeReturnUrl') || 'wallet.html';
   location.href=returnUrl;
-
 }
-
 
 /* SIDE */
-
 function setSide(side){
-
   state.side=side;
-
-  document.getElementById(
-    'pillYes'
-  ).classList.toggle(
-    'active',
-    side==='YES'
-  );
-
-  document.getElementById(
-    'pillNo'
-  ).classList.toggle(
-    'active',
-    side==='NO'
-  );
-
+  document.getElementById('pillYes').classList.toggle('active',side==='YES');
+  document.getElementById('pillNo').classList.toggle('active',side==='NO');
   updateSheet();
-
+  updateBalanceAlert();
 }
-
-
 function price(){
-
-  return state.side==='YES'
-    ? state.yesPrice
-    : state.noPrice;
-
+  return state.side==='YES' ? state.yesPrice : state.noPrice;
 }
-
-
 function available(){
-
-  return state.side==='YES'
-    ? state.yesAvailable
-    : state.noAvailable;
-
+  return state.side==='YES' ? state.yesAvailable : state.noAvailable;
 }
-
 
 /* QUANTITY */
-
 function setQty(q){
-
-  state.qty=Math.max(
-    1,
-    Math.floor(Number(q) || 1)
-  );
-
-  document.getElementById(
-    'qtyInput'
-  ).value=state.qty;
-
+  state.qty=Math.max(1,Math.floor(Number(q) || 1));
+  document.getElementById('qtyInput').value=state.qty;
   updateSheet();
-
+  updateBalanceAlert();
 }
+function changeQty(d){ setQty(state.qty+d); }
+function syncQty(){ setQty(document.getElementById('qtyInput').value); }
 
-
-function changeQty(d){
-
-  setQty(
-    state.qty+d
-  );
-
+/* PRICE */
+function changePrice(n){
+  let p = (state.side==='YES' ? state.yesPrice : state.noPrice) + n;
+  p = Math.max(0.5, Math.min(9.5, Math.round(p*2)/2));
+  state.side==='YES' ? state.yesPrice=p : state.noPrice=p;
+  document.getElementById('priceInput').value=p;
+  updateSheet();
 }
-
-
-function syncQty(){
-
-  setQty(
-    document.getElementById(
-      'qtyInput'
-    ).value
-  );
-
+function syncPrice(){
+  const p = Number(document.getElementById('priceInput').value);
+  state.side==='YES' ? state.yesPrice=p : state.noPrice=p;
+  updateSheet();
 }
-
 
 /* SHEET */
-
 function updateSheet(){
+  const p = state.side==='YES' ? state.yesPrice : state.noPrice;
+  const q = state.qty;
+  const inv = p*q;
+  const ret = q*10;
+  const profit = ret-inv;
 
-  const p=price();
+  document.getElementById('sheetPrice').textContent = '₹' + p;
+  document.getElementById('sheetAvailable').textContent =
+    available().toLocaleString('en-IN') + ' qty available';
+  document.getElementById('pillYesPrice').textContent = state.yesPrice;
+  document.getElementById('pillNoPrice').textContent = state.noPrice;
+  document.getElementById('priceInput').value = p;
+  document.getElementById('investment').textContent = '₹' + inv.toFixed(1);
+  document.getElementById('winning').textContent = '₹' + ret.toFixed(0);
+  document.getElementById('availQty').textContent = available().toLocaleString('en-IN');
+  document.getElementById('sheetBalance').textContent = money(state.balance);
 
-  const q=state.qty;
-
-  const inv=p*q;
-
-  const ret=q*10;
-
-  const profit=ret-inv;
-
-
-  document.getElementById(
-    'sheetPrice'
-  ).textContent=money(p);
-
-
-  document.getElementById(
-    'sheetAvailable'
-  ).textContent=
-    available().toLocaleString('en-IN') +
-    ' qty available';
-
-
-  document.getElementById(
-    'pillYesPrice'
-  ).textContent=
-    money(state.yesPrice);
-
-
-  document.getElementById(
-    'pillNoPrice'
-  ).textContent=
-    money(state.noPrice);
-
-
-  document.getElementById(
-    'investment'
-  ).textContent=
-    money(inv);
-
-
-  document.getElementById(
-    'winning'
-  ).textContent=
-    money(ret);
-
-
-  document.getElementById(
-    'profit'
-  ).textContent=
-    money(profit);
-
-
-  document.getElementById(
-    'avgPrice'
-  ).textContent=
-    money(p);
-
-
-  document.getElementById(
-    'sheetBalance'
-  ).textContent=
-    money(state.balance);
-
-
-  document.getElementById(
-    'swipe'
-  ).classList.toggle(
-    'disabled',
-    inv>state.balance ||
-    q>available()
-  );
-
+  document.getElementById('swipe').classList.toggle('disabled',
+    inv>state.balance || q>available());
 }
-
 
 /* =====================================================
    MOBILE SWIPE SYSTEM
    ===================================================== */
-
-const swipeState={
-
-  active:false,
-
-  startX:0,
-
-  currentX:0,
-
-  maxX:0,
-
-  pointerId:null
-
-};
-
-
-const swipeEl=
-  document.getElementById('swipe');
-
-const knobEl=
-  document.getElementById('knob');
-
+const swipeState={active:false,startX:0,currentX:0,maxX:0,pointerId:null};
+const swipeEl=document.getElementById('swipe');
+const knobEl=document.getElementById('knob');
 
 function getSwipeMax(){
-
   if(!swipeEl) return 0;
-
-  return Math.max(
-    0,
-    swipeEl.clientWidth -
-    knobEl.offsetWidth -
-    10
-  );
-
+  return Math.max(0, swipeEl.clientWidth - knobEl.offsetWidth - 10);
 }
-
-
-function setKnobPosition(
-  x,
-  animate=false
-){
-
+function setKnobPosition(x, animate=false){
   if(!knobEl) return;
-
-
-  x=Math.max(
-    0,
-    Math.min(
-      x,
-      swipeState.maxX
-    )
-  );
-
-
-  knobEl.style.transition=
-    animate
-      ? 'transform .18s ease'
-      : 'none';
-
-
-  knobEl.style.transform=
-    `translateX(${x}px)`;
-
-
+  x=Math.max(0, Math.min(x, swipeState.maxX));
+  knobEl.style.transition=animate?'transform .18s ease':'none';
+  knobEl.style.transform=`translateX(${x}px)`;
   swipeState.currentX=x;
-
 }
-
-
 function startSwipe(e){
-
-  if(
-    !swipeEl ||
-    swipeEl.classList.contains('disabled')
-  ){
-
-    return;
-
-  }
-
-
-  const inv=
-    price()*state.qty;
-
-
-  if(inv>state.balance){
-
-    toast('Insufficient balance');
-
-    return;
-
-  }
-
-
-  if(state.qty>available()){
-
-    toast('Not enough quantity available');
-
-    return;
-
-  }
-
-
+  if(!swipeEl || swipeEl.classList.contains('disabled')) return;
+  const inv = (state.side==='YES'?state.yesPrice:state.noPrice) * state.qty;
+  if(inv>state.balance){ toast('Insufficient balance'); return; }
+  if(state.qty>available()){ toast('Not enough quantity available'); return; }
   swipeState.active=true;
-
   swipeState.pointerId=e.pointerId;
-
   swipeState.maxX=getSwipeMax();
-
-
-  const rect=
-    swipeEl.getBoundingClientRect();
-
-
-  const fingerX=
-    e.clientX-rect.left;
-
-
-  swipeState.startX=
-    fingerX -
-    Math.min(
-      swipeState.maxX,
-      Math.max(
-        0,
-        swipeState.currentX
-      )
-    );
-
-
-  try{
-
-    swipeEl.setPointerCapture(
-      e.pointerId
-    );
-
-  }catch(err){}
-
-
+  const rect=swipeEl.getBoundingClientRect();
+  const fingerX=e.clientX-rect.left;
+  swipeState.startX=fingerX - Math.min(swipeState.maxX, Math.max(0, swipeState.currentX));
+  try{ swipeEl.setPointerCapture(e.pointerId); }catch(err){}
   e.preventDefault();
-
 }
-
-
 function moveSwipe(e){
-
   if(!swipeState.active) return;
-
-  if(
-    e.pointerId !==
-    swipeState.pointerId
-  ){
-
-    return;
-
-  }
-
-
-  const rect=
-    swipeEl.getBoundingClientRect();
-
-
-  const fingerX=
-    e.clientX-rect.left;
-
-
-  let newX=
-    fingerX -
-    swipeState.startX;
-
-
-  newX=Math.max(
-    0,
-    Math.min(
-      newX,
-      swipeState.maxX
-    )
-  );
-
-
-  setKnobPosition(
-    newX,
-    false
-  );
-
-
+  if(e.pointerId !== swipeState.pointerId) return;
+  const rect=swipeEl.getBoundingClientRect();
+  const fingerX=e.clientX-rect.left;
+  let newX=fingerX - swipeState.startX;
+  newX=Math.max(0, Math.min(newX, swipeState.maxX));
+  setKnobPosition(newX, false);
   e.preventDefault();
-
 }
-
-
 function endSwipe(e){
-
   if(!swipeState.active) return;
-
-
-  if(
-    e &&
-    e.pointerId !==
-    swipeState.pointerId
-  ){
-
-    return;
-
-  }
-
-
-  const max=
-    swipeState.maxX;
-
-  const current=
-    swipeState.currentX;
-
-
+  if(e && e.pointerId !== swipeState.pointerId) return;
+  const max=swipeState.maxX;
+  const current=swipeState.currentX;
   swipeState.active=false;
-
-
-  try{
-
-    if(e){
-
-      swipeEl.releasePointerCapture(
-        e.pointerId
-      );
-
-    }
-
-  }catch(err){}
-
-
-  /*
-    75% swipe complete hone par
-    confirmation.
-  */
-
-  if(
-    max>0 &&
-    current>=max*0.75
-  ){
-
-    setKnobPosition(
-      max,
-      true
-    );
-
-
-    setTimeout(
-      ()=>{
-        confirmTrade();
-      },
-      120
-    );
-
+  try{ if(e) swipeEl.releasePointerCapture(e.pointerId); }catch(err){}
+  if(max>0 && current>=max*0.75){
+    setKnobPosition(max, true);
+    setTimeout(()=>{ confirmTrade(); },120);
   }else{
-
     resetSwipe();
-
   }
-
 }
-
-
 function resetSwipe(){
-
   swipeState.active=false;
-
   swipeState.currentX=0;
-
-
   if(knobEl){
-
-    knobEl.style.transition=
-      'transform .18s ease';
-
-    knobEl.style.transform=
-      'translateX(0)';
-
+    knobEl.style.transition='transform .18s ease';
+    knobEl.style.transform='translateX(0)';
   }
-
 }
 
+swipeEl.addEventListener('pointerdown', startSwipe, {passive:false});
+swipeEl.addEventListener('pointermove', moveSwipe, {passive:false});
+swipeEl.addEventListener('pointerup', endSwipe, {passive:false});
+swipeEl.addEventListener('pointercancel', endSwipe, {passive:false});
+swipeEl.addEventListener('lostpointercapture', ()=>{ if(swipeState.active) resetSwipe(); });
 
-/* POINTER EVENTS */
-
-swipeEl.addEventListener(
-  'pointerdown',
-  startSwipe,
-  {passive:false}
-);
-
-swipeEl.addEventListener(
-  'pointermove',
-  moveSwipe,
-  {passive:false}
-);
-
-swipeEl.addEventListener(
-  'pointerup',
-  endSwipe,
-  {passive:false}
-);
-
-swipeEl.addEventListener(
-  'pointercancel',
-  endSwipe,
-  {passive:false}
-);
-
-
-swipeEl.addEventListener(
-  'lostpointercapture',
-  ()=>{
-    if(swipeState.active){
-      resetSwipe();
-    }
+window.addEventListener('resize', ()=>{
+  if(!swipeState.active){
+    swipeState.maxX=getSwipeMax();
+    setKnobPosition(0, false);
   }
-);
-
-
-/* SCREEN ROTATION / RESIZE */
-
-window.addEventListener(
-  'resize',
-  ()=>{
-    if(!swipeState.active){
-
-      swipeState.maxX=
-        getSwipeMax();
-
-      setKnobPosition(
-        0,
-        false
-      );
-
-    }
-  }
-);
-
+});
 
 /* =====================================================
    CONFIRM TRADE
    ===================================================== */
-
 async function confirmTrade(){
+  const inv = (state.side==='YES'?state.yesPrice:state.noPrice) * state.qty;
 
-  const inv=
-    price()*state.qty;
-
-
-  if(inv>state.balance){
-
-    toast('Insufficient balance');
-
-    resetSwipe();
-
-    return;
-
-  }
-
-
-  if(state.qty>available()){
-
-    toast('Not enough quantity available');
-
-    resetSwipe();
-
-    return;
-
-  }
-
-
-  if(
-    !state.loggedIn ||
-    !matchId
-  ){
-
-    toast('Login required');
-
-    resetSwipe();
-
-    return;
-
-  }
-
+  if(inv>state.balance){ toast('Insufficient balance'); resetSwipe(); return; }
+  if(state.qty>available()){ toast('Not enough quantity available'); resetSwipe(); return; }
+  if(!state.loggedIn || !matchId){ toast('Login required'); resetSwipe(); return; }
 
   try{
+    const w=db.ref('users/' + state.uid + '/wallet/balance');
+    const snap=await w.once('value');
+    const bal=Number(snap.val() || 0);
 
-    const w=
-      db.ref(
-        'users/' +
-        state.uid +
-        '/wallet/balance'
-      );
+    if(inv>bal){ toast('Insufficient balance'); resetSwipe(); return; }
 
-
-    const snap=
-      await w.once('value');
-
-
-    const bal=
-      Number(
-        snap.val() || 0
-      );
-
-
-    if(inv>bal){
-
-      toast('Insufficient balance');
-
-      resetSwipe();
-
-      return;
-
-    }
-
-
-    const key=
-      db.ref('trades').push().key;
-
-
-    const sideLabel=
-      state.side==='YES'
-        ? (
-            state.match?.teamA ||
-            'Team A'
-          )
-        : (
-            state.match?.teamB ||
-            'Team B'
-          );
-
+    const key=db.ref('trades').push().key;
+    const sideLabel = state.side==='YES' ? (state.match?.teamA || 'Team A') : (state.match?.teamB || 'Team B');
 
     const trade={
-
       userId:state.uid,
-
       matchId:matchId,
-
-      teamA:
-        state.match?.teamA ||
-        'Team A',
-
-      teamB:
-        state.match?.teamB ||
-        'Team B',
-
+      teamA:state.match?.teamA || 'Team A',
+      teamB:state.match?.teamB || 'Team B',
       selectedTeam:sideLabel,
-
       side:state.side,
-
-      amount:
-        Number(
-          inv.toFixed(2)
-        ),
-
-      odds:price(),
-
+      amount:Number(inv.toFixed(2)),
+      odds: state.side==='YES'?state.yesPrice:state.noPrice,
       qty:state.qty,
-
-      winAmount:
-        Number(
-          (state.qty*10).toFixed(2)
-        ),
-
+      winAmount:Number((state.qty*10).toFixed(2)),
       status:'pending',
-
-      createdAt:
-        firebase.database.ServerValue.TIMESTAMP
-
+      createdAt:firebase.database.ServerValue.TIMESTAMP
     };
-
 
     const updates={};
-
-
-    updates[
-      'trades/'+key
-    ]=trade;
-
-
-    updates[
-      'users/'+
-      state.uid+
-      '/wallet/balance'
-    ]=
-      Number(
-        (bal-inv).toFixed(2)
-      );
-
-
-    updates[
-      'transactions/'+key
-    ]={
-
+    updates['trades/'+key]=trade;
+    updates['users/'+state.uid+'/wallet/balance']=Number((bal-inv).toFixed(2));
+    updates['transactions/'+key]={
       userId:state.uid,
-
       type:'debit',
-
-      amount:
-        Number(
-          inv.toFixed(2)
-        ),
-
-      description:
-        `Trade ${state.side} x${state.qty} @ ${price()} on ${state.match?.teamA} vs ${state.match?.teamB}`,
-
-      date:
-        firebase.database.ServerValue.TIMESTAMP
-
+      amount:Number(inv.toFixed(2)),
+      description:`Trade ${state.side} x${state.qty} @ ${trade.odds} on ${state.match?.teamA} vs ${state.match?.teamB}`,
+      date:firebase.database.ServerValue.TIMESTAMP
     };
 
-
-    /* PRICE MOVEMENT */
-
-    const oldYes=
-      state.yesPrice;
-
-    const oldNo=
-      state.noPrice;
-
-
-    const shift=
-      Math.min(
-        0.5,
-        (inv/1000)*0.1
-      );
-
-
-    let newYes=oldYes;
-
-    let newNo=oldNo;
-
+    const oldYes=state.yesPrice;
+    const oldNo=state.noPrice;
+    const shift=Math.min(0.5, (inv/1000)*0.1);
+    let newYes=oldYes, newNo=oldNo;
 
     if(state.side==='YES'){
-
-      newYes=
-        Math.min(
-          9,
-          oldYes+shift
-        );
-
-      newNo=
-        Math.max(
-          1,
-          oldNo-shift
-        );
-
+      newYes=Math.min(9, oldYes+shift);
+      newNo=Math.max(1, oldNo-shift);
     }else{
-
-      newNo=
-        Math.min(
-          9,
-          oldNo+shift
-        );
-
-      newYes=
-        Math.max(
-          1,
-          oldYes-shift
-        );
-
+      newNo=Math.min(9, oldNo+shift);
+      newYes=Math.max(1, oldYes-shift);
     }
+    newYes=Number(newYes.toFixed(2));
+    newNo=Number(newNo.toFixed(2));
 
+    updates['matches/'+matchId+'/oddsA']=newYes;
+    updates['matches/'+matchId+'/oddsB']=newNo;
+    updates['matches/'+matchId+'/market/yes/price']=newYes;
+    updates['matches/'+matchId+'/market/no/price']=newNo;
 
-    newYes=
-      Number(
-        newYes.toFixed(2)
-      );
+    const yesSnap=await db.ref('matches/'+matchId+'/market/yes/available').once('value');
+    const noSnap=await db.ref('matches/'+matchId+'/market/no/available').once('value');
+    let yesAvail=Number(yesSnap.val() ?? 1000000);
+    let noAvail=Number(noSnap.val() ?? 1000000);
 
-    newNo=
-      Number(
-        newNo.toFixed(2)
-      );
+    if(state.side==='YES') yesAvail=Math.max(0, yesAvail-state.qty);
+    else noAvail=Math.max(0, noAvail-state.qty);
 
+    updates['matches/'+matchId+'/market/yes/available']=yesAvail;
+    updates['matches/'+matchId+'/market/no/available']=noAvail;
 
-    updates[
-      'matches/'+
-      matchId+
-      '/oddsA'
-    ]=newYes;
-
-
-    updates[
-      'matches/'+
-      matchId+
-      '/oddsB'
-    ]=newNo;
-
-
-    updates[
-      'matches/'+
-      matchId+
-      '/market/yes/price'
-    ]=newYes;
-
-
-    updates[
-      'matches/'+
-      matchId+
-      '/market/no/price'
-    ]=newNo;
-
-
-    /* AVAILABLE QUANTITY */
-
-    const yesSnap=
-      await db.ref(
-        'matches/'+
-        matchId+
-        '/market/yes/available'
-      ).once('value');
-
-
-    const noSnap=
-      await db.ref(
-        'matches/'+
-        matchId+
-        '/market/no/available'
-      ).once('value');
-
-
-    let yesAvail=
-      Number(
-        yesSnap.val() ??
-        1000000
-      );
-
-
-    let noAvail=
-      Number(
-        noSnap.val() ??
-        1000000
-      );
-
-
-    if(state.side==='YES'){
-
-      yesAvail=
-        Math.max(
-          0,
-          yesAvail-state.qty
-        );
-
-    }else{
-
-      noAvail=
-        Math.max(
-          0,
-          noAvail-state.qty
-        );
-
-    }
-
-
-    updates[
-      'matches/'+
-      matchId+
-      '/market/yes/available'
-    ]=yesAvail;
-
-
-    updates[
-      'matches/'+
-      matchId+
-      '/market/no/available'
-    ]=noAvail;
-
-
-    await db.ref().update(
-      updates
-    );
-
+    await db.ref().update(updates);
 
     closeTrade();
+    toast('✅ Trade placed! Price updated');
 
-
-    toast(
-      '✅ Trade placed! Price updated'
-    );
-
-
-    setTimeout(
-      ()=>{
-
-        const returnUrl=
-          sessionStorage.getItem(
-            'tradeReturnUrl'
-          ) ||
-          'wallet.html';
-
-
-        sessionStorage.removeItem(
-          'tradeReturnUrl'
-        );
-
-
-        location.href=
-          returnUrl;
-
-      },
-      1500
-    );
-
+    setTimeout(()=>{
+      const returnUrl=sessionStorage.getItem('tradeReturnUrl') || 'wallet.html';
+      sessionStorage.removeItem('tradeReturnUrl');
+      location.href=returnUrl;
+    },1500);
 
   }catch(e){
-
     console.error(e);
-
     resetSwipe();
-
-    toast(
-      'Trade failed: ' +
-      (e.message || 'Unknown error')
-    );
-
+    toast('Trade failed: ' + (e.message || 'Unknown error'));
   }
-
 }
-
 
 /* MY TRADES */
-
 function renderTrades(){
-
-  const box=
-    document.getElementById(
-      'tradeList'
-    );
-
+  const box=document.getElementById('tradeList');
 
   if(!state.loggedIn){
-
-    box.innerHTML=
-      '<div class="empty">Login to see your trades.</div>';
-
-    document.getElementById(
-      'tradeCount'
-    ).textContent='';
-
+    box.innerHTML='<div class="empty">Login to see your trades.</div>';
+    document.getElementById('tradeCount').textContent='';
     return;
-
   }
-
 
   if(!state.myTrades.length){
-
-    box.innerHTML=
-      '<div class="empty">No trades yet.<br>Choose YES or NO to place one.</div>';
-
-    document.getElementById(
-      'tradeCount'
-    ).textContent='';
-
+    box.innerHTML=`
+      <div class="empty">
+        <div class="web11-logo">
+          <span class="w-icon">W</span> Web11
+        </div>
+        <b style="display:block;color:#16181d;font-size:14px;margin-bottom:4px">Nothing to see here... yet</b>
+        All of your orders will appear here
+      </div>`;
+    document.getElementById('tradeCount').textContent='';
     return;
-
   }
 
+  document.getElementById('tradeCount').textContent=state.myTrades.length + ' trades';
 
-  document.getElementById(
-    'tradeCount'
-  ).textContent=
-    state.myTrades.length +
-    ' trades';
-
-
-  box.innerHTML=
-    state.myTrades.map(t=>`
-
-      <div
-        class="book-row"
-        style="grid-template-columns:1.5fr 1fr 1fr 1fr">
-
-        <div>
-
-          <b>${t.side || '—'}</b>
-
-          <small
-            style="display:block;color:#888">
-            ${Number(t.qty || 0)} qty
-          </small>
-
-        </div>
-
-        <div>
-          ${money(t.odds)}
-        </div>
-
-        <div>
-          ${money(t.amount)}
-        </div>
-
-        <div
-          style="
-            color:${
-              t.status==='win'
-                ? '#159b4c'
-                : t.status==='loss'
-                  ? '#d92d20'
-                  : '#f39c12'
-            };
-            text-transform:uppercase;
-            font-size:10px;
-            font-weight:700">
-
-          ${t.status || 'pending'}
-
-        </div>
-
+  box.innerHTML=state.myTrades.map(t=>`
+    <div class="book-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <div>
+        <b>${t.side || '—'}</b>
+        <small style="display:block;color:#888">${Number(t.qty || 0)} qty</small>
       </div>
-
-    `).join('');
-
+      <div>${money(t.odds)}</div>
+      <div>${money(t.amount)}</div>
+      <div style="color:${t.status==='win'?'#159b4c':t.status==='loss'?'#d92d20':'#f39c12'};text-transform:uppercase;font-size:10px;font-weight:700">
+        ${t.status || 'pending'}
+      </div>
+    </div>`).join('');
 }
-
 
 /* TABS */
-
 function switchTab(tab,btn){
-
-  document.querySelectorAll(
-    '.tab'
-  ).forEach(
-    x=>x.classList.remove('active')
-  );
-
-
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   btn.classList.add('active');
 
-
-  document.getElementById(
-    'marketView'
-  ).style.display=
-    tab==='market'
-      ? 'block'
-      : 'none';
-
-
-  document.getElementById(
-    'activityView'
-  ).style.display=
-    tab==='activity'
-      ? 'block'
-      : 'none';
-
+  document.getElementById('marketView').style.display = tab==='market'?'block':'none';
+  document.getElementById('activityView').style.display = tab==='activity'?'block':'none';
 }
-
 
 /* =====================================================
    FIREBASE AUTH
    ===================================================== */
+auth.onAuthStateChanged(user=>{
+  if(user){
+    state.loggedIn=true;
+    state.uid=user.uid;
 
-auth.onAuthStateChanged(
-  user=>{
-
-    if(user){
-
-      state.loggedIn=true;
-
-      state.uid=user.uid;
-
-
-      /* BALANCE */
-
-      if(walletRef){
-
-        walletRef.off();
-
-      }
-
-
-      walletRef=
-        db.ref(
-          'users/' +
-          user.uid +
-          '/wallet/balance'
-        );
-
-
-      walletRef.on(
-        'value',
-        s=>{
-
-          state.balance=
-            Number(
-              s.val() || 0
-            );
-
-          render();
-
-          updateSheet();
-
-        },
-        err=>{
-
-          console.error(
-            'Balance read error:',
-            err
-          );
-
-          toast(
-            'Cannot read wallet balance'
-          );
-
-        }
-      );
-
-
-      /* MY TRADES */
-
-      if(myTradesRef){
-
-        myTradesRef.off();
-
-      }
-
-
-      myTradesRef=
-        db.ref('trades')
-          .orderByChild('userId')
-          .equalTo(user.uid);
-
-
-      myTradesRef.on(
-        'value',
-        s=>{
-
-          const arr=[];
-
-
-          s.forEach(
-            c=>{
-              arr.push({
-                id:c.key,
-                ...c.val()
-              });
-            }
-          );
-
-
-          arr.sort(
-            (a,b)=>
-              Number(
-                b.createdAt || 0
-              ) -
-              Number(
-                a.createdAt || 0
-              )
-          );
-
-
-          state.myTrades=arr;
-
-          renderTrades();
-
-        }
-      );
-
-
-    }else{
-
-      state.loggedIn=false;
-
-      state.uid=null;
-
-      state.balance=0;
-
-      state.myTrades=[];
-
-
-      if(walletRef){
-
-        walletRef.off();
-
-      }
-
-
-      if(myTradesRef){
-
-        myTradesRef.off();
-
-      }
-
-
+    if(walletRef) walletRef.off();
+    walletRef=db.ref('users/' + user.uid + '/wallet/balance');
+    walletRef.on('value', s=>{
+      state.balance=Number(s.val() || 0);
       render();
+      updateSheet();
+    }, err=>{
+      console.error('Balance read error:', err);
+      toast('Cannot read wallet balance');
+    });
 
-    }
+    if(myTradesRef) myTradesRef.off();
+    myTradesRef=db.ref('trades').orderByChild('userId').equalTo(user.uid);
+    myTradesRef.on('value', s=>{
+      const arr=[];
+      s.forEach(c=>{ arr.push({id:c.key, ...c.val()}); });
+      arr.sort((a,b)=>Number(b.createdAt || 0) - Number(a.createdAt || 0));
+      state.myTrades=arr;
+      renderTrades();
+    });
 
+  }else{
+    state.loggedIn=false;
+    state.uid=null;
+    state.balance=0;
+    state.myTrades=[];
+    if(walletRef) walletRef.off();
+    if(myTradesRef) myTradesRef.off();
+    render();
   }
-);
-
+});
 
 /* =====================================================
    MATCH LIVE SYNC
    ===================================================== */
-
 if(matchId){
+  marketRef=db.ref('matches/'+matchId);
+  marketRef.on('value', s=>{
+    if(!s.exists()){ toast('Match not found'); return; }
+    state.match=s.val();
+    const m=state.match.market || {};
+    const yes=m.yes || {};
+    const no=m.no || {};
 
-  marketRef=
-    db.ref(
-      'matches/'+
-      matchId
-    );
+    state.yesPrice=Number(yes.price ?? state.match.oddsA ?? 7.5);
+    state.noPrice=Number(no.price ?? state.match.oddsB ?? 2.5);
+    state.yesAvailable=Number(yes.available ?? 1000000);
+    state.noAvailable=Number(no.available ?? 1000000);
 
+    render();
+    updateSheet();
+  });
 
-  marketRef.on(
-    'value',
-    s=>{
-
-      if(!s.exists()){
-
-        toast(
-          'Match not found'
-        );
-
-        return;
-
-      }
-
-
-      state.match=s.val();
-
-
-      const m=
-        state.match.market ||
-        {};
-
-
-      const yes=
-        m.yes ||
-        {};
-
-
-      const no=
-        m.no ||
-        {};
-
-
-      state.yesPrice=
-        Number(
-          yes.price ??
-          state.match.oddsA ??
-          5
-        );
-
-
-      state.noPrice=
-        Number(
-          no.price ??
-          state.match.oddsB ??
-          5
-        );
-
-
-      state.yesAvailable=
-        Number(
-          yes.available ??
-          1000000
-        );
-
-
-      state.noAvailable=
-        Number(
-          no.available ??
-          1000000
-        );
-
-
-      render();
-
-      updateSheet();
-
-    }
-  );
-
-
-  /* ALL TRADES */
-
-  allTradesRef=
-    db.ref('trades')
-      .orderByChild('matchId')
-      .equalTo(matchId);
-
-
-  allTradesRef.on(
-    'value',
-    s=>{
-
-      const arr=[];
-
-
-      s.forEach(
-        c=>{
-          arr.push(c.val());
-        }
-      );
-
-
-      state.allTrades=arr;
-
-      renderBook();
-
-    }
-  );
-
+  allTradesRef=db.ref('trades').orderByChild('matchId').equalTo(matchId);
+  allTradesRef.on('value', s=>{
+    const arr=[];
+    s.forEach(c=>{ arr.push(c.val()); });
+    state.allTrades=arr;
+    renderBook();
+  });
 
 }else{
-
-  toast(
-    'No match ID in URL'
-  );
-
+  toast('No match ID in URL');
   render();
-
 }
 
-
 /* INITIAL */
-
 render();
 
 </script>
