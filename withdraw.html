@@ -79,7 +79,6 @@ header h2{
     margin-top:6px;
 }
 
-/* Pending banner */
 .pending-banner{
     background:#fff8e1;
     border:1px solid #ffd54f;
@@ -165,6 +164,101 @@ header h2{
     background:#999;
 }
 
+/* ================= IMPORTANT NOTICE ================= */
+.important-notice{
+    margin-top:18px;
+    background:linear-gradient(135deg,#fff4e5,#ffe0b2);
+    border:2px solid #ff9800;
+    border-radius:14px;
+    padding:16px 16px 14px;
+    box-shadow:0 4px 15px rgba(255,152,0,.15);
+}
+
+.important-notice .notice-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+    padding-bottom:10px;
+    border-bottom:1px dashed #ffb74d;
+}
+
+.important-notice .notice-head .n-icon{
+    width:34px;height:34px;
+    border-radius:50%;
+    background:#ff9800;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    flex-shrink:0;
+    animation:warnPulse 1.8s infinite;
+}
+
+@keyframes warnPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,152,0,.6);}
+    50%{box-shadow:0 0 0 8px rgba(255,152,0,0);}
+}
+
+.important-notice .notice-head h4{
+    font-size:14px;
+    font-weight:800;
+    color:#bf360c;
+    letter-spacing:.3px;
+}
+
+.important-notice .notice-head small{
+    font-size:10px;
+    color:#e65100;
+    display:block;
+    font-weight:600;
+    margin-top:2px;
+}
+
+.important-notice ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.important-notice ul li{
+    font-size:12.5px;
+    color:#4e342e;
+    line-height:1.6;
+    padding:6px 0 6px 22px;
+    position:relative;
+    font-weight:500;
+}
+
+.important-notice ul li::before{
+    content:"\f111";
+    font-family:"Font Awesome 6 Free";
+    font-weight:900;
+    font-size:6px;
+    color:#ff9800;
+    position:absolute;
+    left:6px;
+    top:11px;
+}
+
+.important-notice ul li strong{
+    color:#bf360c;
+    font-weight:800;
+}
+
+.important-notice .notice-footer{
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px dashed #ffb74d;
+    font-size:11px;
+    color:#e65100;
+    font-style:italic;
+    text-align:center;
+    font-weight:600;
+}
+
+/* ================= INFO BOX ================= */
 .info{
     margin-top:15px;
     background:#fff7f7;
@@ -176,29 +270,7 @@ header h2{
     line-height:1.6;
 }
 
-/* SMS style notice */
-.sms-notice{
-    margin-top:15px;
-    background:linear-gradient(135deg,#e8f5e9,#c8e6c9);
-    border:1px solid #66bb6a;
-    border-radius:12px;
-    padding:14px 16px;
-    display:flex;
-    gap:12px;
-    align-items:flex-start;
-    box-shadow:0 3px 12px rgba(10,168,79,.12);
-}
-.sms-notice .sms-icon{
-    width:36px;height:36px;border-radius:50%;
-    background:#0aa84f;
-    color:#fff;
-    display:flex;align-items:center;justify-content:center;
-    font-size:15px;
-    flex-shrink:0;
-}
-.sms-notice .sms-body{flex:1;font-size:12px;color:#1b5e20;line-height:1.55;}
-.sms-notice .sms-body b{display:block;font-size:13px;margin-bottom:4px;color:#0a3d13;}
-.sms-notice .sms-body small{font-size:10px;color:#2e7d32;display:block;margin-top:4px;font-style:italic;}
+.info i{color:#B80000;margin-right:6px;}
 
 .toast{
     position:fixed;
@@ -212,13 +284,8 @@ header h2{
     z-index:9999;
 }
 
-.toast.success{
-    background:#28a745;
-}
-
-.toast.error{
-    background:#d40000;
-}
+.toast.success{background:#28a745;}
+.toast.error{background:#d40000;}
 
 /* =============== SUCCESS POPUP =============== */
 .popup-bg{
@@ -371,32 +438,25 @@ nav a.active i{
 <body>
 
 <header>
-
     <h2>
         <i class="fa fa-building-columns"></i>
         Withdraw
     </h2>
-
     <a href="wallet.html" class="back-btn">
         <i class="fa fa-times"></i>
     </a>
-
 </header>
 
 
 <div class="container">
 
     <div class="balance-card">
-
         <h3>Winning Balance (Withdrawable)</h3>
-
         <h1 id="balance">₹0</h1>
-
         <div class="sub">
             <i class="fa fa-lock"></i>
             Deposit balance is not withdrawable
         </div>
-
     </div>
 
     <!-- Pending request banner -->
@@ -416,134 +476,90 @@ nav a.active i{
             Bank Account
         </div>
 
-
         <div class="form-group">
-
             <label>Withdrawal Amount</label>
-
-            <input
-                type="number"
-                id="amount"
-                placeholder="Enter amount"
-                min="50"
-                inputmode="numeric"
-            >
-
+            <input type="number" id="amount" placeholder="Enter amount" min="50" inputmode="numeric">
         </div>
 
-
         <div class="form-group">
-
             <label>Account Holder Name</label>
-
-            <input
-                type="text"
-                id="accountName"
-                placeholder="Enter account holder name"
-                maxlength="100"
-            >
-
+            <input type="text" id="accountName" placeholder="Enter account holder name" maxlength="100">
         </div>
 
-
         <div class="form-group">
-
             <label>Bank Name</label>
-
-            <input
-                type="text"
-                id="bankName"
-                placeholder="Enter bank name"
-                maxlength="100"
-            >
-
+            <input type="text" id="bankName" placeholder="Enter bank name" maxlength="100">
         </div>
 
-
         <div class="form-group">
-
             <label>Account Number</label>
-
-            <input
-                type="password"
-                id="accountNumber"
-                placeholder="Enter account number"
-                inputmode="numeric"
-                maxlength="20"
-            >
-
+            <input type="password" id="accountNumber" placeholder="Enter account number" inputmode="numeric" maxlength="20">
         </div>
 
-
         <div class="form-group">
-
             <label>Confirm Account Number</label>
-
-            <input
-                type="password"
-                id="confirmAccountNumber"
-                placeholder="Confirm account number"
-                inputmode="numeric"
-                maxlength="20"
-            >
-
+            <input type="password" id="confirmAccountNumber" placeholder="Confirm account number" inputmode="numeric" maxlength="20">
         </div>
-
 
         <div class="form-group">
-
             <label>IFSC Code</label>
-
-            <input
-                type="text"
-                id="ifsc"
-                placeholder="Example: SBIN0001234"
-                maxlength="11"
-                style="text-transform:uppercase"
-            >
-
+            <input type="text" id="ifsc" placeholder="Example: SBIN0001234" maxlength="11" style="text-transform:uppercase">
         </div>
 
-
-        <button
-            class="withdraw-btn"
-            id="withdrawBtn">
-
+        <button class="withdraw-btn" id="withdrawBtn">
             <i class="fa fa-paper-plane"></i>
             Submit Withdrawal
-
         </button>
 
 
-     ```html
-<!-- Withdrawal Important Notice -->
-<div class="sms-notice">
-    <div class="sms-icon">
-        <i class="fa fa-shield-halved"></i>
-    </div>
+        <!-- ============ IMPORTANT NOTICE ============ -->
+        <div class="important-notice">
 
-    <div class="sms-body">
-        <b>⚠️ Withdrawal Important</b>
+            <div class="notice-head">
+                <div class="n-icon">
+                    <i class="fa fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h4>IMPORTANT — कृपया ध्यान दें</h4>
+                    <small>Please read before submitting withdrawal</small>
+                </div>
+            </div>
 
-        • Bank details ध्यान से भरें। गलत details की वजह से payment fail/delay होने पर <strong>Company जिम्मेदार नहीं होगी।</strong><br>
-        • Withdrawal processing में <strong>24–48 घंटे</strong> लग सकते हैं।<br>
-        • Approval के बाद bank में पैसा आने में <strong>1–3 working days</strong> लग सकते हैं।<br>
-        • एक समय में <strong>सिर्फ 1 withdrawal request</strong> करें।<br>
-        • समस्या होने पर Support से संपर्क करें और <strong>Withdrawal ID</strong> दें।
+            <ul>
+                <li>
+                    Bank details <strong>ध्यान से भरें</strong>। गलत details की वजह से payment fail या delay होने पर <strong>Company जिम्मेदार नहीं होगी</strong>।
+                </li>
+                <li>
+                    Withdrawal processing में <strong>24–48 घंटे</strong> लग सकते हैं।
+                </li>
+                <li>
+                    Approval के बाद bank में पैसा आने में <strong>1–3 working days</strong> लग सकते हैं।
+                </li>
+                <li>
+                    एक समय में <strong>सिर्फ 1 withdrawal request</strong> allowed है।
+                </li>
+                <li>
+                    Withdraw amount <strong>turant lock</strong> हो जाता है। Admin reject करे तो <strong>wapas winning balance me</strong> aa जाएगा।
+                </li>
+                <li>
+                    समस्या होने पर Support से संपर्क करें और <strong>Withdrawal ID</strong> ज़रूर दें।
+                </li>
+                <li>
+                    Minimum withdrawal <strong>₹50</strong> है। इससे कम की request reject हो जाएगी।
+                </li>
+            </ul>
 
-        <small>— Fantasy Adda Security</small>
-    </div>
-</div>
-```
+            <div class="notice-footer">
+                — Fantasy Adda Security Team —
+            </div>
 
+        </div>
+        <!-- ============ /IMPORTANT NOTICE ============ -->
 
 
         <div class="info">
-
             <i class="fa fa-circle-info"></i>
-
-           Minimum withdrawal ₹50.
-
+            Only winning balance can be withdrawn. Deposit amount is locked for gameplay.
         </div>
 
     </div>
@@ -552,27 +568,22 @@ nav a.active i{
 
 
 <nav>
-
     <a href="index.html">
         <i class="fa fa-home"></i>
         Home
     </a>
-
     <a href="matches.html">
         <i class="fa fa-trophy"></i>
         Matches
     </a>
-
     <a href="wallet.html" class="active">
         <i class="fa fa-wallet"></i>
         Wallet
     </a>
-
     <a href="profile.html">
         <i class="fa fa-user"></i>
         Profile
     </a>
-
 </nav>
 
 
@@ -613,23 +624,14 @@ nav a.active i{
 <script>
 
 const firebaseConfig = {
-
     apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
-
     authDomain:"fantasy-adda-e3b72.firebaseapp.com",
-
     databaseURL:"https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
-
     projectId:"fantasy-adda-e3b72",
-
     storageBucket:"fantasy-adda-e3b72.firebasestorage.app",
-
     messagingSenderId:"882657286194",
-
     appId:"1:882657286194:web:284e818359de2363f0442b",
-
     measurementId:"G-8HJX9NRL1B"
-
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -664,15 +666,10 @@ let toastTimer;
 
 
 function showToast(message,type="success"){
-
     toast.className="toast "+type;
-
     toastMessage.textContent=message;
-
     toast.style.display="block";
-
     clearTimeout(toastTimer);
-
     toastTimer=setTimeout(()=>{
         toast.style.display="none";
     },3500);
@@ -690,9 +687,7 @@ function closePopup(){
 auth.onAuthStateChanged(user=>{
 
     if(!user){
-
         window.location.href="login.html";
-
         return;
     }
 
@@ -701,12 +696,9 @@ auth.onAuthStateChanged(user=>{
     /* Winning balance live */
     db.ref("users/"+user.uid+"/wallet/winning")
       .on("value",snap=>{
-
         userWinning=Number(snap.val())||0;
-
         balanceEl.textContent=
             "₹"+userWinning.toLocaleString("en-IN");
-
     });
 
     /* Check pending withdrawal */
@@ -743,125 +735,88 @@ auth.onAuthStateChanged(user=>{
 
 
 accountNumber.addEventListener("input",function(){
-
     this.value=this.value
         .replace(/\D/g,"")
         .slice(0,20);
-
 });
 
 
 confirmAccountNumber.addEventListener("input",function(){
-
     this.value=this.value
         .replace(/\D/g,"")
         .slice(0,20);
-
 });
 
 
 ifsc.addEventListener("input",function(){
-
     this.value=this.value
         .toUpperCase()
         .replace(/[^A-Z0-9]/g,"")
         .slice(0,11);
-
 });
 
 
 withdrawBtn.addEventListener("click",async()=>{
 
-    /* Block if pending already */
     if(pendingWithdrawal){
         showToast("Aapki ek withdrawal already pending hai","error");
         return;
     }
 
     const amt=Number(amount.value);
-
     const holder=accountName.value.trim();
-
     const bank=bankName.value.trim();
-
     const acc=accountNumber.value.trim();
-
     const confirmAcc=confirmAccountNumber.value.trim();
-
     const ifscCode=ifsc.value.trim().toUpperCase();
 
-
     if(!amt || amt<50){
-
         showToast("Minimum withdrawal is ₹50","error");
-
         return;
     }
 
-
     if(amt>userWinning){
-
         showToast(
             "Insufficient winning balance. Available: ₹"+
             userWinning.toLocaleString("en-IN"),
             "error"
         );
-
         return;
     }
-
 
     if(!holder){
-
         showToast("Enter account holder name","error");
-
         return;
     }
-
 
     if(!bank){
-
         showToast("Enter bank name","error");
-
         return;
     }
-
 
     if(acc.length<9){
-
         showToast("Enter valid account number","error");
-
         return;
     }
-
 
     if(acc!==confirmAcc){
-
         showToast("Account numbers do not match","error");
-
         return;
     }
-
 
     const ifscRegex=/^[A-Z]{4}0[A-Z0-9]{6}$/;
-
     if(!ifscRegex.test(ifscCode)){
-
         showToast("Enter valid IFSC code","error");
-
         return;
     }
 
-
     withdrawBtn.disabled=true;
-
     withdrawBtn.innerHTML=
         '<i class="fa fa-spinner fa-spin"></i> Processing...';
 
-
     try{
 
-        /* STEP 1: Recheck latest winning balance */
+        /* STEP 1: Recheck winning */
         const winSnap = await db.ref(
             "users/"+currentUser.uid+"/wallet/winning"
         ).once("value");
@@ -873,7 +828,7 @@ withdrawBtn.addEventListener("click",async()=>{
             return;
         }
 
-        /* STEP 2: Double-check no pending withdrawal exists */
+        /* STEP 2: Check pending */
         const pendingSnap = await db.ref("withdrawals")
             .orderByChild("userId")
             .equalTo(currentUser.uid)
@@ -889,7 +844,7 @@ withdrawBtn.addEventListener("click",async()=>{
             return;
         }
 
-        /* STEP 3: Deduct winning balance (escrow) via transaction */
+        /* STEP 3: Deduct winning (escrow) */
         const deductResult = await db.ref(
             "users/"+currentUser.uid+"/wallet"
         ).transaction(w=>{
@@ -898,7 +853,7 @@ withdrawBtn.addEventListener("click",async()=>{
             const win = Number(w.winning||0);
             const bal = Number(w.balance||0);
 
-            if(win < amt) return; // abort
+            if(win < amt) return;
 
             w.winning = Number((win - amt).toFixed(2));
             w.balance = Number((bal - amt).toFixed(2));
@@ -911,47 +866,31 @@ withdrawBtn.addEventListener("click",async()=>{
             return;
         }
 
-        /* STEP 4: Create withdrawal request record */
+        /* STEP 4: Create withdrawal record */
         const reqRef = db.ref("withdrawals").push();
         const reqId = reqRef.key;
 
         const paymentDetails =
-            "Bank Account | Holder: "+
-            holder+
-            " | Bank: "+
-            bank+
-            " | Account: "+
-            acc+
-            " | IFSC: "+
-            ifscCode;
+            "Bank Account | Holder: "+ holder+
+            " | Bank: "+ bank+
+            " | Account: "+ acc+
+            " | IFSC: "+ ifscCode;
 
         await reqRef.set({
-
             userId: currentUser.uid,
-
             amount: amt,
-
             accountName: holder,
-
             bankName: bank,
-
             accountNumber: acc,
-
             ifsc: ifscCode,
-
             paymentDetails: paymentDetails,
-
             source: "winning",
-
             status: "pending",
-
             createdAt: Date.now(),
-
-            locked: true    // balance already deducted
-
+            locked: true
         });
 
-        /* STEP 5: Add pending transaction record */
+        /* STEP 5: Pending transaction record */
         await db.ref("transactions").push({
             userId: currentUser.uid,
             type: "debit",
@@ -963,7 +902,7 @@ withdrawBtn.addEventListener("click",async()=>{
             status: "pending"
         });
 
-        /* STEP 6: Show success popup */
+        /* STEP 6: Success popup */
         popupAmount.textContent = "₹" + amt.toLocaleString("en-IN");
         popupRef.textContent = "Ref: #" + reqId.slice(-8).toUpperCase();
         successPopup.classList.add("show");
@@ -976,19 +915,13 @@ withdrawBtn.addEventListener("click",async()=>{
         confirmAccountNumber.value="";
         ifsc.value="";
 
-        /* Block button immediately */
         withdrawBtn.disabled = true;
         withdrawBtn.innerHTML = '<i class="fa fa-clock"></i> Request Pending';
-
 
     }catch(error){
 
         console.error(error);
-
-        showToast(
-            "Unable to submit withdrawal request.",
-            "error"
-        );
+        showToast("Unable to submit withdrawal request.","error");
 
         withdrawBtn.disabled=false;
         withdrawBtn.innerHTML=
