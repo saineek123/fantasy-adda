@@ -73,6 +73,12 @@ header h2{
     margin-top:5px;
 }
 
+.balance-card .sub{
+    font-size:11px;
+    opacity:.85;
+    margin-top:6px;
+}
+
 .card{
     background:white;
     padding:20px;
@@ -220,9 +226,14 @@ nav a.active i{
 
     <div class="balance-card">
 
-        <h3>Available Balance</h3>
+        <h3>Winning Balance (Withdrawable)</h3>
 
         <h1 id="balance">₹0</h1>
+
+        <div class="sub">
+            <i class="fa fa-lock"></i>
+            Deposit balance is not withdrawable
+        </div>
 
     </div>
 
@@ -338,6 +349,7 @@ nav a.active i{
             <i class="fa fa-circle-info"></i>
 
             Minimum withdrawal ₹50.
+            Only winning balance can be withdrawn.
             Your request will first go to admin for approval.
             Balance will be adjusted only after admin approval.
 
@@ -390,6 +402,8 @@ const firebaseConfig = {
 
     authDomain:"fantasy-adda-e3b72.firebaseapp.com",
 
+    databaseURL:"https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
+
     projectId:"fantasy-adda-e3b72",
 
     storageBucket:"fantasy-adda-e3b72.firebasestorage.app",
@@ -408,7 +422,9 @@ const auth=firebase.auth();
 const db=firebase.database();
 
 let currentUser=null;
-let userBalance=0;
+
+/* yahi ab withdrawable balance hai */
+let userWinning=0;
 
 const balanceEl=document.getElementById("balance");
 
@@ -453,13 +469,14 @@ auth.onAuthStateChanged(user=>{
 
     currentUser=user;
 
-    db.ref("users/"+user.uid+"/wallet/balance")
+    /* sirf winning balance suno */
+    db.ref("users/"+user.uid+"/wallet/winning")
       .on("value",snap=>{
 
-        userBalance=Number(snap.val())||0;
+        userWinning=Number(snap.val())||0;
 
         balanceEl.textContent=
-            "₹"+userBalance.toLocaleString("en-IN");
+            "₹"+userWinning.toLocaleString("en-IN");
 
     });
 
@@ -517,9 +534,14 @@ withdrawBtn.addEventListener("click",async()=>{
     }
 
 
-    if(amt>userBalance){
+    /* sirf winning balance se compare */
+    if(amt>userWinning){
 
-        showToast("Insufficient balance","error");
+        showToast(
+            "Insufficient winning balance. Available: ₹"+
+            userWinning.toLocaleString("en-IN"),
+            "error"
+        );
 
         return;
     }
@@ -576,23 +598,23 @@ withdrawBtn.addEventListener("click",async()=>{
     try{
 
         /*
-        Recheck latest balance.
+        Recheck latest winning balance.
         */
 
-        const balanceSnap=
+        const winSnap=
             await db.ref(
-                "users/"+currentUser.uid+"/wallet/balance"
+                "users/"+currentUser.uid+"/wallet/winning"
             ).once("value");
 
 
-        const latestBalance=
-            Number(balanceSnap.val())||0;
+        const latestWinning=
+            Number(winSnap.val())||0;
 
 
-        if(amt>latestBalance){
+        if(amt>latestWinning){
 
             showToast(
-                "Insufficient balance",
+                "Insufficient winning balance",
                 "error"
             );
 
@@ -619,6 +641,8 @@ withdrawBtn.addEventListener("click",async()=>{
         Create pending request.
         IMPORTANT:
         No wallet deduction here.
+        Deduction will happen on admin approval
+        from wallet/winning AND wallet/balance.
         */
 
         await db.ref("withdrawals").push({
@@ -636,6 +660,8 @@ withdrawBtn.addEventListener("click",async()=>{
             ifsc:ifscCode,
 
             paymentDetails:paymentDetails,
+
+            source:"winning",
 
             status:"pending",
 
