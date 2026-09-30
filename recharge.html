@@ -163,7 +163,6 @@ input:focus{
     font-size:13px;
 }
 
-/* QR Container */
 .qr-wrap{
     background:#fff;
     border:2px solid #B80000;
@@ -177,7 +176,6 @@ input:focus{
     border-radius:10px;
 }
 
-/* Payment apps */
 .apps-title{
     font-size:12px;
     font-weight:700;
@@ -227,7 +225,6 @@ input:focus{
 .pay-app.paytm .icon{background:#00b9f1}
 .pay-app.bhim .icon{background:#0e4c92}
 
-/* Pay button */
 .pay-now-btn{
     width:100%;
     padding:16px;
@@ -311,10 +308,8 @@ input:focus{
     color:#721c24;
 }
 
-/* Hidden step */
 .hidden-step{display:none;}
 
-/* Success tick */
 .tick-badge{
     display:inline-flex;
     align-items:center;
@@ -447,7 +442,7 @@ nav i{
             <div style="font-size:12px;color:#666;margin-bottom:4px">
                 Or pay to UPI ID
             </div>
-            <div class="upi-id" id="upiId">daliylgrow@axl</div>
+            <div class="upi-id" id="upiId">dailylgrow@axl</div>
             <button class="copy-btn" id="copyBtn">
                 <i class="fa fa-copy"></i>
                 Copy UPI ID
@@ -585,7 +580,7 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 /* ✅ DEFAULT UPI ID */
-const DEFAULT_UPI = "daliylgrow@axl";
+const DEFAULT_UPI = "dailylgrow@axl";
 
 let currentUser = null;
 let selectedAmount = 0;
@@ -606,7 +601,6 @@ const upiIdEl = document.getElementById("upiId");
 const qrImg = document.getElementById("qrImg");
 
 
-/* TOAST */
 function showToast(message, type="success"){
     const toast = document.getElementById("toast");
     const text = document.getElementById("toastMessage");
@@ -620,7 +614,6 @@ function showToast(message, type="success"){
 }
 
 
-/* BUILD UPI LINK (as per selected app) */
 function buildUpiLink(appName){
     const upi = currentUpi;
     const name = "Fantasy Adda";
@@ -642,12 +635,10 @@ function buildUpiLink(appName){
     if(appName === "bhim")
         return "upi://pay?" + baseParams;
 
-    /* Generic fallback */
     return "upi://pay?" + baseParams;
 }
 
 
-/* SETUP PAY APP LINKS */
 function setupPayApps(){
     const apps = [
         { id: "payPhonePe", name: "phonepe" },
@@ -674,7 +665,6 @@ function setupPayApps(){
 }
 
 
-/* UNLOCK UTR STEP */
 function unlockUtr(){
     if(payOpened) return;
     payOpened = true;
@@ -684,7 +674,6 @@ function unlockUtr(){
 }
 
 
-/* AUTH */
 auth.onAuthStateChanged(user=>{
     if(!user){
         window.location.href = "login.html";
@@ -698,7 +687,6 @@ auth.onAuthStateChanged(user=>{
 });
 
 
-/* BALANCE */
 function loadBalance(){
     db.ref("users/" + currentUser.uid + "/wallet/balance")
     .on("value", snapshot=>{
@@ -709,22 +697,32 @@ function loadBalance(){
 }
 
 
-/* PAYMENT SETTINGS (overrides default UPI if set in db) */
 function loadPaymentSettings(){
     db.ref("settings/payment")
     .on("value", snapshot=>{
         const data = snapshot.val() || {};
         currentUpi = data.upiId || DEFAULT_UPI;
         upiIdEl.textContent = currentUpi;
-        /* QR from any public UPI QR generator */
         qrImg.src =
             "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
-            encodeURIComponent("upi://pay?pa=" + currentUpi + "&pn=FantasyAdda&cu=INR");
+            encodeURIComponent(
+                "upi://pay?pa=" + currentUpi +
+                "&pn=FantasyAdda&cu=INR"
+            );
+    }, err=>{
+        /* Agar settings read fail ho jaye to default UPI use karo */
+        currentUpi = DEFAULT_UPI;
+        upiIdEl.textContent = DEFAULT_UPI;
+        qrImg.src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+            encodeURIComponent(
+                "upi://pay?pa=" + DEFAULT_UPI +
+                "&pn=FantasyAdda&cu=INR"
+            );
     });
 }
 
 
-/* COPY UPI */
 document.getElementById("copyBtn").addEventListener("click", ()=>{
     const upi = currentUpi;
     if(!upi){
@@ -737,7 +735,6 @@ document.getElementById("copyBtn").addEventListener("click", ()=>{
 });
 
 
-/* AMOUNT BUTTONS */
 document.querySelectorAll(".amount-options button").forEach(button=>{
     button.addEventListener("click", ()=>{
         document.querySelectorAll(".amount-options button")
@@ -750,7 +747,6 @@ document.querySelectorAll(".amount-options button").forEach(button=>{
 });
 
 
-/* CUSTOM AMOUNT */
 customAmount.addEventListener("input", ()=>{
     document.querySelectorAll(".amount-options button")
         .forEach(btn=> btn.classList.remove("selected"));
@@ -759,30 +755,23 @@ customAmount.addEventListener("input", ()=>{
 });
 
 
-/* UPDATE PAY BUTTON TEXT */
 function updatePayButton(){
     payAmt.textContent = Number(selectedAmount||0).toLocaleString("en-IN");
     payNowBtn.disabled = !(selectedAmount >= 1 && selectedAmount <= 100000);
 }
 
 
-/* PAY NOW BUTTON */
 payNowBtn.addEventListener("click", ()=>{
     if(!selectedAmount || selectedAmount < 1){
         showToast("Pehle amount select karo", "error");
         return;
     }
-
-    /* Open generic UPI chooser — user picks app */
     const link = buildUpiLink("generic");
     window.location.href = link;
-
-    /* UTR ko unlock karo thoda wait ke baad */
     setTimeout(unlockUtr, 1500);
 });
 
 
-/* CLEAN UTR */
 function cleanUTR(value){
     return value
         .trim()
@@ -791,7 +780,6 @@ function cleanUTR(value){
 }
 
 
-/* SUBMIT */
 submitBtn.addEventListener("click", async ()=>{
     if(!currentUser){
         showToast("Please login first", "error");
@@ -832,7 +820,6 @@ submitBtn.addEventListener("click", async ()=>{
             updatedAt: firebase.database.ServerValue.TIMESTAMP
         });
 
-        /* Reset */
         utrInput.value = "";
         customAmount.value = "";
         selectedAmount = 0;
@@ -862,7 +849,6 @@ submitBtn.addEventListener("click", async ()=>{
 });
 
 
-/* REQUEST HISTORY */
 function loadRequests(){
     db.ref("rechargeRequests")
     .orderByChild("userId")
@@ -923,7 +909,6 @@ function loadRequests(){
 }
 
 
-/* ESCAPE */
 function escapeHtml(value){
     return String(value)
     .replace(/&/g,"&amp;")
@@ -933,7 +918,6 @@ function escapeHtml(value){
     .replace(/'/g,"&#039;");
 }
 
-/* INIT */
 updatePayButton();
 
 </script>
