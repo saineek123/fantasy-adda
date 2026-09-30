@@ -194,7 +194,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 }
 .book-title{
   display:flex;justify-content:space-between;
-  align-items:center;margin-bottom:0;
+  align-items:center;padding-bottom:4px;
 }
 .book-title b{font-size:14px;display:flex;align-items:center;gap:6px;}
 .book-title .chev{
@@ -308,7 +308,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 .pill.active.y{background:#0aa84f;color:#fff;border-color:#0aa84f;}
 .pill.active.n{background:var(--red);color:#fff;border-color:var(--red);}
 
-/* ===== FIXED PRICE (no edit) ===== */
 .price-line{
   display:flex;justify-content:space-between;
   align-items:end;margin:6px 0 16px;
@@ -318,7 +317,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 .price-big small{font-size:11px;color:#8a9098;font-weight:500;margin-left:4px;}
 .available{color:#0a9c46;font-size:11px;font-weight:700;}
 
-/* qty */
 .qty-box{
   border:1px solid var(--line);border-radius:12px;
   padding:12px;margin-bottom:12px;
@@ -376,7 +374,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
   text-align:center;margin-top:8px;line-height:1.4;
 }
 
-/* ===== SWIPE INSIDE SHEET ===== */
 .sheet-swipe-wrap{
   margin-top:10px;
   margin-bottom:6px;
@@ -406,7 +403,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
   align-items:center;justify-content:center;font-size:14px;
 }
 
-/* ================= LOGIN BANNER ================= */
 .login-banner{
   background:#fff3cd;border:1px solid #ffeaa7;border-radius:12px;
   padding:12px;margin:10px 12px;
@@ -418,13 +414,11 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
   border-radius:9px;text-decoration:none;font-weight:700;font-size:12px;
 }
 
-/* ================= LOADING ================= */
 .loading-card{
   background:#fff;padding:40px 16px;text-align:center;
   color:#8b9098;font-size:13px;
 }
 
-/* ================= RESPONSIVE ================= */
 @media(max-width:380px){
   .quick button{font-size:10px;}
   .sheet{padding-left:12px;padding-right:12px;}
@@ -522,7 +516,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
   <div id="marketView" style="display:none">
     <div id="marketsContainer"></div>
 
-    <!-- 🔥 EXTRA INFO WRAPPER — Order Book + Stats (hidden by default) -->
+    <!-- EXTRA INFO WRAPPER — Order Book + Stats (hidden by default) -->
     <div id="extraInfoWrap" style="display:none">
 
       <!-- ORDER BOOK -->
@@ -593,7 +587,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 
     <div class="balance-line">
       <span>Balance: <b id="walletTop">₹0.00</b></span>
-      <span>Commission on net winnings: 15%</span>
+      <span>Commission on winnings: 15%</span>
     </div>
 
   </div>
@@ -628,7 +622,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
       </button>
     </div>
 
-    <!-- FIXED PRICE (no edit) -->
+    <!-- FIXED PRICE -->
     <div class="price-line">
       <div>
         <div class="label">Price (Fixed)</div>
@@ -668,7 +662,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
         <b id="investment">₹0</b>
       </div>
       <div class="s-item" style="text-align:right">
-        <small>Winnings</small>
+        <small>Winnings (before tax)</small>
         <b class="win" id="winning">₹0</b>
       </div>
     </div>
@@ -692,7 +686,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
     </div>
 
     <div class="note">
-      Trading mode: real market data,
+      Trading mode: real market data. 15% commission on net winnings.
     </div>
 
   </div>
@@ -977,7 +971,7 @@ function renderBook(){
 }
 
 /* =====================================================
-   OPEN TRADE
+   OPEN TRADE — Order Book + Stats auto-show
    ===================================================== */
 function openTrade(side, marketIdx){
   if(!state.loggedIn){
@@ -1001,10 +995,19 @@ function openTrade(side, marketIdx){
     return;
   }
 
-  /* 🔥 EXTRA INFO SHOW — sirf YES/NO click ke baad (Order Book + Stats) */
-  document.getElementById('extraInfoWrap').style.display = 'block';
+  /* ✅ FIX: Order Book + Stats ko turant show karo */
+  const wrap = document.getElementById('extraInfoWrap');
+  wrap.style.display = 'block';
 
-  /* FIXED prices from active market */
+  const bookBody = document.getElementById('orderBookBody');
+  const bookIcon = document.getElementById('bookChevIcon');
+  if(bookBody) bookBody.style.display = 'block';
+  if(bookIcon) bookIcon.className = 'fa fa-chevron-up';
+
+  /* ✅ Order Book fresh render karo */
+  renderBook();
+
+  /* FIXED prices */
   state.yesPrice = Number(state.activeMarket.yesPrice ?? state.activeMarket.price ?? 0);
   state.noPrice = Number(state.activeMarket.noPrice ?? 0);
   state.yesAvailable = Number(state.activeMarket.yesAvailable ?? 0);
@@ -1021,7 +1024,6 @@ function openTrade(side, marketIdx){
   setSide(side);
   setQty(state.qty || 5);
 
-  /* reset swipe when sheet opens */
   resetSwipe();
   setTimeout(()=>{ swipeState.maxX=getSwipeMax(); }, 100);
 }
@@ -1032,7 +1034,6 @@ function closeTrade(){
   document.body.style.overflow='';
   resetSwipe();
 
-  /* 🔥 EXTRA INFO HIDE — sheet band hone pe (Order Book + Stats) */
   document.getElementById('extraInfoWrap').style.display = 'none';
   document.getElementById('orderBookBody').style.display = 'none';
   document.getElementById('bookChevIcon').className = 'fa fa-chevron-down';
@@ -1181,7 +1182,7 @@ window.addEventListener('resize', ()=>{
 });
 
 /* =====================================================
-   CONFIRM TRADE
+   CONFIRM TRADE — My Trades tab pe jaye
    ===================================================== */
 async function confirmTrade(){
   const inv = price() * state.qty;
@@ -1228,7 +1229,7 @@ async function confirmTrade(){
       date:firebase.database.ServerValue.TIMESTAMP
     };
 
-    /* PRICE MOVEMENT — Firebase me update */
+    /* PRICE MOVEMENT */
     const shift=Math.min(0.5, (inv/1000)*0.1);
     let newYes = state.yesPrice;
     let newNo = state.noPrice;
@@ -1243,7 +1244,6 @@ async function confirmTrade(){
     newYes=Number(newYes.toFixed(2));
     newNo=Number(newNo.toFixed(2));
 
-    /* Use market ID instead of index for safety */
     const marketId = state.activeMarket?.id;
     const path = marketId ? `matches/${matchId}/markets/${marketId}` : null;
 
@@ -1259,17 +1259,32 @@ async function confirmTrade(){
     closeTrade();
     toast('✅ Trade placed!');
 
+    /* ✅ FIX: trade ke baad My Trades tab pe switch karo */
     setTimeout(()=>{
-      const returnUrl=sessionStorage.getItem('tradeReturnUrl') || 'wallet.html';
-      sessionStorage.removeItem('tradeReturnUrl');
-      location.href=returnUrl;
-    },1500);
+      switchToMyTrades();
+    },400);
 
   }catch(e){
     console.error(e);
     resetSwipe();
     toast('Trade failed: ' + (e.message || 'Unknown error'));
   }
+}
+
+/* ✅ My Trades tab pe switch karo */
+function switchToMyTrades(){
+  /* Tab active karo */
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>{
+    if(x.textContent.trim() === 'My Trades') x.classList.add('active');
+  });
+
+  /* Views switch */
+  document.getElementById('marketView').style.display = 'none';
+  document.getElementById('activityView').style.display = 'block';
+
+  /* Scroll top */
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 /* MY TRADES */
@@ -1377,7 +1392,6 @@ if(matchId){
     state.match=s.val();
     const m = state.match;
 
-    /* ✅ AUTO MARKET CREATION REMOVED — sirf admin ke banaye markets */
     let marketsArr = [];
 
     if(m.markets && typeof m.markets === 'object'){
@@ -1422,6 +1436,67 @@ if(matchId){
 
 /* INITIAL */
 render();
+
+/* =====================================================
+   WINNING COMMISSION SETTLEMENT — 15% TAX
+   ---------------------------------------------------
+   Ye function admin panel me call karna hai jab admin
+   kisi trade ko "win" mark kare. User ke wallet me
+   winning amount me se 15% commission kat ke balance
+   add hoga.
+
+   Admin panel me settleTradeWin(tradeId) call karo.
+   ===================================================== */
+window.settleTradeWin = async function(tradeId){
+  try{
+    const tradeSnap = await db.ref('trades/'+tradeId).once('value');
+    const trade = tradeSnap.val();
+    if(!trade) return;
+
+    if(trade.status === 'win') return; // already settled
+
+    const winAmount = Number(trade.winAmount || 0);
+    const commission = Number((winAmount * 0.15).toFixed(2)); // 15%
+    const netAmount = Number((winAmount - commission).toFixed(2));
+
+    /* 1. trade mark win */
+    await db.ref('trades/'+tradeId).update({
+      status: 'win',
+      commission: commission,
+      netWinAmount: netAmount,
+      settledAt: Date.now()
+    });
+
+    /* 2. user wallet me winning add + balance add */
+    const userWalletRef = db.ref('users/'+trade.userId+'/wallet');
+    const walletSnap = await userWalletRef.once('value');
+    const wallet = walletSnap.val() || {};
+
+    const currWinning = Number(wallet.winning || 0);
+    const currBalance = Number(wallet.balance || 0);
+
+    await userWalletRef.update({
+      winning: Number((currWinning + netAmount).toFixed(2)),
+      balance: Number((currBalance + netAmount).toFixed(2))
+    });
+
+    /* 3. transactions me record */
+    await db.ref('transactions').push({
+      userId: trade.userId,
+      type: 'credit',
+      amount: netAmount,
+      description: `Trade WIN — Win: ₹${winAmount} | Commission (15%): -₹${commission} | Net: ₹${netAmount}`,
+      date: Date.now(),
+      tradeId: tradeId,
+      source: 'winning',
+      commission: commission,
+      grossAmount: winAmount
+    });
+
+  }catch(e){
+    console.error('Settle win error:', e);
+  }
+};
 
 </script>
 
