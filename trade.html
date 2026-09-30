@@ -522,8 +522,8 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
   <div id="marketView" style="display:none">
     <div id="marketsContainer"></div>
 
-    <!-- ORDER BOOK (collapsed by default) -->
-    <section class="book" id="orderBookSection">
+    <!-- ORDER BOOK (hidden by default, shown on YES/NO click) -->
+    <section class="book" id="orderBookSection" style="display:none">
       <div class="book-title">
         <b><i class="fa fa-book"></i> Order Book</b>
         <button class="chev" onclick="toggleBook()" id="bookChevBtn">
@@ -995,6 +995,9 @@ function openTrade(side, marketIdx){
     return;
   }
 
+  /* 🔥 ORDER BOOK SHOW — sirf YES/NO click ke baad */
+  document.getElementById('orderBookSection').style.display = 'block';
+
   /* FIXED prices from active market */
   state.yesPrice = Number(state.activeMarket.yesPrice ?? state.activeMarket.price ?? 0);
   state.noPrice = Number(state.activeMarket.noPrice ?? 0);
@@ -1022,6 +1025,11 @@ function closeTrade(){
   document.getElementById('overlay').classList.remove('show');
   document.body.style.overflow='';
   resetSwipe();
+
+  /* 🔥 ORDER BOOK HIDE — sheet band hone pe */
+  document.getElementById('orderBookSection').style.display = 'none';
+  document.getElementById('orderBookBody').style.display = 'none';
+  document.getElementById('bookChevIcon').className = 'fa fa-chevron-down';
 }
 function outsideClose(e){
   if(e.target.id==='overlay') closeTrade();
@@ -1363,6 +1371,7 @@ if(matchId){
     state.match=s.val();
     const m = state.match;
 
+    /* ✅ AUTO MARKET CREATION REMOVED — sirf admin ke banaye markets */
     let marketsArr = [];
 
     if(m.markets && typeof m.markets === 'object'){
@@ -1372,20 +1381,6 @@ if(matchId){
       }));
     }else if(Array.isArray(m.markets)){
       marketsArr = m.markets;
-    }
-
-    if(!marketsArr.length && (m.market || m.oddsA !== undefined)){
-      marketsArr = [{
-        id:'default',
-        question: (m.teamA || 'Team A') + ' to win vs ' + (m.teamB || 'Team B'),
-        icon: '🏏',
-        yesPrice: Number(m.market?.yes?.price ?? m.oddsA ?? 0),
-        noPrice: Number(m.market?.no?.price ?? m.oddsB ?? 0),
-        yesAvailable: Number(m.market?.yes?.available ?? 0),
-        noAvailable: Number(m.market?.no?.available ?? 0),
-        tradesCount: Number(m.tradesCount || 0),
-        probText: m.probText || ''
-      }];
     }
 
     state.markets = marketsArr;
