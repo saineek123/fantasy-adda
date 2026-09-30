@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refer & Earn - Fantasy Adda</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,Arial,sans-serif;
+}
+
+body{
+    background:#f5f6fa;
+    padding-bottom:85px;
+    color:#222;
+}
+
+/* ============ HEADER ============ */
+header{
+    background:linear-gradient(135deg,#B80000,#d92d20);
+    color:#fff;
+    padding:18px 20px 24px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(184,0,0,.25);
+}
+
+header::before{
+    content:"";
+    position:absolute;
+    top:-50px;right:-50px;
+    width:200px;height:200px;
+    background:rgba(255,255,255,.08);
+    border-radius:50%;
+}
+
+header::after{
+    content:"";
+    position:absolute;
+    bottom:-80px;left:-40px;
+    width:180px;height:180px;
+    background:rgba(255,255,255,.06);
+    border-radius:50%;
+}
+
+.header-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:relative;
+    z-index:2;
+    margin-bottom:16px;
+}
+
+.header-top h2{
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+}
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    font-size:22px;
+    width:38px;
+    height:38px;
+    border-radius:10px;
+    background:rgba(255,255,255,.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* Header tagline */
+.header-tagline{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding-top:6px;
+}
+.header-tagline .big-icon{
+    font-size:44px;
+    margin-bottom:8px;
+    display:block;
+    filter:drop-shadow(0 4px 8px rgba(0,0,0,.2));
+    animation:bounce 2s infinite;
+}
+@keyframes bounce{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-6px)}
+}
+.header-tagline h1{
+    font-size:22px;
+    font-weight:800;
+    margin-bottom:4px;
+}
+.header-tagline p{
+    font-size:13px;
+    opacity:.92;
+}
+
+/* ============ CONTAINER ============ */
+.container{
+    max-width:520px;
+    margin:-14px auto 0;
+    padding:0 16px;
+    position:relative;
+    z-index:5;
+}
+
+/* ============ REWARD CARD ============ */
+.reward-card{
+    background:#fff;
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 8px 30px rgba(0,0,0,.1);
+    margin-bottom:16px;
+    position:relative;
+    overflow:hidden;
+}
+.reward-card::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;
+    height:5px;
+    background:linear-gradient(90deg,#0aa84f,#B80000,#f59e0b,#0aa84f);
+    background-size:200% 100%;
+    animation:gradientShift 3s infinite;
+}
+@keyframes gradientShift{
+    0%{background-position:0% 50%}
+    100%{background-position:200% 50%}
+}
+
+.reward-card .amount{
+    font-size:44px;
+    font-weight:800;
+    background:linear-gradient(135deg,#0aa84f,#08b85a);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    line-height:1;
+    margin-bottom:6px;
+}
+.reward-card .label{
+    font-size:13px;
+    color:#666;
+    font-weight:600;
+}
+.reward-card .sub{
+    font-size:11px;
+    color:#999;
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px dashed #e5e5e5;
+}
+
+/* ============ CODE CARD ============ */
+.code-card{
+    background:linear-gradient(135deg,#fff8f8,#fff0f0);
+    border:2px dashed #B80000;
+    border-radius:18px;
+    padding:18px;
+    margin-bottom:16px;
+    text-align:center;
+}
+.code-card .code-label{
+    font-size:11px;
+    font-weight:700;
+    color:#B80000;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    margin-bottom:8px;
+}
+.code-card .code-value{
+    font-size:24px;
+    font-weight:800;
+    color:#B80000;
+    letter-spacing:2px;
+    font-family:monospace;
+    margin-bottom:14px;
+    word-break:break-all;
+}
+.code-actions{
+    display:flex;
+    gap:8px;
+}
+.code-actions button{
+    flex:1;
+    padding:11px;
+    border:0;
+    border-radius:11px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    transition:.2s;
+}
+.copy-btn{
+    background:#B80000;
+    color:#fff;
+}
+.share-btn{
+    background:#0aa84f;
+    color:#fff;
+}
+.code-actions button:active{transform:scale(.97)}
+
+/* ============ SECTION TITLE ============ */
+.section-title{
+    font-size:15px;
+    font-weight:800;
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#222;
+}
+.section-title i{color:#B80000}
+
+/* ============ SHARE GRID ============ */
+.share-card{
+    background:#fff;
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:16px;
+    box-shadow:0 3px 14px rgba(0,0,0,.06);
+}
+
+.share-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.share-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    padding:10px 4px;
+    border-radius:14px;
+    text-decoration:none;
+    color:#222;
+    font-size:10px;
+    font-weight:700;
+    transition:.2s;
+    background:#fafbfc;
+    border:1px solid #eef0f3;
+    cursor:pointer;
+}
+.share-item:active{transform:scale(.95)}
+.share-item .icon{
+    width:40px;height:40px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:19px;
+}
+.share-item.whatsapp .icon{background:#25D366}
+.share-item.telegram .icon{background:#0088cc}
+.share-item.sms .icon{background:#f39c12}
+.share-item.email .icon{background:#ea4335}
+.share-item.facebook .icon{background:#1877f2}
+.share-item.twitter .icon{background:#000}
+.share-item.linkedin .icon{background:#0077b5}
+.share-item.more .icon{background:#6c757d}
+
+/* ============ HOW IT WORKS ============ */
+.how-card{
+    background:#fff;
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:16px;
+    box-shadow:0 3px 14px rgba(0,0,0,.06);
+}
+.step{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid #f5f6f8;
+}
+.step:last-child{border-bottom:0}
+.step .num{
+    width:32px;height:32px;
+    background:linear-gradient(135deg,#B80000,#d92d20);
+    color:#fff;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:14px;
+    flex-shrink:0;
+}
+.step .text b{
+    display:block;
+    font-size:13px;
+    margin-bottom:3px;
+}
+.step .text small{
+    font-size:11px;
+    color:#888;
+    line-height:1.5;
+}
+
+/* ============ STATS ============ */
+.stats-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:16px;
+}
+.stat-box{
+    background:#fff;
+    border-radius:16px;
+    padding:14px;
+    text-align:center;
+    box-shadow:0 3px 14px rgba(0,0,0,.06);
+}
+.stat-box .icon-circle{
+    width:40px;height:40px;
+    border-radius:50%;
+    margin:0 auto 8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:17px;
+}
+.stat-box .icon-circle.green{background:#e8f5e9;color:#0aa84f}
+.stat-box .icon-circle.blue{background:#e3f2fd;color:#2563eb}
+.stat-box small{
+    display:block;
+    font-size:10px;
+    color:#888;
+    text-transform:uppercase;
+    font-weight:700;
+    letter-spacing:.3px;
+    margin-bottom:4px;
+}
+.stat-box b{
+    font-size:20px;
+    font-weight:800;
+    color:#222;
+}
+
+/* ============ REFERRALS LIST ============ */
+.ref-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:11px 0;
+    border-bottom:1px solid #f5f6f8;
+    font-size:12px;
+}
+.ref-item:last-child{border-bottom:0}
+.ref-item .left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex:1;
+    min-width:0;
+}
+.ref-item .avatar{
+    width:36px;height:36px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#B80000,#d92d20);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:14px;
+    flex-shrink:0;
+}
+.ref-item .info b{
+    display:block;
+    font-size:12px;
+    margin-bottom:2px;
+}
+.ref-item .info small{
+    font-size:10px;
+    color:#888;
+}
+.ref-item .badge-earned{
+    background:#e8f5e9;
+    color:#0aa84f;
+    font-size:10px;
+    font-weight:800;
+    padding:4px 8px;
+    border-radius:20px;
+}
+
+.empty-ref{
+    text-align:center;
+    padding:22px 10px;
+    color:#999;
+    font-size:12px;
+}
+.empty-ref i{
+    font-size:32px;
+    color:#ddd;
+    display:block;
+    margin-bottom:8px;
+}
+
+/* ============ APK DOWNLOAD ============ */
+.apk-card{
+    background:linear-gradient(135deg,#1a1a1a,#2c2c2c);
+    color:#fff;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:16px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+.apk-card::before{
+    content:"";
+    position:absolute;
+    top:-30px;right:-30px;
+    width:130px;height:130px;
+    background:rgba(10,168,79,.15);
+    border-radius:50%;
+}
+.apk-card .icon-big{
+    font-size:44px;
+    color:#0aa84f;
+    margin-bottom:8px;
+    position:relative;
+    z-index:2;
+}
+.apk-card h3{
+    font-size:16px;
+    font-weight:800;
+    margin-bottom:4px;
+    position:relative;
+    z-index:2;
+}
+.apk-card p{
+    font-size:11px;
+    opacity:.75;
+    margin-bottom:14px;
+    position:relative;
+    z-index:2;
+}
+.apk-download-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:linear-gradient(135deg,#0aa84f,#08b85a);
+    color:#fff;
+    text-decoration:none;
+    padding:13px 22px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:800;
+    box-shadow:0 6px 18px rgba(10,168,79,.4);
+    transition:.2s;
+    position:relative;
+    z-index:2;
+    border:0;
+    cursor:pointer;
+}
+.apk-download-btn:active{transform:scale(.97)}
+
+/* ============ TERMS ============ */
+.terms-card{
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:16px;
+}
+.terms-card h4{
+    font-size:12px;
+    color:#9a3412;
+    font-weight:800;
+    margin-bottom:10px;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+.terms-card ul{
+    list-style:none;
+    padding:0;
+}
+.terms-card ul li{
+    font-size:11.5px;
+    color:#7c2d12;
+    padding:5px 0 5px 16px;
+    position:relative;
+    line-height:1.5;
+}
+.terms-card ul li::before{
+    content:"\f111";
+    font-family:"Font Awesome 6 Free";
+    font-weight:900;
+    font-size:5px;
+    color:#ea580c;
+    position:absolute;
+    left:2px;
+    top:9px;
+}
+
+/* ============ TOAST ============ */
+.toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-20px);
+    background:#20242a;
+    color:#fff;
+    padding:12px 18px;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:700;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+    z-index:9999;
+    opacity:0;
+    transition:.3s;
+    max-width:90%;
+    text-align:center;
+}
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+.toast.success{background:#0aa84f}
+.toast.error{background:#d92d20}
+
+/* ============ LOADING ============ */
+.loading{
+    text-align:center;
+    padding:30px;
+    color:#888;
+    font-size:13px;
+}
+
+/* ============ NAV ============ */
+nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#fff;
+    display:flex;
+    justify-content:space-around;
+    padding:11px 0;
+    box-shadow:0 -3px 12px rgba(0,0,0,.12);
+    z-index:100;
+}
+nav a{
+    text-decoration:none;
+    color:#666;
+    font-size:12px;
+    text-align:center;
+    font-weight:600;
+}
+nav a.active{color:#B80000}
+nav i{
+    display:block;
+    font-size:20px;
+    margin-bottom:4px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:380px){
+    .share-grid{grid-template-columns:repeat(3,1fr)}
+    .reward-card .amount{font-size:38px}
+    .code-card .code-value{font-size:20px}
+    .header-tagline h1{font-size:19px}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="header-top">
+        <h2>
+            <i class="fa fa-gift"></i>
+            Refer & Earn
+        </h2>
+        <a href="index.html" class="back-btn">
+            <i class="fa fa-times"></i>
+        </a>
+    </div>
+
+    <div class="header-tagline">
+        <i class="fa fa-users big-icon"></i>
+        <h1>Invite Friends, Earn ₹100</h1>
+        <p>Har successful referral par ₹100 paayein</p>
+    </div>
+</header>
+
+
+<div class="container">
+
+    <!-- REWARD CARD -->
+    <div class="reward-card">
+        <div class="amount">₹100</div>
+        <div class="label">Per Successful Referral</div>
+        <div class="sub">
+            <i class="fa fa-bolt" style="color:#f59e0b"></i>
+            Referral bonus credited within 24 hours
+        </div>
+    </div>
+
+
+    <!-- REFERRAL CODE -->
+    <div class="code-card">
+        <div class="code-label">
+            <i class="fa fa-ticket"></i> Your Referral Code
+        </div>
+        <div class="code-value" id="referralCode">LOADING...</div>
+        <div class="code-actions">
+            <button class="copy-btn" onclick="copyCode()">
+                <i class="fa fa-copy"></i> Copy Code
+            </button>
+            <button class="share-btn" onclick="shareReferral()">
+                <i class="fa fa-share-alt"></i> Share
+            </button>
+        </div>
+    </div>
+
+
+    <!-- SHARE OPTIONS -->
+    <div class="share-card">
+        <div class="section-title">
+            <i class="fa fa-share-nodes"></i> Invite via
+        </div>
+
+        <div class="share-grid">
+            <a class="share-item whatsapp" onclick="shareWhatsApp()">
+                <div class="icon"><i class="fab fa-whatsapp"></i></div>
+                WhatsApp
+            </a>
+            <a class="share-item telegram" onclick="shareTelegram()">
+                <div class="icon"><i class="fab fa-telegram-plane"></i></div>
+                Telegram
+            </a>
+            <a class="share-item sms" onclick="shareSMS()">
+                <div class="icon"><i class="fa fa-comment-sms"></i></div>
+                SMS
+            </a>
+            <a class="share-item email" onclick="shareEmail()">
+                <div class="icon"><i class="fa fa-envelope"></i></div>
+                Email
+            </a>
+            <a class="share-item facebook" onclick="shareFacebook()">
+                <div class="icon"><i class="fab fa-facebook-f"></i></div>
+                Facebook
+            </a>
+            <a class="share-item twitter" onclick="shareTwitter()">
+                <div class="icon"><i class="fab fa-x-twitter"></i></div>
+                X
+            </a>
+            <a class="share-item linkedin" onclick="shareLinkedIn()">
+                <div class="icon"><i class="fab fa-linkedin-in"></i></div>
+                LinkedIn
+            </a>
+            <a class="share-item more" onclick="shareNative()">
+                <div class="icon"><i class="fa fa-ellipsis"></i></div>
+                More
+            </a>
+        </div>
+    </div>
+
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="icon-circle green">
+                <i class="fa fa-user-plus"></i>
+            </div>
+            <small>Total Referrals</small>
+            <b id="totalReferrals">0</b>
+        </div>
+        <div class="stat-box">
+            <div class="icon-circle blue">
+                <i class="fa fa-indian-rupee-sign"></i>
+            </div>
+            <small>Total Earned</small>
+            <b id="totalEarned">₹0</b>
+        </div>
+    </div>
+
+
+    <!-- HOW IT WORKS -->
+    <div class="how-card">
+        <div class="section-title">
+            <i class="fa fa-list-check"></i> How It Works
+        </div>
+
+        <div class="step">
+            <div class="num">1</div>
+            <div class="text">
+                <b>Share Your Code</b>
+                <small>Apna referral code ya link friends ko bhejein</small>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="num">2</div>
+            <div class="text">
+                <b>Friend Downloads App</b>
+                <small>Wo APK download kare aur aapka code enter kare</small>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="num">3</div>
+            <div class="text">
+                <b>Friend Recharges ₹100+</b>
+                <small>Minimum ₹100 ka pehla recharge kare</small>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="num">4</div>
+            <div class="text">
+                <b>Get ₹100 Instant</b>
+                <small>Aapke wallet me ₹100 add ho jayega</small>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- REFERRAL LIST -->
+    <div class="share-card">
+        <div class="section-title">
+            <i class="fa fa-users"></i> My Referrals
+        </div>
+
+        <div id="referralList">
+            <div class="loading">
+                <i class="fa fa-spinner fa-spin"></i> Loading...
+            </div>
+        </div>
+    </div>
+
+
+    <!-- APK DOWNLOAD -->
+    <div class="apk-card">
+        <div class="icon-big">
+            <i class="fa fa-mobile-screen-button"></i>
+        </div>
+        <h3>Download Fantasy Adda App</h3>
+        <p>Install the APK and start trading</p>
+        <a
+            class="apk-download-btn"
+            href="https://github.com/saineek123/fantasy-adda/releases/download/v.1/app-release.5.apk"
+            download
+            target="_blank"
+        >
+            <i class="fa fa-download"></i>
+            Download APK
+        </a>
+    </div>
+
+
+    <!-- TERMS -->
+    <div class="terms-card">
+        <h4>
+            <i class="fa fa-circle-info"></i> Terms & Conditions
+        </h4>
+        <ul>
+            <li>Har successful referral par ₹100 milega</li>
+            <li>Referral tab valid hoga jab friend pehla recharge ₹100+ kare</li>
+            <li>Ek device = ek referral (multiple accounts allowed nahi)</li>
+            <li>Referral bonus 24 hours me wallet me add hoga</li>
+            <li>Fake / duplicate accounts par bonus nahi milega</li>
+            <li>Company kisi bhi referral ko reject karne ka adhikar rakhti hai</li>
+            <li>Self-referral allowed nahi hai</li>
+            <li>Referral bonus withdrawal ke liye eligible hai</li>
+        </ul>
+    </div>
+
+</div>
+
+
+<!-- NAV -->
+<nav>
+    <a href="index.html">
+        <i class="fa fa-home"></i>
+        Home
+    </a>
+    <a href="matches.html">
+        <i class="fa fa-trophy"></i>
+        Matches
+    </a>
+    <a href="referral.html" class="active">
+        <i class="fa fa-gift"></i>
+        Refer
+    </a>
+    <a href="wallet.html">
+        <i class="fa fa-wallet"></i>
+        Wallet
+    </a>
+    <a href="profile.html">
+        <i class="fa fa-user"></i>
+        Profile
+    </a>
+</nav>
+
+
+<div class="toast" id="toast"></div>
+
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+    authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+    databaseURL: "https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
+    projectId: "fantasy-adda-e3b72",
+    storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+    messagingSenderId: "882657286194",
+    appId: "1:882657286194:web:284e818359de2363f0442b",
+    measurementId: "G-8HJX9NRL1B"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.database();
+
+/* CONSTANTS */
+const APK_URL = "https://github.com/saineek123/fantasy-adda/releases/download/v.1/app-release.5.apk";
+const REFERRAL_BONUS = 100; /* ₹100 per referral */
+const SITE_URL = "https://fantasy-adda-e3b72.web.app"; /* apna domain daalo */
+
+let currentUser = null;
+let referralCode = "";
+let toastTimer = null;
+
+
+/* TOAST */
+function showToast(msg, type="success"){
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "toast show " + type;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{
+        t.className = "toast";
+    }, 2800);
+}
+
+
+/* GENERATE REFERRAL CODE from UID */
+function generateCode(uid){
+    if(!uid) return "FA000000";
+    /* Take first 6 chars, uppercase */
+    return "FA" + uid.substring(0, 6).toUpperCase();
+}
+
+
+/* AUTH */
+auth.onAuthStateChanged(user=>{
+    if(!user){
+        window.location.href = "login.html";
+        return;
+    }
+
+    currentUser = user;
+    referralCode = generateCode(user.uid);
+    document.getElementById("referralCode").textContent = referralCode;
+
+    loadStats();
+    loadReferralList();
+});
+
+
+/* LOAD STATS */
+function loadStats(){
+    if(!currentUser) return;
+
+    db.ref("referrals")
+    .orderByChild("referrerId")
+    .equalTo(currentUser.uid)
+    .on("value", snap=>{
+        let total = 0;
+        let earned = 0;
+
+        snap.forEach(child=>{
+            total++;
+            const r = child.val();
+            if(r.status === "completed" && r.bonusPaid){
+                earned += Number(r.bonusAmount || REFERRAL_BONUS);
+            }
+        });
+
+        document.getElementById("totalReferrals").textContent = total;
+        document.getElementById("totalEarned").textContent = "₹" + earned.toLocaleString("en-IN");
+    });
+}
+
+
+/* LOAD REFERRAL LIST */
+function loadReferralList(){
+    if(!currentUser) return;
+
+    const listBox = document.getElementById("referralList");
+
+    db.ref("referrals")
+    .orderByChild("referrerId")
+    .equalTo(currentUser.uid)
+    .on("value", snap=>{
+        if(!snap.exists()){
+            listBox.innerHTML = `
+                <div class="empty-ref">
+                    <i class="fa fa-user-plus"></i>
+                    <b style="display:block;color:#555;font-size:13px;margin-bottom:4px">
+                        Koi referral nahi abhi tak
+                    </b>
+                    Apna code share karo aur ₹${REFERRAL_BONUS} kamayein
+                </div>`;
+            return;
+        }
+
+        const arr = [];
+        snap.forEach(child=>{
+            arr.push({ id: child.key, ...child.val() });
+        });
+
+        /* Sort by newest */
+        arr.sort((a,b)=> (b.createdAt || 0) - (a.createdAt || 0));
+
+        listBox.innerHTML = arr.map(r=>{
+            const name = r.referredUserName || r.referredEmail || "User";
+            const initial = String(name).charAt(0).toUpperCase();
+            const statusText = r.status === "completed" ? "Completed" : "Pending";
+            const bonusText = r.status === "completed" && r.bonusPaid
+                ? "+₹" + Number(r.bonusAmount || REFERRAL_BONUS)
+                : "Pending";
+
+            return `
+                <div class="ref-item">
+                    <div class="left">
+                        <div class="avatar">${initial}</div>
+                        <div class="info">
+                            <b>${escapeHtml(name)}</b>
+                            <small>${statusText} • ${formatDate(r.createdAt)}</small>
+                        </div>
+                    </div>
+                    <div class="badge-earned">${bonusText}</div>
+                </div>
+            `;
+        }).join("");
+    });
+}
+
+
+/* FORMAT DATE */
+function formatDate(ts){
+    if(!ts) return "—";
+    return new Date(ts).toLocaleDateString("en-IN",{
+        day:"2-digit", month:"short"
+    });
+}
+
+
+/* ESCAPE HTML */
+function escapeHtml(v){
+    return String(v||"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+/* BUILD SHARE MESSAGE */
+function buildShareMessage(){
+    const link = SITE_URL + "/signup.html?ref=" + referralCode;
+    return `🎮 Fantasy Adda join karo!\n\n` +
+           `🎁 Mere referral code se signup karo aur paao ₹${REFERRAL_BONUS} bonus!\n\n` +
+           `👉 Referral Code: ${referralCode}\n` +
+           `📱 App Download: ${APK_URL}\n` +
+           `🌐 Website: ${link}\n\n` +
+           `Fast trading • Instant withdrawals • 24/7 support`;
+}
+
+function buildShareLink(){
+    return SITE_URL + "/signup.html?ref=" + referralCode;
+}
+
+
+/* ============== COPY CODE ============== */
+function copyCode(){
+    if(!referralCode) return;
+    navigator.clipboard.writeText(referralCode)
+    .then(()=> showToast("Referral code copied: " + referralCode))
+    .catch(()=> showToast("Code: " + referralCode));
+}
+
+
+/* ============== SHARE NATIVE ============== */
+function shareReferral(){
+    const text = buildShareMessage();
+    if(navigator.share){
+        navigator.share({
+            title: "Fantasy Adda - Refer & Earn",
+            text: text,
+            url: buildShareLink()
+        }).catch(()=>{});
+    }else{
+        copyCode();
+        showToast("Link copied! Ab paste karo");
+    }
+}
+
+
+/* ============== WHATSAPP ============== */
+function shareWhatsApp(){
+    const text = encodeURIComponent(buildShareMessage());
+    window.open("https://wa.me/?text=" + text, "_blank");
+}
+
+/* ============== TELEGRAM ============== */
+function shareTelegram(){
+    const text = encodeURIComponent(buildShareMessage());
+    const url = encodeURIComponent(buildShareLink());
+    window.open("https://t.me/share/url?url=" + url + "&text=" + text, "_blank");
+}
+
+/* ============== SMS ============== */
+function shareSMS(){
+    const text = encodeURIComponent(buildShareMessage());
+    window.location.href = "sms:?&body=" + text;
+}
+
+/* ============== EMAIL ============== */
+function shareEmail(){
+    const subject = encodeURIComponent("Fantasy Adda - Refer & Earn ₹" + REFERRAL_BONUS);
+    const body = encodeURIComponent(buildShareMessage());
+    window.location.href = "mailto:?subject=" + subject + "&body=" + body;
+}
+
+/* ============== FACEBOOK ============== */
+function shareFacebook(){
+    const url = encodeURIComponent(buildShareLink());
+    window.open("https://www.facebook.com/sharer/sharer.php?u=" + url, "_blank");
+}
+
+/* ============== TWITTER / X ============== */
+function shareTwitter(){
+    const text = encodeURIComponent("Fantasy Adda join karo aur paao ₹" + REFERRAL_BONUS + " bonus! Code: " + referralCode);
+    const url = encodeURIComponent(buildShareLink());
+    window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" + url, "_blank");
+}
+
+/* ============== LINKEDIN ============== */
+function shareLinkedIn(){
+    const url = encodeURIComponent(buildShareLink());
+    window.open("https://www.linkedin.com/sharing/share-offsite/?url=" + url, "_blank");
+}
+
+/* ============== MORE (Native share) ============== */
+function shareNative(){
+    if(navigator.share){
+        navigator.share({
+            title: "Fantasy Adda - Refer & Earn",
+            text: buildShareMessage(),
+            url: buildShareLink()
+        }).catch(()=>{});
+    }else{
+        copyCode();
+        showToast("Code copied!");
+    }
+}
+
+</script>
+
+</body>
+</html>
