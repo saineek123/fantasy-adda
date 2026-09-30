@@ -579,12 +579,11 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-/* ✅ DEFAULT UPI ID */
-const DEFAULT_UPI = "dailylgrow@axl";
+/* ✅ FIXED UPI ID — ye kabhi change nahi hoga */
+const FIXED_UPI = "dailylgrow@axl";
 
 let currentUser = null;
 let selectedAmount = 0;
-let currentUpi = DEFAULT_UPI;
 let toastTimer = null;
 let payOpened = false;
 
@@ -614,8 +613,9 @@ function showToast(message, type="success"){
 }
 
 
+/* UPI Link Builder — always uses FIXED_UPI */
 function buildUpiLink(appName){
-    const upi = currentUpi;
+    const upi = FIXED_UPI;
     const name = "Fantasy Adda";
     const amt = selectedAmount || 0;
     const note = "Recharge";
@@ -674,14 +674,26 @@ function unlockUtr(){
 }
 
 
+/* ✅ SET UPI ID + QR ON PAGE LOAD — koi Firebase check nahi */
+function setupFixedUpi(){
+    upiIdEl.textContent = FIXED_UPI;
+    qrImg.src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+        encodeURIComponent(
+            "upi://pay?pa=" + FIXED_UPI +
+            "&pn=FantasyAdda&cu=INR"
+        );
+}
+
+
 auth.onAuthStateChanged(user=>{
     if(!user){
         window.location.href = "login.html";
         return;
     }
     currentUser = user;
+    setupFixedUpi();
     loadBalance();
-    loadPaymentSettings();
     loadRequests();
     setupPayApps();
 });
@@ -697,38 +709,8 @@ function loadBalance(){
 }
 
 
-function loadPaymentSettings(){
-    db.ref("settings/payment")
-    .on("value", snapshot=>{
-        const data = snapshot.val() || {};
-        currentUpi = data.upiId || DEFAULT_UPI;
-        upiIdEl.textContent = currentUpi;
-        qrImg.src =
-            "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
-            encodeURIComponent(
-                "upi://pay?pa=" + currentUpi +
-                "&pn=FantasyAdda&cu=INR"
-            );
-    }, err=>{
-        /* Agar settings read fail ho jaye to default UPI use karo */
-        currentUpi = DEFAULT_UPI;
-        upiIdEl.textContent = DEFAULT_UPI;
-        qrImg.src =
-            "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
-            encodeURIComponent(
-                "upi://pay?pa=" + DEFAULT_UPI +
-                "&pn=FantasyAdda&cu=INR"
-            );
-    });
-}
-
-
 document.getElementById("copyBtn").addEventListener("click", ()=>{
-    const upi = currentUpi;
-    if(!upi){
-        showToast("UPI ID not available", "error");
-        return;
-    }
+    const upi = FIXED_UPI;
     navigator.clipboard.writeText(upi)
     .then(()=> showToast("UPI ID copied: " + upi))
     .catch(()=> showToast("UPI ID: " + upi));
@@ -814,7 +796,7 @@ submitBtn.addEventListener("click", async ()=>{
             userEmail: currentUser.email || "",
             amount: selectedAmount,
             utr: utr,
-            upiId: currentUpi,
+            upiId: FIXED_UPI,
             status: "pending",
             createdAt: firebase.database.ServerValue.TIMESTAMP,
             updatedAt: firebase.database.ServerValue.TIMESTAMP
