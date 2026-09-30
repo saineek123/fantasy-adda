@@ -522,41 +522,47 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
   <div id="marketView" style="display:none">
     <div id="marketsContainer"></div>
 
-    <!-- ORDER BOOK (hidden by default, shown on YES/NO click) -->
-    <section class="book" id="orderBookSection" style="display:none">
-      <div class="book-title">
-        <b><i class="fa fa-book"></i> Order Book</b>
-        <button class="chev" onclick="toggleBook()" id="bookChevBtn">
-          <i class="fa fa-chevron-down" id="bookChevIcon"></i>
-        </button>
-      </div>
+    <!-- 🔥 EXTRA INFO WRAPPER — Order Book + Stats (hidden by default) -->
+    <div id="extraInfoWrap" style="display:none">
 
-      <div id="orderBookBody" style="display:none">
-        <div class="book-head">
-          <div style="text-align:left">PRICE</div>
-          <div class="yesc">QTY YES</div>
-          <div>PRICE</div>
-          <div class="noc">QTY NO</div>
+      <!-- ORDER BOOK -->
+      <section class="book" id="orderBookSection">
+        <div class="book-title">
+          <b><i class="fa fa-book"></i> Order Book</b>
+          <button class="chev" onclick="toggleBook()" id="bookChevBtn">
+            <i class="fa fa-chevron-down" id="bookChevIcon"></i>
+          </button>
         </div>
 
-        <div id="orderRows"></div>
-      </div>
-    </section>
+        <div id="orderBookBody" style="display:none">
+          <div class="book-head">
+            <div style="text-align:left">PRICE</div>
+            <div class="yesc">QTY YES</div>
+            <div>PRICE</div>
+            <div class="noc">QTY NO</div>
+          </div>
 
-    <section class="stats">
-      <div class="stat">
-        <small>Last YES</small>
-        <b id="lastYes">—</b>
-      </div>
-      <div class="stat">
-        <small>Last NO</small>
-        <b id="lastNo">—</b>
-      </div>
-      <div class="stat">
-        <small>24h Volume</small>
-        <b id="volume">₹0</b>
-      </div>
-    </section>
+          <div id="orderRows"></div>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="stats">
+        <div class="stat">
+          <small>Last YES</small>
+          <b id="lastYes">—</b>
+        </div>
+        <div class="stat">
+          <small>Last NO</small>
+          <b id="lastNo">—</b>
+        </div>
+        <div class="stat">
+          <small>24h Volume</small>
+          <b id="volume">₹0</b>
+        </div>
+      </section>
+
+    </div>
   </div>
 
   <!-- ACTIVITY VIEW -->
@@ -995,8 +1001,8 @@ function openTrade(side, marketIdx){
     return;
   }
 
-  /* 🔥 ORDER BOOK SHOW — sirf YES/NO click ke baad */
-  document.getElementById('orderBookSection').style.display = 'block';
+  /* 🔥 EXTRA INFO SHOW — sirf YES/NO click ke baad (Order Book + Stats) */
+  document.getElementById('extraInfoWrap').style.display = 'block';
 
   /* FIXED prices from active market */
   state.yesPrice = Number(state.activeMarket.yesPrice ?? state.activeMarket.price ?? 0);
@@ -1026,8 +1032,8 @@ function closeTrade(){
   document.body.style.overflow='';
   resetSwipe();
 
-  /* 🔥 ORDER BOOK HIDE — sheet band hone pe */
-  document.getElementById('orderBookSection').style.display = 'none';
+  /* 🔥 EXTRA INFO HIDE — sheet band hone pe (Order Book + Stats) */
+  document.getElementById('extraInfoWrap').style.display = 'none';
   document.getElementById('orderBookBody').style.display = 'none';
   document.getElementById('bookChevIcon').className = 'fa fa-chevron-down';
 }
