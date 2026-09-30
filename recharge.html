@@ -83,6 +83,21 @@ header h2{
     font-size:16px;
     font-weight:700;
     margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.card-title .step{
+    background:#B80000;
+    color:#fff;
+    width:24px;height:24px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+    flex-shrink:0;
 }
 
 .amount-options{
@@ -126,6 +141,7 @@ input:focus{
     border:1px dashed #B80000;
     padding:15px;
     border-radius:13px;
+    margin-bottom:12px;
 }
 
 .upi-id{
@@ -143,6 +159,97 @@ input:focus{
     background:#B80000;
     color:white;
     cursor:pointer;
+    font-weight:700;
+    font-size:13px;
+}
+
+/* QR Container */
+.qr-wrap{
+    background:#fff;
+    border:2px solid #B80000;
+    border-radius:14px;
+    padding:12px;
+    text-align:center;
+    margin-bottom:12px;
+}
+.qr-wrap img{
+    width:180px;height:180px;
+    border-radius:10px;
+}
+
+/* Payment apps */
+.apps-title{
+    font-size:12px;
+    font-weight:700;
+    color:#555;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+    margin-bottom:10px;
+    text-align:center;
+}
+.pay-apps{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-bottom:14px;
+}
+.pay-app{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:5px;
+    background:#fff;
+    border:1px solid #e7e9ed;
+    border-radius:12px;
+    padding:10px 4px;
+    text-decoration:none;
+    color:#222;
+    font-size:10px;
+    font-weight:700;
+    transition:.15s;
+}
+.pay-app:hover,.pay-app:active{
+    transform:scale(.96);
+    background:#f8f9fb;
+}
+.pay-app .icon{
+    width:34px;height:34px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:17px;
+    color:#fff;
+    font-weight:900;
+}
+.pay-app.phonepe .icon{background:#5f259f}
+.pay-app.gpay .icon{background:#fff;border:2px solid #eee;color:#4285F4}
+.pay-app.paytm .icon{background:#00b9f1}
+.pay-app.bhim .icon{background:#0e4c92}
+
+/* Pay button */
+.pay-now-btn{
+    width:100%;
+    padding:16px;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#0aa84f,#08b85a);
+    color:white;
+    font-size:17px;
+    font-weight:800;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    box-shadow:0 6px 18px rgba(10,168,79,.3);
+    transition:.2s;
+}
+.pay-now-btn:active{transform:scale(.98)}
+.pay-now-btn:disabled{
+    background:#999;
+    box-shadow:none;
+    cursor:not-allowed;
 }
 
 .pay-note{
@@ -152,7 +259,7 @@ input:focus{
     border-radius:10px;
     font-size:13px;
     line-height:1.5;
-    margin-top:15px;
+    margin-top:12px;
 }
 
 .submit-btn{
@@ -165,6 +272,7 @@ input:focus{
     font-size:18px;
     font-weight:700;
     cursor:pointer;
+    margin-top:10px;
 }
 
 .submit-btn:disabled{
@@ -203,6 +311,23 @@ input:focus{
     color:#721c24;
 }
 
+/* Hidden step */
+.hidden-step{display:none;}
+
+/* Success tick */
+.tick-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:#e8f5e9;
+    color:#0a7d38;
+    font-size:11px;
+    font-weight:800;
+    padding:5px 10px;
+    border-radius:20px;
+    margin-bottom:8px;
+}
+
 .toast{
     position:fixed;
     top:20px;
@@ -216,13 +341,8 @@ input:focus{
     z-index:9999;
 }
 
-.toast.success{
-    background:#198754;
-}
-
-.toast.error{
-    background:#dc3545;
-}
+.toast.success{background:#198754}
+.toast.error{background:#dc3545}
 
 nav{
     position:fixed;
@@ -244,10 +364,7 @@ nav a{
     text-align:center;
 }
 
-nav a.active{
-    color:#B80000;
-}
-
+nav a.active{color:#B80000}
 nav i{
     display:block;
     font-size:20px;
@@ -255,11 +372,8 @@ nav i{
 }
 
 @media(max-width:380px){
-
-    .amount-options{
-        grid-template-columns:repeat(2,1fr);
-    }
-
+    .amount-options{grid-template-columns:repeat(2,1fr)}
+    .pay-apps{grid-template-columns:repeat(3,1fr)}
 }
 
 </style>
@@ -268,55 +382,39 @@ nav i{
 <body>
 
 <header>
-
     <h2>
         <i class="fa fa-plus-circle"></i>
         Recharge
     </h2>
-
     <a href="wallet.html" class="back-btn">
         <i class="fa fa-times"></i>
     </a>
-
 </header>
 
 
 <div class="container">
 
-
     <!-- BALANCE -->
-
     <div class="balance-card">
-
         <small>Current Wallet Balance</small>
-
         <h1 id="balance">₹0</h1>
-
     </div>
 
 
-    <!-- AMOUNT -->
-
+    <!-- STEP 1: AMOUNT -->
     <div class="card">
-
         <div class="card-title">
-            1. Select Recharge Amount
+            <span class="step">1</span>
+            Select Recharge Amount
         </div>
 
         <div class="amount-options">
-
             <button data-amount="100">₹100</button>
-
             <button data-amount="200">₹200</button>
-
             <button data-amount="500">₹500</button>
-
             <button data-amount="1000">₹1,000</button>
-
             <button data-amount="2000">₹2,000</button>
-
             <button data-amount="5000">₹5,000</button>
-
         </div>
 
         <input
@@ -326,64 +424,85 @@ nav i{
             max="100000"
             placeholder="Or enter custom amount"
         >
-
     </div>
 
 
-    <!-- PAYMENT -->
-
-    <div class="card">
-
+    <!-- STEP 2: PAYMENT -->
+    <div class="card" id="paymentCard">
         <div class="card-title">
-            2. Make Payment
+            <span class="step">2</span>
+            Make Payment
         </div>
 
+        <!-- QR -->
+        <div class="qr-wrap">
+            <img id="qrImg" alt="UPI QR" src="">
+            <div style="font-size:11px;color:#888;margin-top:8px">
+                Scan & Pay with any UPI app
+            </div>
+        </div>
+
+        <!-- UPI ID -->
         <div class="upi-box">
-
-            <div style="font-size:13px;color:#666;">
-                Pay using UPI
+            <div style="font-size:12px;color:#666;margin-bottom:4px">
+                Or pay to UPI ID
             </div>
-
-            <div class="upi-id" id="upiId">
-                Loading...
-            </div>
-
+            <div class="upi-id" id="upiId">daliylgrow@axl</div>
             <button class="copy-btn" id="copyBtn">
-
                 <i class="fa fa-copy"></i>
-
-                Copy UPI
-
+                Copy UPI ID
             </button>
-
         </div>
+
+        <!-- Payment Apps -->
+        <div class="apps-title">
+            <i class="fa fa-bolt"></i> Quick Pay with
+        </div>
+        <div class="pay-apps" id="payApps">
+            <a class="pay-app phonepe" id="payPhonePe">
+                <div class="icon">P</div>
+                PhonePe
+            </a>
+            <a class="pay-app gpay" id="payGPay">
+                <div class="icon">G</div>
+                GPay
+            </a>
+            <a class="pay-app paytm" id="payPaytm">
+                <div class="icon">₹</div>
+                Paytm
+            </a>
+            <a class="pay-app bhim" id="payBhim">
+                <div class="icon">B</div>
+                BHIM
+            </a>
+        </div>
+
+        <!-- Pay Now Button -->
+        <button class="pay-now-btn" id="payNowBtn">
+            <i class="fa fa-indian-rupee-sign"></i>
+            Pay ₹<span id="payAmt">0</span> Now
+        </button>
 
         <div class="pay-note">
-
-            <b>Important:</b><br>
-
-            Pehle selected amount ka payment UPI par karein.
-
-            Payment complete hone ke baad UTR / Transaction ID
-            neeche enter karein.
-
-            Admin payment verify karne ke baad hi wallet me balance
-            add karega.
-
+            <b>Note:</b> Select amount first, then click Pay Now.
+            After payment, UTR step will unlock.
         </div>
-
     </div>
 
 
-    <!-- UTR -->
-
-    <div class="card">
-
+    <!-- STEP 3: UTR (hidden initially) -->
+    <div class="card hidden-step" id="utrCard">
         <div class="card-title">
-            3. Enter Payment UTR
+            <span class="step">3</span>
+            Enter Payment UTR
         </div>
 
-        <label>
+        <div class="tick-badge">
+            <i class="fa fa-check-circle"></i>
+            Payment Done? Enter details below
+        </div>
+
+        <label style="font-size:13px;font-weight:700;color:#555">
             UTR / Transaction ID
         </label>
 
@@ -391,729 +510,431 @@ nav i{
             type="text"
             id="utr"
             maxlength="50"
-            placeholder="Enter UTR / Transaction ID"
+            placeholder="Enter 12-digit UTR number"
             autocomplete="off"
         >
 
+        <button class="submit-btn" id="submitBtn">
+            <i class="fa fa-paper-plane"></i>
+            Submit Recharge Request
+        </button>
     </div>
 
 
-    <!-- SUBMIT -->
-
-    <button class="submit-btn" id="submitBtn">
-
-        <i class="fa fa-paper-plane"></i>
-
-        Submit Recharge Request
-
-    </button>
-
-
     <!-- REQUEST HISTORY -->
-
     <div class="card" style="margin-top:15px;">
-
         <div class="card-title">
+            <i class="fa fa-history" style="color:#B80000"></i>
             My Recharge Requests
         </div>
-
         <div id="requestList">
             Loading...
         </div>
-
     </div>
 
 </div>
 
 
 <!-- NAV -->
-
 <nav>
-
     <a href="index.html">
-
         <i class="fa fa-home"></i>
-
         Home
-
     </a>
-
     <a href="matches.html">
-
         <i class="fa fa-trophy"></i>
-
         Matches
-
     </a>
-
     <a href="wallet.html" class="active">
-
         <i class="fa fa-wallet"></i>
-
         Wallet
-
     </a>
-
     <a href="profile.html">
-
         <i class="fa fa-user"></i>
-
         Profile
-
     </a>
-
 </nav>
 
 
 <div class="toast" id="toast">
-
     <span id="toastMessage"></span>
-
 </div>
 
 
 <!-- FIREBASE -->
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
-
 
 <script>
 
-
 const firebaseConfig = {
-
     apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
-
     authDomain: "fantasy-adda-e3b72.firebaseapp.com",
-
+    databaseURL: "https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
     projectId: "fantasy-adda-e3b72",
-
     storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
-
     messagingSenderId: "882657286194",
-
     appId: "1:882657286194:web:284e818359de2363f0442b",
-
     measurementId: "G-8HJX9NRL1B"
-
 };
-
 
 firebase.initializeApp(firebaseConfig);
 
-
 const auth = firebase.auth();
-
 const db = firebase.database();
 
+/* ✅ DEFAULT UPI ID */
+const DEFAULT_UPI = "daliylgrow@axl";
 
 let currentUser = null;
-
 let selectedAmount = 0;
-
+let currentUpi = DEFAULT_UPI;
 let toastTimer = null;
+let payOpened = false;
 
+const balanceEl = document.getElementById("balance");
+const customAmount = document.getElementById("customAmount");
+const utrInput = document.getElementById("utr");
+const submitBtn = document.getElementById("submitBtn");
+const requestList = document.getElementById("requestList");
 
-const balanceEl =
-    document.getElementById("balance");
-
-const customAmount =
-    document.getElementById("customAmount");
-
-const utrInput =
-    document.getElementById("utr");
-
-const submitBtn =
-    document.getElementById("submitBtn");
-
-const requestList =
-    document.getElementById("requestList");
-
+const utrCard = document.getElementById("utrCard");
+const payNowBtn = document.getElementById("payNowBtn");
+const payAmt = document.getElementById("payAmt");
+const upiIdEl = document.getElementById("upiId");
+const qrImg = document.getElementById("qrImg");
 
 
 /* TOAST */
-
-function showToast(message,type="success"){
-
-    const toast =
-        document.getElementById("toast");
-
-    const text =
-        document.getElementById("toastMessage");
-
-    toast.className =
-        "toast " + type;
-
-    text.textContent =
-        message;
-
-    toast.style.display =
-        "block";
-
+function showToast(message, type="success"){
+    const toast = document.getElementById("toast");
+    const text = document.getElementById("toastMessage");
+    toast.className = "toast " + type;
+    text.textContent = message;
+    toast.style.display = "block";
     clearTimeout(toastTimer);
-
-    toastTimer =
-        setTimeout(()=>{
-
-            toast.style.display =
-                "none";
-
-        },3500);
-
+    toastTimer = setTimeout(()=>{
+        toast.style.display = "none";
+    }, 3500);
 }
 
+
+/* BUILD UPI LINK (as per selected app) */
+function buildUpiLink(appName){
+    const upi = currentUpi;
+    const name = "Fantasy Adda";
+    const amt = selectedAmount || 0;
+    const note = "Recharge";
+    const baseParams =
+        "pa=" + encodeURIComponent(upi) +
+        "&pn=" + encodeURIComponent(name) +
+        "&am=" + amt +
+        "&cu=INR" +
+        "&tn=" + encodeURIComponent(note);
+
+    if(appName === "phonepe")
+        return "phonepe://pay?" + baseParams;
+    if(appName === "gpay")
+        return "tez://upi/pay?" + baseParams;
+    if(appName === "paytm")
+        return "paytmmp://pay?" + baseParams;
+    if(appName === "bhim")
+        return "upi://pay?" + baseParams;
+
+    /* Generic fallback */
+    return "upi://pay?" + baseParams;
+}
+
+
+/* SETUP PAY APP LINKS */
+function setupPayApps(){
+    const apps = [
+        { id: "payPhonePe", name: "phonepe" },
+        { id: "payGPay",    name: "gpay"    },
+        { id: "payPaytm",   name: "paytm"   },
+        { id: "payBhim",    name: "bhim"    }
+    ];
+
+    apps.forEach(app=>{
+        const el = document.getElementById(app.id);
+        if(!el) return;
+        el.href = "#";
+        el.addEventListener("click", e=>{
+            e.preventDefault();
+            if(!selectedAmount || selectedAmount < 1){
+                showToast("Pehle amount select karo", "error");
+                return;
+            }
+            const link = buildUpiLink(app.name);
+            window.location.href = link;
+            setTimeout(unlockUtr, 1500);
+        });
+    });
+}
+
+
+/* UNLOCK UTR STEP */
+function unlockUtr(){
+    if(payOpened) return;
+    payOpened = true;
+    utrCard.classList.remove("hidden-step");
+    utrCard.scrollIntoView({behavior:"smooth", block:"start"});
+    showToast("Payment ke baad UTR enter karo", "success");
+}
 
 
 /* AUTH */
-
 auth.onAuthStateChanged(user=>{
-
     if(!user){
-
-        window.location.href =
-            "login.html";
-
+        window.location.href = "login.html";
         return;
-
     }
-
-    currentUser =
-        user;
-
+    currentUser = user;
     loadBalance();
-
     loadPaymentSettings();
-
     loadRequests();
-
+    setupPayApps();
 });
-
 
 
 /* BALANCE */
-
 function loadBalance(){
-
-    db.ref(
-        "users/" +
-        currentUser.uid +
-        "/wallet/balance"
-    )
-    .on("value",snapshot=>{
-
-        const value =
-            Number(snapshot.val() || 0);
-
+    db.ref("users/" + currentUser.uid + "/wallet/balance")
+    .on("value", snapshot=>{
+        const value = Number(snapshot.val() || 0);
         balanceEl.textContent =
-            "₹" +
-            value.toLocaleString("en-IN");
-
+            "₹" + value.toLocaleString("en-IN");
     });
-
 }
 
 
-
-/* PAYMENT SETTINGS */
-
+/* PAYMENT SETTINGS (overrides default UPI if set in db) */
 function loadPaymentSettings(){
-
     db.ref("settings/payment")
-    .on("value",snapshot=>{
-
-        const data =
-            snapshot.val() || {};
-
-        document.getElementById("upiId")
-            .textContent =
-            data.upiId ||
-            "admin@upi";
-
+    .on("value", snapshot=>{
+        const data = snapshot.val() || {};
+        currentUpi = data.upiId || DEFAULT_UPI;
+        upiIdEl.textContent = currentUpi;
+        /* QR from any public UPI QR generator */
+        qrImg.src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+            encodeURIComponent("upi://pay?pa=" + currentUpi + "&pn=FantasyAdda&cu=INR");
     });
-
 }
-
 
 
 /* COPY UPI */
-
-document.getElementById("copyBtn")
-.addEventListener("click",()=>{
-
-    const upi =
-        document.getElementById("upiId")
-        .textContent
-        .trim();
-
+document.getElementById("copyBtn").addEventListener("click", ()=>{
+    const upi = currentUpi;
     if(!upi){
-
-        showToast(
-            "UPI ID available nahi hai",
-            "error"
-        );
-
+        showToast("UPI ID not available", "error");
         return;
-
     }
-
-    navigator.clipboard
-    .writeText(upi)
-    .then(()=>{
-
-        showToast(
-            "UPI ID copied"
-        );
-
-    })
-    .catch(()=>{
-
-        showToast(
-            "UPI ID: " + upi
-        );
-
-    });
-
+    navigator.clipboard.writeText(upi)
+    .then(()=> showToast("UPI ID copied: " + upi))
+    .catch(()=> showToast("UPI ID: " + upi));
 });
-
 
 
 /* AMOUNT BUTTONS */
-
-document
-.querySelectorAll(".amount-options button")
-.forEach(button=>{
-
-    button.addEventListener(
-        "click",
-        ()=>{
-
-            document
-            .querySelectorAll(
-                ".amount-options button"
-            )
-            .forEach(btn=>{
-
-                btn.classList
-                .remove("selected");
-
-            });
-
-            button.classList
-            .add("selected");
-
-            selectedAmount =
-                Number(
-                    button.dataset.amount
-                );
-
-            customAmount.value =
-                "";
-
-        }
-    );
-
+document.querySelectorAll(".amount-options button").forEach(button=>{
+    button.addEventListener("click", ()=>{
+        document.querySelectorAll(".amount-options button")
+            .forEach(btn=> btn.classList.remove("selected"));
+        button.classList.add("selected");
+        selectedAmount = Number(button.dataset.amount);
+        customAmount.value = "";
+        updatePayButton();
+    });
 });
 
 
-
 /* CUSTOM AMOUNT */
+customAmount.addEventListener("input", ()=>{
+    document.querySelectorAll(".amount-options button")
+        .forEach(btn=> btn.classList.remove("selected"));
+    selectedAmount = Number(customAmount.value || 0);
+    updatePayButton();
+});
 
-customAmount.addEventListener(
-    "input",
-    ()=>{
 
-        document
-        .querySelectorAll(
-            ".amount-options button"
-        )
-        .forEach(btn=>{
+/* UPDATE PAY BUTTON TEXT */
+function updatePayButton(){
+    payAmt.textContent = Number(selectedAmount||0).toLocaleString("en-IN");
+    payNowBtn.disabled = !(selectedAmount >= 1 && selectedAmount <= 100000);
+}
 
-            btn.classList
-            .remove("selected");
 
-        });
-
-        selectedAmount =
-            Number(
-                customAmount.value || 0
-            );
-
+/* PAY NOW BUTTON */
+payNowBtn.addEventListener("click", ()=>{
+    if(!selectedAmount || selectedAmount < 1){
+        showToast("Pehle amount select karo", "error");
+        return;
     }
-);
 
+    /* Open generic UPI chooser — user picks app */
+    const link = buildUpiLink("generic");
+    window.location.href = link;
+
+    /* UTR ko unlock karo thoda wait ke baad */
+    setTimeout(unlockUtr, 1500);
+});
 
 
 /* CLEAN UTR */
-
 function cleanUTR(value){
-
     return value
         .trim()
-        .replace(/[.#$[\]/]/g,"")
-        .substring(0,50);
-
+        .replace(/[.#$[\]/]/g, "")
+        .substring(0, 50);
 }
-
 
 
 /* SUBMIT */
-
-submitBtn.addEventListener(
-    "click",
-    async ()=>{
-
-        if(!currentUser){
-
-            showToast(
-                "Please login first",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        selectedAmount =
-            Number(selectedAmount);
-
-
-        if(
-            !selectedAmount ||
-            selectedAmount < 1 ||
-            selectedAmount > 100000
-        ){
-
-            showToast(
-                "Valid recharge amount enter karein",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        const utr =
-            cleanUTR(
-                utrInput.value
-            );
-
-
-        if(utr.length < 6){
-
-            showToast(
-                "Valid UTR / Transaction ID enter karein",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        submitBtn.disabled =
-            true;
-
-        submitBtn.innerHTML =
-            '<i class="fa fa-spinner fa-spin"></i> Submitting...';
-
-
-        try{
-
-            /*
-             * IMPORTANT:
-             * Yahan wallet balance ko
-             * bilkul touch nahi kiya gaya.
-             */
-
-            const requestRef =
-                db.ref(
-                    "rechargeRequests"
-                ).push();
-
-
-            const requestId =
-                requestRef.key;
-
-
-            await requestRef.set({
-
-                id:
-                    requestId,
-
-                userId:
-                    currentUser.uid,
-
-                userEmail:
-                    currentUser.email || "",
-
-                amount:
-                    selectedAmount,
-
-                utr:
-                    utr,
-
-                status:
-                    "pending",
-
-                createdAt:
-                    firebase.database
-                    .ServerValue
-                    .TIMESTAMP,
-
-                updatedAt:
-                    firebase.database
-                    .ServerValue
-                    .TIMESTAMP
-
-            });
-
-
-            utrInput.value =
-                "";
-
-            customAmount.value =
-                "";
-
-            selectedAmount =
-                0;
-
-
-            document
-            .querySelectorAll(
-                ".amount-options button"
-            )
-            .forEach(btn=>{
-
-                btn.classList
-                .remove("selected");
-
-            });
-
-
-            showToast(
-                "Recharge request submit ho gayi. Admin approval pending.",
-                "success"
-            );
-
-
-            loadRequests();
-
-
-        }catch(error){
-
-            console.error(error);
-
-            showToast(
-                "Request submit failed: " +
-                error.message,
-                "error"
-            );
-
-        }finally{
-
-            submitBtn.disabled =
-                false;
-
-            submitBtn.innerHTML =
-                '<i class="fa fa-paper-plane"></i> Submit Recharge Request';
-
-        }
-
+submitBtn.addEventListener("click", async ()=>{
+    if(!currentUser){
+        showToast("Please login first", "error");
+        return;
     }
-);
 
+    selectedAmount = Number(selectedAmount);
+
+    if(!selectedAmount || selectedAmount < 1 || selectedAmount > 100000){
+        showToast("Valid recharge amount enter karein", "error");
+        return;
+    }
+
+    const utr = cleanUTR(utrInput.value);
+
+    if(utr.length < 6){
+        showToast("Valid UTR / Transaction ID enter karein", "error");
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML =
+        '<i class="fa fa-spinner fa-spin"></i> Submitting...';
+
+    try{
+        const requestRef = db.ref("rechargeRequests").push();
+        const requestId = requestRef.key;
+
+        await requestRef.set({
+            id: requestId,
+            userId: currentUser.uid,
+            userEmail: currentUser.email || "",
+            amount: selectedAmount,
+            utr: utr,
+            upiId: currentUpi,
+            status: "pending",
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            updatedAt: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        /* Reset */
+        utrInput.value = "";
+        customAmount.value = "";
+        selectedAmount = 0;
+        payOpened = false;
+
+        document.querySelectorAll(".amount-options button")
+            .forEach(btn=> btn.classList.remove("selected"));
+
+        utrCard.classList.add("hidden-step");
+        updatePayButton();
+
+        showToast(
+            "Recharge request submit ho gayi. Admin approval pending.",
+            "success"
+        );
+
+        loadRequests();
+
+    }catch(error){
+        console.error(error);
+        showToast("Request submit failed: " + error.message, "error");
+    }finally{
+        submitBtn.disabled = false;
+        submitBtn.innerHTML =
+            '<i class="fa fa-paper-plane"></i> Submit Recharge Request';
+    }
+});
 
 
 /* REQUEST HISTORY */
-
 function loadRequests(){
-
     db.ref("rechargeRequests")
     .orderByChild("userId")
     .equalTo(currentUser.uid)
-    .on("value",snapshot=>{
-
-        const data =
-            snapshot.val();
-
+    .on("value", snapshot=>{
+        const data = snapshot.val();
 
         if(!data){
-
-            requestList.innerHTML =
-                `
-                <div style="
-                    text-align:center;
-                    color:#777;
-                    padding:10px;
-                ">
+            requestList.innerHTML = `
+                <div style="text-align:center;color:#777;padding:10px;">
                     No recharge requests yet.
-                </div>
-                `;
-
+                </div>`;
             return;
-
         }
 
+        const requests = Object.values(data)
+            .sort((a,b)=> (b.createdAt || 0) - (a.createdAt || 0));
 
-        const requests =
-            Object.values(data)
-            .sort(
-                (a,b)=>
-                    (b.createdAt || 0) -
-                    (a.createdAt || 0)
-            );
+        requestList.innerHTML = requests.map(item=>{
+            const date = item.createdAt
+                ? new Date(item.createdAt).toLocaleString("en-IN")
+                : "-";
 
+            let badgeClass = "pending";
+            if(item.status === "approved") badgeClass = "approved";
+            if(item.status === "rejected") badgeClass = "rejected";
 
-        requestList.innerHTML =
-            requests
-            .map(item=>{
-
-                const date =
-                    item.createdAt
-                    ?
-                    new Date(
-                        item.createdAt
-                    ).toLocaleString("en-IN")
-                    :
-                    "-";
-
-
-                let badgeClass =
-                    "pending";
-
-
-                if(
-                    item.status ===
-                    "approved"
-                ){
-
-                    badgeClass =
-                        "approved";
-
-                }
-
-
-                if(
-                    item.status ===
-                    "rejected"
-                ){
-
-                    badgeClass =
-                        "rejected";
-
-                }
-
-
-                return `
-
+            return `
                 <div class="status-item">
-
-                    <div style="
-                        display:flex;
-                        justify-content:space-between;
-                        gap:10px;
-                    ">
-
+                    <div style="display:flex;justify-content:space-between;gap:10px;">
                         <strong>
-                            ₹${Number(
-                                item.amount
-                            ).toLocaleString("en-IN")}
+                            ₹${Number(item.amount).toLocaleString("en-IN")}
                         </strong>
-
-                        <span class="
-                            badge
-                            ${badgeClass}
-                        ">
-
-                            ${String(
-                                item.status ||
-                                "pending"
-                            ).toUpperCase()}
-
+                        <span class="badge ${badgeClass}">
+                            ${String(item.status || "pending").toUpperCase()}
                         </span>
-
                     </div>
 
-
-                    <div style="
-                        font-size:13px;
-                        color:#666;
-                        margin-top:7px;
-                    ">
-
-                        UTR:
-                        ${escapeHtml(
-                            item.utr || "-"
-                        )}
-
+                    <div style="font-size:13px;color:#666;margin-top:7px;">
+                        UTR: ${escapeHtml(item.utr || "-")}
                     </div>
 
-
-                    <div style="
-                        font-size:12px;
-                        color:#888;
-                        margin-top:5px;
-                    ">
-
+                    <div style="font-size:12px;color:#888;margin-top:5px;">
                         ${date}
-
                     </div>
-
 
                     ${
-                        item.status ===
-                        "rejected" &&
-                        item.adminNote
-                        ?
-                        `
-                        <div style="
-                            color:#b00000;
-                            font-size:13px;
-                            margin-top:7px;
-                        ">
-
-                            Reason:
-                            ${escapeHtml(
-                                item.adminNote
-                            )}
-
-                        </div>
-                        `
-                        :
-                        ""
+                        item.status === "rejected" && item.adminNote
+                        ? `<div style="color:#b00000;font-size:13px;margin-top:7px;">
+                            Reason: ${escapeHtml(item.adminNote)}
+                           </div>`
+                        : ""
                     }
-
                 </div>
-
-                `;
-
-            })
-            .join("");
-
+            `;
+        }).join("");
     });
-
 }
 
 
-
 /* ESCAPE */
-
 function escapeHtml(value){
-
     return String(value)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
 }
+
+/* INIT */
+updatePayButton();
 
 </script>
 
