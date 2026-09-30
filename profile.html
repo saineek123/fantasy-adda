@@ -185,6 +185,79 @@
         }
 
         /* ======================
+           Refer Banner
+        ====================== */
+        .refer-banner {
+            background: linear-gradient(135deg, #0aa84f, #08b85a);
+            color: #fff;
+            border-radius: 15px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(10, 168, 79, .25);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .refer-banner:active {
+            transform: scale(0.98);
+        }
+
+        .refer-banner::before {
+            content: "";
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, .12);
+            border-radius: 50%;
+        }
+
+        .refer-banner .icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, .2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .refer-banner .text {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .refer-banner .text b {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+
+        .refer-banner .text small {
+            font-size: 11px;
+            opacity: .9;
+        }
+
+        .refer-banner .arrow {
+            font-size: 18px;
+            opacity: .8;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ======================
            Menu Card
         ====================== */
         .menu-card {
@@ -221,10 +294,34 @@
             text-align: center;
         }
 
+        .menu-card a.refer-item i {
+            color: #0aa84f;
+        }
+
+        .menu-card a.refer-item {
+            background: #f0fdf4;
+        }
+
+        .menu-card a.refer-item:hover {
+            background: #dcfce7;
+        }
+
         .menu-card a .arrow {
             margin-left: auto;
             color: #ccc;
             font-size: 14px;
+        }
+
+        .menu-card a .badge-new {
+            background: #0aa84f;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 7px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+            margin-left: 8px;
         }
 
         .menu-card a.logout {
@@ -400,6 +497,18 @@
             </button>
         </div>
 
+        <!-- ✅ REFER & EARN BANNER -->
+        <a href="referral.html" class="refer-banner">
+            <div class="icon">
+                <i class="fa fa-gift"></i>
+            </div>
+            <div class="text">
+                <b>Refer & Earn ₹100</b>
+                <small>Invite friends and earn ₹100 per referral</small>
+            </div>
+            <i class="fa fa-chevron-right arrow"></i>
+        </a>
+
         <!-- Stats -->
         <div class="stats">
             <div>
@@ -421,6 +530,12 @@
 
         <!-- Menu -->
         <div class="menu-card">
+            <a href="referral.html" class="refer-item">
+                <i class="fa fa-gift"></i>
+                Refer & Earn
+                <span class="badge-new">₹100</span>
+                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+            </a>
             <a href="trade-history.html">
                 <i class="fa fa-chart-line"></i>
                 My Trades
@@ -488,6 +603,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
             authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            databaseURL: "https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
             projectId: "fantasy-adda-e3b72",
             storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
             messagingSenderId: "882657286194",
@@ -553,7 +669,7 @@
 
                     // Wallet Balance
                     if (userData.wallet) {
-                        walletBalance.textContent = '₹' + (userData.wallet.balance || 0);
+                        walletBalance.textContent = '₹' + Number(userData.wallet.balance || 0).toLocaleString('en-IN');
                     } else {
                         walletBalance.textContent = '₹0';
                     }
