@@ -41,6 +41,24 @@
         .field-error { color: #d40000; font-size: 12px; margin-top: 4px; display: none; padding-left: 10px; }
         .password-hint { color: #777; font-size: 12px; margin-top: 4px; padding-left: 10px; }
         .password-strength { height: 4px; border-radius: 2px; margin-top: 8px; transition: width 0.3s, background 0.3s; width: 0%; background: #ddd; }
+
+        /* Referral applied banner */
+        .ref-applied {
+            background: #e8f5e9;
+            border: 1px solid #66bb6a;
+            color: #1b5e20;
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-bottom: 14px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        .ref-applied.show { display: flex; }
+        .ref-applied i { color: #0aa84f; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @media(max-width:450px) { .card { padding: 25px 20px; } }
     </style>
@@ -48,9 +66,16 @@
 <body>
     <div class="container">
         <div class="card">
-            <img src="logo.png" alt="Fantasy Adda " class="logo">
+            <img src="logo.png" alt="Fantasy Adda" class="logo">
             <h2>Create Account</h2>
             <p>Join Fantasy Adda</p>
+
+            <!-- Referral banner (agar URL me ?ref= ho) -->
+            <div class="ref-applied" id="refApplied">
+                <i class="fa fa-gift"></i>
+                <span>Referral code applied: <b id="refCodeText"></b></span>
+            </div>
+
             <form id="signupForm">
                 <div class="input-box">
                     <i class="fa fa-user"></i>
@@ -83,7 +108,7 @@
                 </div>
                 <div class="input-box">
                     <i class="fa fa-gift"></i>
-                    <input type="text" id="referral" placeholder="Referral Code (Optional)" maxlength="20">
+                    <input type="text" id="referral" placeholder="Referral Code (Optional)" maxlength="20" style="text-transform:uppercase">
                 </div>
                 <div class="remember">
                     <label><input type="checkbox" id="terms" required> I Agree Terms & Conditions</label>
@@ -97,13 +122,17 @@
             <div class="bottom">Already have an account? <a href="login.html">Login</a></div>
         </div>
     </div>
+
     <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+
     <script>
+        // ✅ FIXED: databaseURL add kiya — isse user data save hoga
         const firebaseConfig = {
             apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
             authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+            databaseURL: "https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
             projectId: "fantasy-adda-e3b72",
             storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
             messagingSenderId: "882657286194",
@@ -113,6 +142,10 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
+
+        /* ============ REFERRAL — URL se code uthao ============ */
+        const urlParams = new URLSearchParams(location.search);
+        const refFromUrl = (urlParams.get('ref') || '').trim().toUpperCase();
 
         const signupForm = document.getElementById('signupForm');
         const signupBtn = document.getElementById('signupBtn');
@@ -133,6 +166,20 @@
         const errorMsg = document.getElementById('errorMsg');
         const successMsg = document.getElementById('successMsg');
         const passwordStrength = document.getElementById('passwordStrength');
+        const refApplied = document.getElementById('refApplied');
+        const refCodeText = document.getElementById('refCodeText');
+
+        /* ✅ URL se aaya code auto-fill karo */
+        if (refFromUrl) {
+            referralInput.value = refFromUrl;
+            refApplied.classList.add('show');
+            refCodeText.textContent = refFromUrl;
+        }
+
+        /* Uppercase referral input */
+        referralInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        });
 
         togglePassword.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -191,33 +238,128 @@
             return isValid;
         }
 
+        /* ============ GENERATE REFERRAL CODE ============ */
+        function generateCode(uid) {
+            return "FA" + uid.substring(0, 6).toUpperCase();
+        }
+
+        /* ============ APPLY REFERRAL (Firebase) ============ */
+        async function applyReferral(referralCode, newUser, userName, userEmail) {
+            if (!referralCode) return;
+
+            try {
+                const codeUpper = referralCode.toUpperCase();
+
+                /* 1. Find referrer by code */
+                const codeSnap = await database.ref('referralCodes/' + codeUpper).once('value');
+                const codeData = codeSnap.val();
+
+                if (!codeData || !codeData.uid) {
+                    console.warn('Referral code not found:', codeUpper);
+                    return;
+                }
+
+                /* 2. Don't allow self-referral */
+                if (codeData.uid === newUser.uid) {
+                    console.warn('Self referral not allowed');
+                    return;
+                }
+
+                /* 3. Save referral record */
+                await database.ref('referrals').push({
+                    referrerId: codeData.uid,
+                    referredUserId: newUser.uid,
+                    referredUserName: userName,
+                    referredEmail: userEmail,
+                    referralCode: codeUpper,
+                    status: "pending",
+                    bonusPaid: false,
+                    bonusAmount: 100,
+                    createdAt: Date.now()
+                });
+
+                console.log('✅ Referral saved for:', codeUpper);
+            } catch (err) {
+                console.warn('Referral apply error:', err);
+            }
+        }
+
+        /* ============ REGISTER OWN REFERRAL CODE ============ */
+        async function registerOwnCode(uid) {
+            try {
+                const code = generateCode(uid);
+                await database.ref('referralCodes/' + code).set({
+                    uid: uid,
+                    code: code,
+                    createdAt: Date.now()
+                });
+                return code;
+            } catch (err) {
+                console.warn('Register code error:', err);
+                return null;
+            }
+        }
+
+        /* ============ EMAIL SIGNUP ============ */
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
             if (!validateForm()) return;
+
             const name = nameInput.value.trim();
             const email = emailInput.value.trim();
             const phone = phoneInput.value;
             const password = passwordInput.value;
-            const referral = referralInput.value.trim();
+            const referral = referralInput.value.trim().toUpperCase();
+
             signupBtn.disabled = true;
             signupBtn.textContent = 'Creating Account...';
+
             try {
+                /* 1. Create Firebase Auth user */
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
+
+                /* 2. Update display name */
                 await user.updateProfile({ displayName: name });
+
+                /* 3. Save user data — ✅ databaseURL fix ke baad ye kaam karega */
                 await database.ref('users/' + user.uid).set({
-                    name: name, email: email, phone: phone, referral: referral || '',
-                    wallet: { balance: 100, totalDeposited: 0, totalWithdrawn: 0, totalWon: 0 },
-                    createdAt: Date.now(), updatedAt: Date.now()
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    referral: referral || '',
+                    wallet: {
+                        balance: 100,
+                        winning: 0,
+                        deposit: 0,
+                        totalDeposited: 0,
+                        totalWithdrawn: 0,
+                        totalWon: 0
+                    },
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
                 });
+
+                /* 4. Register own referral code */
+                await registerOwnCode(user.uid);
+
+                /* 5. Apply referral if code present */
+                if (referral) {
+                    await applyReferral(referral, user, name, email);
+                }
+
                 showSuccess('Account created successfully! Welcome to Fantasy Adda! 🎉');
                 setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+
             } catch (error) {
+                console.error('Signup error:', error);
                 let msg = 'Signup failed. Please try again.';
                 if (error.code === 'auth/email-already-in-use') msg = 'This email is already registered.';
                 else if (error.code === 'auth/invalid-email') msg = 'Invalid email address.';
                 else if (error.code === 'auth/weak-password') msg = 'Password is too weak.';
+                else if (error.code === 'auth/network-request-failed') msg = 'Network error. Please check internet.';
+                else if (error.message) msg = error.message;
                 showError(msg);
             } finally {
                 signupBtn.disabled = false;
@@ -225,29 +367,51 @@
             }
         });
 
+        /* ============ GOOGLE SIGNUP ============ */
         document.getElementById('googleBtn').addEventListener('click', async () => {
             hideMessages();
             const btn = document.getElementById('googleBtn');
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Connecting...';
+
             try {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 const result = await auth.signInWithPopup(provider);
                 const user = result.user;
+
                 const snap = await database.ref('users/' + user.uid).once('value');
                 if (!snap.exists()) {
+                    /* New Google user */
                     await database.ref('users/' + user.uid).set({
                         name: user.displayName || 'User',
                         email: user.email,
                         phone: user.phoneNumber || '',
-                        referral: '',
-                        wallet: { balance: 100, totalDeposited: 0, totalWithdrawn: 0, totalWon: 0 },
-                        createdAt: Date.now(), updatedAt: Date.now()
+                        referral: refFromUrl || '',
+                        wallet: {
+                            balance: 100,
+                            winning: 0,
+                            deposit: 0,
+                            totalDeposited: 0,
+                            totalWithdrawn: 0,
+                            totalWon: 0
+                        },
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
                     });
+
+                    /* Register own code */
+                    await registerOwnCode(user.uid);
+
+                    /* Apply referral */
+                    if (refFromUrl) {
+                        await applyReferral(refFromUrl, user, user.displayName || 'User', user.email);
+                    }
                 }
+
                 showSuccess('Google signup successful! Redirecting...');
                 setTimeout(() => { window.location.href = 'index.html'; }, 1500);
             } catch (error) {
+                console.error('Google error:', error);
                 let msg = 'Google signup failed. Please try again.';
                 if (error.code === 'auth/popup-closed-by-user') msg = 'Sign-in popup was closed.';
                 else if (error.code === 'auth/popup-blocked') msg = 'Pop-up was blocked. Please allow pop-ups.';
@@ -258,7 +422,13 @@
             }
         });
 
-        auth.onAuthStateChanged((user) => { if (user) { window.location.href = 'index.html'; } });
+        /* ============ AUTH STATE ============ */
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                /* Already logged in — redirect */
+                window.location.href = 'index.html';
+            }
+        });
     </script>
 </body>
 </html>
