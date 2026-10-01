@@ -7,70 +7,282 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#f5f6fa;padding-bottom:80px}
-header{background:#b80000;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
-header h2{font-size:20px}.back{color:#fff;text-decoration:none;font-size:22px}
-.container{max-width:600px;margin:20px auto;padding:0 15px}
-.tabs{display:flex;gap:8px;background:#fff;padding:7px;border-radius:12px;margin-bottom:20px;position:sticky;top:60px;z-index:9;box-shadow:0 2px 8px #0001}
-.tab{flex:1;padding:11px;border:0;border-radius:8px;background:#f1f1f1;font-weight:bold;cursor:pointer;font-size:13px;transition:.2s}
-.tab.active{background:#b80000;color:#fff}
-.card{background:#fff;padding:17px;border-radius:15px;margin-bottom:15px;box-shadow:0 3px 12px #0001;transition:.2s}
-.card:hover{transform:translateY(-2px);box-shadow:0 6px 20px #0002}
-.teams{display:flex;align-items:center;justify-content:space-between;text-align:center}
-.team{width:40%}
-.team img{width:60px;height:60px;object-fit:contain;border-radius:50%;background:#f4f4f4}
-.team p{font-weight:bold;margin-top:6px;font-size:13px}
-.vs{font-weight:bold;color:#b80000}
-.info{text-align:center;margin-top:12px;color:#777;font-size:13px}
-.info>div{margin-bottom:3px}
-.status{display:inline-block;margin-top:7px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:bold;text-transform:uppercase}
-.status.live{background:#ff4d4d;color:#fff;animation:pulse 1.5s infinite}
-.status.upcoming{background:#ffd700;color:#222}
-.status.completed,.status.finished{background:#28a745;color:#fff}
-.status.cancelled{background:#6b7280;color:#fff}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
-.trade{width:100%;margin-top:13px;padding:11px;border:0;border-radius:9px;background:#b80000;color:#fff;font-weight:bold;font-size:15px;cursor:pointer;transition:.2s}
+body{background:#f5f6fa;padding-bottom:85px}
+
+/* ============ HEADER ============ */
+header{
+  background:#b80000;color:#fff;padding:14px 18px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;z-index:10;
+  box-shadow:0 3px 10px rgba(0,0,0,.15);
+}
+header h2{
+  font-size:20px;
+  display:flex;align-items:center;gap:8px;
+}
+.header-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{
+  background:rgba(255,255,255,.18);color:#fff;border:0;
+  width:36px;height:36px;border-radius:10px;
+  font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;
+  transition:.2s;
+}
+.icon-btn:hover{background:rgba(255,255,255,.28)}
+.icon-btn.spinning i{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ CONTAINER ============ */
+.container{max-width:600px;margin:16px auto;padding:0 15px}
+
+/* ============ TABS ============ */
+.tabs{
+  display:flex;gap:6px;background:#fff;padding:6px;
+  border-radius:14px;margin-bottom:18px;
+  position:sticky;top:64px;z-index:9;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+.tab{
+  flex:1;padding:11px 8px;
+  border:0;border-radius:9px;
+  background:#f4f5f7;
+  font-weight:700;font-size:12.5px;
+  cursor:pointer;transition:.2s;
+  color:#555;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.tab.active{background:#b80000;color:#fff;box-shadow:0 3px 10px rgba(184,0,0,.3)}
+.tab .count{
+  background:rgba(0,0,0,.08);
+  font-size:9px;font-weight:800;
+  padding:2px 5px;border-radius:10px;
+  min-width:18px;text-align:center;
+}
+.tab.active .count{background:rgba(255,255,255,.25)}
+
+/* ============ CARD ============ */
+.card{
+  background:#fff;padding:17px;
+  border-radius:16px;margin-bottom:14px;
+  box-shadow:0 3px 12px rgba(0,0,0,.07);
+  border:1px solid #eef0f3;
+  transition:.2s;
+}
+.card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(0,0,0,.12);
+}
+
+/* Top row: league + status */
+.card-top{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;gap:8px;
+}
+.league-tag{
+  font-size:11.5px;color:#666;font-weight:700;
+  background:#f4f5f7;
+  padding:5px 10px;border-radius:20px;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.league-tag i{color:#b80000}
+
+/* Status pill */
+.status{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 10px;border-radius:20px;
+  font-size:10.5px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.3px;
+  white-space:nowrap;
+}
+.status.live{
+  background:#ffeaea;color:#b80000;
+  animation:pulse 1.5s infinite;
+}
+.status.live::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:#b80000;animation:pulse 1s infinite;
+}
+.status.upcoming{background:#fff3cd;color:#9a6900}
+.status.completed{background:#d4edda;color:#0f7b3a}
+.status.cancelled{background:#e5e7eb;color:#4b5563}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* Teams */
+.teams{
+  display:flex;align-items:center;justify-content:space-between;
+  text-align:center;gap:6px;
+}
+.team{width:40%;min-width:0}
+.team img{
+  width:60px;height:60px;object-fit:contain;
+  border-radius:50%;background:#f4f4f4;
+  border:2px solid #f0f1f3;
+}
+.team p{
+  font-weight:700;margin-top:8px;font-size:13px;
+  color:#222;
+  overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.vs{
+  font-weight:900;color:#b80000;font-size:15px;
+  background:#fff0f0;width:38px;height:38px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+
+/* Info rows */
+.info{
+  text-align:center;margin-top:12px;
+  color:#666;font-size:12px;
+  display:flex;flex-direction:column;gap:4px;
+  align-items:center;
+}
+.info>div{
+  display:inline-flex;align-items:center;gap:5px;
+  max-width:100%;
+}
+.info i{color:#b80000;font-size:11px;flex-shrink:0}
+
+/* Score line for live */
+.score-line{
+  background:#151a20;color:#fff;
+  border-radius:11px;padding:10px 12px;
+  margin-top:11px;
+  display:flex;justify-content:center;gap:9px;
+  align-items:center;font-size:12px;
+}
+.score-line .live-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#19c463;
+  animation:pulse 1s infinite;
+}
+.score-line b{font-weight:800;font-size:13px}
+.score-line small{color:#a8b0bb;font-size:11px}
+
+/* Trade button */
+.trade{
+  width:100%;margin-top:13px;
+  padding:12px;border:0;border-radius:11px;
+  background:#b80000;color:#fff;
+  font-weight:800;font-size:14px;
+  cursor:pointer;transition:.2s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
 .trade:not(:disabled):hover{background:#a00000}
-.trade:disabled{background:#ccc;cursor:not-allowed}
-.empty{text-align:center;padding:50px 10px;color:#777}
-.empty i{color:#ccc;margin-bottom:12px;display:inline-block}
-.loading{text-align:center;padding:40px;color:#777}
-.score-line{background:#151a20;color:#fff;border-radius:10px;padding:8px 12px;margin-top:10px;font-size:12px;display:flex;justify-content:center;gap:10px;align-items:center}
-.score-line b{font-weight:800}
-nav{position:fixed;bottom:0;left:0;width:100%;background:#fff;display:flex;justify-content:space-around;padding:12px;box-shadow:0 -3px 10px #0002;z-index:10}
-nav a{color:#666;text-decoration:none;text-align:center;font-size:12px}
-nav i{display:block;font-size:20px;margin-bottom:4px}
-.refresh-btn{background:#ffffff33;color:#fff;border:0;padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:bold}
+.trade:not(:disabled):active{transform:scale(.98)}
+.trade:disabled{background:#cbd0d6;color:#fff;cursor:not-allowed}
+
+/* Winner badge for completed */
+.winner-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:#e8f5e9;color:#0a7d38;
+  font-size:11px;font-weight:800;
+  padding:5px 10px;border-radius:20px;
+  margin-top:10px;
+}
+
+/* ============ EMPTY / LOADING ============ */
+.empty{
+  text-align:center;padding:50px 20px;color:#777;
+  background:#fff;border-radius:16px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+.empty i{
+  color:#ccc;margin-bottom:14px;display:inline-block;
+}
+.empty b{display:block;color:#444;font-size:14px;margin-bottom:4px}
+.empty small{font-size:12px;color:#999}
+.loading{
+  text-align:center;padding:50px;color:#777;
+  background:#fff;border-radius:16px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+.loading i{font-size:22px;color:#b80000}
+
+/* ============ NAV ============ */
+nav{
+  position:fixed;bottom:0;left:0;width:100%;
+  background:#fff;display:flex;justify-content:space-around;
+  padding:10px 0;box-shadow:0 -3px 12px rgba(0,0,0,.12);
+  z-index:100;
+}
+nav a{
+  flex:1;color:#666;text-decoration:none;text-align:center;
+  font-size:11px;font-weight:600;
+  transition:.2s;
+}
+nav a.active{color:#b80000;font-weight:800}
+nav i{display:block;font-size:19px;margin-bottom:4px}
+nav a.refer-nav{position:relative}
+nav a.refer-nav::before{
+  content:"₹100";position:absolute;
+  top:-4px;right:20%;
+  background:#0aa84f;color:#fff;
+  font-size:7px;font-weight:800;
+  padding:1px 4px;border-radius:8px;
+  letter-spacing:.2px;
+}
+
+/* ============ MOBILE ============ */
+@media(max-width:380px){
+  .team img{width:52px;height:52px}
+  .team p{font-size:12px}
+  .vs{width:34px;height:34px;font-size:13px}
+  .tab{font-size:11.5px;padding:10px 5px}
+  .tab .count{display:none}
+}
 </style>
 </head>
 <body>
+
 <header>
-<h2><i class="fa fa-trophy"></i> Matches</h2>
-<div style="display:flex;gap:8px;align-items:center">
-  <button class="refresh-btn" onclick="load()"><i class="fa fa-sync"></i></button>
-  <a class="back" href="index.html"><i class="fa fa-home"></i></a>
-</div>
+  <h2><i class="fa fa-trophy"></i> Matches</h2>
+  <div class="header-actions">
+    <button class="icon-btn" id="refreshBtn" onclick="refreshMatches()">
+      <i class="fa fa-sync"></i>
+    </button>
+    <a class="icon-btn" href="referral.html" title="Refer & Earn">
+      <i class="fa fa-gift"></i>
+    </a>
+    <a class="icon-btn" href="index.html" title="Home">
+      <i class="fa fa-home"></i>
+    </a>
+  </div>
 </header>
 
 <div class="container">
-<div class="tabs">
-<button class="tab active" data-tab="live">🔴 Live</button>
-<button class="tab" data-tab="upcoming">📅 Upcoming</button>
-<button class="tab" data-tab="completed">✅ Completed</button>
-</div>
-<div id="container" class="loading">Loading matches...</div>
+  <div class="tabs">
+    <button class="tab active" data-tab="live">
+      🔴 Live <span class="count" id="cntLive">0</span>
+    </button>
+    <button class="tab" data-tab="upcoming">
+      📅 Upcoming <span class="count" id="cntUpcoming">0</span>
+    </button>
+    <button class="tab" data-tab="completed">
+      ✅ Completed <span class="count" id="cntCompleted">0</span>
+    </button>
+  </div>
+  <div id="container" class="loading">
+    <i class="fa fa-spinner fa-spin"></i>
+    <div style="margin-top:10px">Loading matches...</div>
+  </div>
 </div>
 
 <nav>
-<a href="index.html"><i class="fa fa-home"></i>Home</a>
-<a href="matches.html"><i class="fa fa-trophy"></i>Matches</a>
-<a href="wallet.html"><i class="fa fa-wallet"></i>Wallet</a>
-<a href="profile.html"><i class="fa fa-user"></i>Profile</a>
+  <a href="index.html"><i class="fa fa-home"></i>Home</a>
+  <a href="matches.html" class="active"><i class="fa fa-trophy"></i>Matches</a>
+  <a href="referral.html" class="refer-nav"><i class="fa fa-gift"></i>Refer</a>
+  <a href="wallet.html"><i class="fa fa-wallet"></i>Wallet</a>
+  <a href="profile.html"><i class="fa fa-user"></i>Profile</a>
 </nav>
 
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+
 <script>
 const firebaseConfig={
   apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
@@ -84,29 +296,44 @@ const firebaseConfig={
 };
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.database();
+
 const box=document.getElementById("container");
 let tab="live";
+let allMatches=[];
+let loaded=false;
 
-/* TAB SWITCH */
+/* ============ TAB SWITCH ============ */
 document.querySelectorAll(".tab").forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
     tab=b.dataset.tab;
-    load();
+    if(loaded) renderCurrentTab();
   };
 });
 
-/* AUTH */
+/* ============ AUTH ============ */
 auth.onAuthStateChanged(user=>{
   if(!user){
-    box.innerHTML='<div class="empty"><i class="fa fa-lock fa-3x"></i><br><br>Please login first.<br><br><a href="login.html" style="color:#b80000;font-weight:bold">Login Now</a></div>';
+    box.innerHTML=`
+      <div class="empty">
+        <i class="fa fa-lock" style="font-size:38px"></i>
+        <b>Please login first</b>
+        <small>Login to see live matches</small>
+        <div style="margin-top:16px">
+          <a href="login.html"
+            style="background:#b80000;color:#fff;padding:10px 22px;
+            border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">
+            Login Now
+          </a>
+        </div>
+      </div>`;
     return;
   }
   load();
 });
 
-/* NORMALIZE STATUS - ye hi main fix hai */
+/* ============ NORMALIZE STATUS ============ */
 function normStatus(s){
   if(!s) return "upcoming";
   const x = String(s).toLowerCase().trim();
@@ -116,95 +343,170 @@ function normStatus(s){
   return "upcoming";
 }
 
-/* LOAD */
+/* ============ LOAD ============ */
 function load(){
-  box.innerHTML='<div class="loading"><i class="fa fa-spinner fa-spin"></i> Loading matches...</div>';
+  box.innerHTML='<div class="loading"><i class="fa fa-spinner fa-spin"></i><div style="margin-top:10px">Loading matches...</div></div>';
 
   db.ref("matches").once("value").then(snap=>{
-    box.innerHTML="";
     if(!snap.exists()){
-      box.innerHTML='<div class="empty"><i class="fa fa-trophy fa-3x"></i><br><br>No matches available</div>';
+      box.innerHTML=`
+        <div class="empty">
+          <i class="fa fa-trophy" style="font-size:38px"></i>
+          <b>No matches available</b>
+          <small>New matches will appear here</small>
+        </div>`;
       return;
     }
 
     const data=snap.val();
-    const list=Object.entries(data).filter(([id,m])=>{
-      const st = normStatus(m.status);
-      if(tab==="live") return st==="live";
-      if(tab==="upcoming") return st==="upcoming";
-      return st==="completed";
-    });
+    allMatches = Object.entries(data).map(([id,m])=>({
+      id,
+      match:m,
+      status: normStatus(m.status)
+    }));
 
-    if(!list.length){
-      box.innerHTML=`<div class="empty"><i class="fa fa-inbox fa-3x"></i><br><br>No ${tab} matches right now</div>`;
-      return;
-    }
+    /* update counts */
+    updateCounts();
 
-    // sort: live first (by createdAt desc), upcoming by time asc
-    list.sort((a,b)=>{
-      const ta = a[1].createdAt || 0;
-      const tb = b[1].createdAt || 0;
-      return tb - ta;
-    });
-
-    list.forEach(([id,m])=>render(id,m));
+    loaded = true;
+    renderCurrentTab();
   }).catch(e=>{
     console.error(e);
-    box.innerHTML='<div class="empty">❌ '+e.message+'</div>';
+    box.innerHTML=`<div class="empty"><i class="fa fa-exclamation-circle" style="font-size:38px"></i><b>Failed to load</b><small>${escapeHtml(e.message)}</small></div>`;
   });
 }
 
-/* RENDER */
-function render(id,m){
-  const statusRaw = m.status || "Upcoming";
-  const status = normStatus(statusRaw);
+/* ============ REFRESH BUTTON ============ */
+function refreshMatches(){
+  const btn = document.getElementById("refreshBtn");
+  btn.classList.add("spinning");
+  load();
+  setTimeout(()=>btn.classList.remove("spinning"), 900);
+}
+
+/* ============ UPDATE COUNTS ============ */
+function updateCounts(){
+  const live = allMatches.filter(x=>x.status==="live").length;
+  const upcoming = allMatches.filter(x=>x.status==="upcoming").length;
+  const completed = allMatches.filter(x=>x.status==="completed").length;
+
+  document.getElementById("cntLive").textContent = live;
+  document.getElementById("cntUpcoming").textContent = upcoming;
+  document.getElementById("cntCompleted").textContent = completed;
+}
+
+/* ============ RENDER CURRENT TAB ============ */
+function renderCurrentTab(){
+  box.innerHTML="";
+
+  let list = allMatches.filter(x=>{
+    if(tab==="live") return x.status==="live";
+    if(tab==="upcoming") return x.status==="upcoming";
+    return x.status==="completed";
+  });
+
+  if(!list.length){
+    const tabLabel = tab==="live" ? "live" : tab==="upcoming" ? "upcoming" : "completed";
+    box.innerHTML=`
+      <div class="empty">
+        <i class="fa fa-inbox" style="font-size:38px"></i>
+        <b>No ${tabLabel} matches</b>
+        <small>Check back later for updates</small>
+      </div>`;
+    return;
+  }
+
+  /* Sort: live first by createdAt desc, others by date asc */
+  list.sort((a,b)=>{
+    const ta = a.match.createdAt || 0;
+    const tb = b.match.createdAt || 0;
+    if(tab==="upcoming") return ta - tb;
+    return tb - ta;
+  });
+
+  list.forEach(item=>renderCard(item.id, item.match, item.status));
+}
+
+/* ============ RENDER CARD ============ */
+function renderCard(id, m, status){
+  const defaultLogo="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" rx="100" fill="#eeeeee"/><text x="100" y="135" text-anchor="middle" font-size="100">🏏</text></svg>`);
 
   const card=document.createElement("div");
   card.className="card";
 
-  const defaultLogo="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" rx="100" fill="#eeeeee"/><text x="100" y="130" text-anchor="middle" font-size="90">🏏</text></svg>`);
-
-  // score display
+  /* Score bar for live */
   let scoreHtml = "";
   if(status === "live" && (m.scoreA || m.scoreB)){
     scoreHtml = `
       <div class="score-line">
-        <span>🔴 LIVE</span>
+        <span class="live-dot"></span>
+        <span style="font-size:11px;font-weight:800;color:#19c463">LIVE</span>
         <b>${escapeHtml(m.scoreA||"0")}</b>
-        <span>•</span>
+        <span style="opacity:.5">•</span>
         <b>${escapeHtml(m.scoreB||"0")}</b>
         ${m.overs ? `<small>(${escapeHtml(m.overs)} ov)</small>` : ""}
       </div>
     `;
   }
 
-  const btnText = 
-    status==="live" ? "⚡ Trade Now" :
-    status==="completed" ? "Match Ended" :
-    status==="cancelled" ? "Cancelled" :
-    "📅 Trade Now";
+  /* Winner badge for completed */
+  let winnerHtml = "";
+  if(status === "completed" && m.winner){
+    winnerHtml = `
+      <div style="text-align:center">
+        <span class="winner-badge">
+          <i class="fa fa-trophy"></i>
+          Winner: ${escapeHtml(m.winner)}
+        </span>
+      </div>
+    `;
+  }
+
+  const btnText =
+    status==="live" ? '<i class="fa fa-bolt"></i> Trade Now' :
+    status==="completed" ? '<i class="fa fa-flag-checkered"></i> Match Ended' :
+    status==="cancelled" ? '<i class="fa fa-ban"></i> Cancelled' :
+    '<i class="fa fa-calendar"></i> Trade Now';
+
+  const statusRaw = m.status || "Upcoming";
 
   card.innerHTML=`
+    <div class="card-top">
+      <span class="league-tag">
+        <i class="fa fa-trophy"></i>
+        ${escapeHtml(m.league || "Match")}
+      </span>
+      <span class="status ${status}">
+        ${escapeHtml(statusRaw)}
+      </span>
+    </div>
+
     <div class="teams">
       <div class="team">
-        <img src="${escapeAttr(m.teamALogo||defaultLogo)}" onerror="this.src='${defaultLogo}'">
+        <img src="${escapeAttr(m.teamALogo||defaultLogo)}"
+             onerror="this.src='${defaultLogo}'"
+             alt="${escapeAttr(m.teamA||'Team A')}">
         <p>${escapeHtml(m.teamA||"Team A")}</p>
       </div>
       <div class="vs">VS</div>
       <div class="team">
-        <img src="${escapeAttr(m.teamBLogo||defaultLogo)}" onerror="this.src='${defaultLogo}'">
+        <img src="${escapeAttr(m.teamBLogo||defaultLogo)}"
+             onerror="this.src='${defaultLogo}'"
+             alt="${escapeAttr(m.teamB||'Team B')}">
         <p>${escapeHtml(m.teamB||"Team B")}</p>
       </div>
     </div>
+
     <div class="info">
-      ${m.league ? `<div><i class="fa fa-trophy"></i> ${escapeHtml(m.league)}</div>` : ""}
       ${m.venue ? `<div><i class="fa fa-map-marker-alt"></i> ${escapeHtml(m.venue)}</div>` : ""}
       ${m.matchTime ? `<div><i class="fa fa-clock"></i> ${escapeHtml(m.matchTime)}</div>` : ""}
       ${m.dateTime ? `<div><i class="fa fa-calendar"></i> ${escapeHtml(m.dateTime)}</div>` : ""}
-      <span class="status ${status}">${escapeHtml(statusRaw)}</span>
     </div>
+
     ${scoreHtml}
+    ${winnerHtml}
+
     <button class="trade">${btnText}</button>
   `;
 
@@ -218,9 +520,11 @@ function render(id,m){
   box.appendChild(card);
 }
 
-/* HELPERS */
+/* ============ HELPERS ============ */
 function escapeHtml(v){
-  return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  return String(v==null?"":v).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
 }
 function escapeAttr(v){return escapeHtml(v)}
 
