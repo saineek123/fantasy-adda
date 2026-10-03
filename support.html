@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support - Fantasy Adda</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,Arial,sans-serif;
+}
+
+body{
+    background:#f5f6fa;
+    padding-bottom:85px;
+    color:#222;
+    -webkit-font-smoothing:antialiased;
+}
+
+/* ================= HEADER ================= */
+header{
+    background:#B80000;
+    color:#fff;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 3px 12px rgba(0,0,0,.18);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+header h2{
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+}
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    font-size:22px;
+    width:38px;
+    height:38px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,.15);
+}
+
+/* ================= CONTAINER ================= */
+.container{
+    max-width:520px;
+    margin:20px auto;
+    padding:0 16px;
+}
+
+/* ================= HERO CARD ================= */
+.hero-card{
+    background:linear-gradient(135deg,#B80000,#d92d20);
+    color:#fff;
+    padding:24px 20px;
+    border-radius:18px;
+    margin-bottom:18px;
+    text-align:center;
+    box-shadow:0 8px 25px rgba(184,0,0,.25);
+    position:relative;
+    overflow:hidden;
+}
+
+.hero-card::before{
+    content:"";
+    position:absolute;
+    top:-40px;
+    right:-40px;
+    width:140px;
+    height:140px;
+    background:rgba(255,255,255,.1);
+    border-radius:50%;
+}
+
+.hero-card::after{
+    content:"";
+    position:absolute;
+    bottom:-50px;
+    left:-30px;
+    width:120px;
+    height:120px;
+    background:rgba(255,255,255,.08);
+    border-radius:50%;
+}
+
+.hero-card .icon{
+    font-size:42px;
+    margin-bottom:8px;
+    display:block;
+    position:relative;
+    z-index:2;
+}
+
+.hero-card h1{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:6px;
+    position:relative;
+    z-index:2;
+}
+
+.hero-card p{
+    font-size:12.5px;
+    opacity:.92;
+    line-height:1.5;
+    position:relative;
+    z-index:2;
+}
+
+/* ================= QUICK CONTACT ================= */
+.quick-contact{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.qc-btn{
+    background:#fff;
+    border:1.5px solid #e7e9ed;
+    border-radius:14px;
+    padding:14px 10px;
+    text-decoration:none;
+    color:#222;
+    font-size:12px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    transition:.2s;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.qc-btn:active{transform:scale(.97)}
+
+.qc-btn .qc-icon{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    color:#fff;
+    flex-shrink:0;
+}
+
+.qc-btn.whatsapp .qc-icon{background:#25D366}
+.qc-btn.email .qc-icon{background:#ea4335}
+
+.qc-btn .qc-text{
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+}
+
+.qc-btn .qc-text b{
+    font-size:13px;
+    font-weight:800;
+    color:#16181d;
+}
+
+.qc-btn .qc-text small{
+    font-size:10.5px;
+    color:#888;
+    font-weight:500;
+}
+
+/* ================= CARD ================= */
+.card{
+    background:#fff;
+    padding:18px;
+    border-radius:18px;
+    margin-bottom:15px;
+    box-shadow:0 3px 14px rgba(0,0,0,.06);
+}
+
+.card-title{
+    font-size:15px;
+    font-weight:800;
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#16181d;
+}
+
+.card-title i{
+    color:#B80000;
+    font-size:15px;
+}
+
+/* ================= CATEGORY CHIPS ================= */
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-bottom:14px;
+}
+
+.cat-chip{
+    background:#f8f9fb;
+    border:1.5px solid #e7e9ed;
+    border-radius:11px;
+    padding:11px 6px;
+    font-size:11px;
+    font-weight:700;
+    color:#555;
+    cursor:pointer;
+    text-align:center;
+    transition:.15s;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:5px;
+}
+
+.cat-chip i{
+    font-size:16px;
+    color:#B80000;
+}
+
+.cat-chip.selected{
+    background:#fff0f0;
+    border-color:#B80000;
+    color:#B80000;
+}
+
+.cat-chip.selected i{
+    color:#B80000;
+}
+
+/* ================= FORM ================= */
+.form-group{
+    margin-bottom:14px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12.5px;
+    font-weight:700;
+    color:#444;
+    margin-bottom:7px;
+}
+
+.form-group label .req{
+    color:#d40000;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    padding:12px 14px;
+    border:1.5px solid #ddd;
+    border-radius:12px;
+    outline:none;
+    font-size:14px;
+    font-family:inherit;
+    background:#fafbfc;
+    transition:.15s;
+    color:#16181d;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+    border-color:#B80000;
+    background:#fff;
+}
+
+.form-group textarea{
+    resize:vertical;
+    min-height:100px;
+    line-height:1.5;
+}
+
+.char-count{
+    font-size:10.5px;
+    color:#999;
+    text-align:right;
+    margin-top:4px;
+}
+
+/* ================= SUBMIT BTN ================= */
+.submit-btn{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#B80000,#d92d20);
+    color:#fff;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    box-shadow:0 6px 18px rgba(184,0,0,.3);
+    transition:.2s;
+    margin-top:6px;
+}
+
+.submit-btn:active{transform:scale(.98)}
+
+.submit-btn:disabled{
+    background:#999;
+    box-shadow:none;
+    cursor:not-allowed;
+}
+
+/* ================= TICKET LIST ================= */
+.ticket-item{
+    border:1px solid #eef0f3;
+    border-radius:13px;
+    padding:14px;
+    margin-bottom:11px;
+    background:#fafbfc;
+    transition:.15s;
+}
+
+.ticket-item:active{
+    background:#f4f6f8;
+}
+
+.ticket-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:9px;
+}
+
+.ticket-head .t-left{
+    flex:1;
+    min-width:0;
+}
+
+.ticket-head .t-left b{
+    font-size:13px;
+    font-weight:800;
+    color:#16181d;
+    display:block;
+    margin-bottom:3px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.ticket-head .t-left small{
+    font-size:10.5px;
+    color:#888;
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.ticket-head .t-left small i{
+    color:#B80000;
+    font-size:10px;
+}
+
+.ticket-status{
+    font-size:9.5px;
+    font-weight:800;
+    padding:4px 9px;
+    border-radius:20px;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+    white-space:nowrap;
+    flex-shrink:0;
+}
+
+.ts-pending{background:#fff3cd;color:#856404}
+.ts-in-progress{background:#e3f2fd;color:#1565c0}
+.ts-resolved{background:#d4edda;color:#155724}
+.ts-closed{background:#e5e7eb;color:#4b5563}
+
+.ticket-body{
+    font-size:12px;
+    color:#555;
+    line-height:1.55;
+    margin-bottom:9px;
+    padding:10px 12px;
+    background:#fff;
+    border-radius:10px;
+    border:1px solid #eef0f3;
+    max-height:80px;
+    overflow:hidden;
+    position:relative;
+}
+
+.ticket-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:10.5px;
+    color:#999;
+    padding-top:8px;
+    border-top:1px dashed #eef0f3;
+}
+
+.ticket-foot .admin-reply{
+    color:#0a7d38;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.ticket-foot .admin-reply i{
+    font-size:11px;
+}
+
+/* ================= EMPTY ================= */
+.empty{
+    text-align:center;
+    padding:30px 16px;
+    color:#999;
+    font-size:12.5px;
+    background:#fafbfc;
+    border-radius:13px;
+    border:1.5px dashed #e7e9ed;
+}
+
+.empty i{
+    font-size:34px;
+    color:#ddd;
+    display:block;
+    margin-bottom:10px;
+}
+
+.empty b{
+    display:block;
+    color:#666;
+    font-size:13px;
+    margin-bottom:4px;
+}
+
+/* ================= TOAST ================= */
+.toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-20px);
+    background:#20242a;
+    color:#fff;
+    padding:12px 18px;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:700;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+    z-index:9999;
+    opacity:0;
+    transition:.3s;
+    max-width:90%;
+    text-align:center;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+.toast.success{background:#0aa84f}
+.toast.error{background:#d92d20}
+
+/* ================= NAV ================= */
+nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#fff;
+    display:flex;
+    justify-content:space-around;
+    padding:11px 0;
+    box-shadow:0 -3px 12px rgba(0,0,0,.12);
+    z-index:100;
+}
+
+nav a{
+    text-decoration:none;
+    color:#666;
+    font-size:11px;
+    text-align:center;
+    font-weight:600;
+    flex:1;
+    transition:.15s;
+}
+
+nav a.active{color:#B80000}
+
+nav i{
+    display:block;
+    font-size:19px;
+    margin-bottom:4px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:380px){
+    .category-grid{grid-template-columns:repeat(2,1fr)}
+    .hero-card h1{font-size:18px}
+    .quick-contact{grid-template-columns:1fr}
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>
+        <i class="fa fa-headset"></i>
+        Support
+    </h2>
+    <a href="profile.html" class="back-btn">
+        <i class="fa fa-times"></i>
+    </a>
+</header>
+
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="hero-card">
+        <i class="fa fa-headset icon"></i>
+        <h1>We're Here to Help</h1>
+        <p>Apni problem neeche submit karo. Hamari team 24 hours me respond karegi.</p>
+    </div>
+
+
+    <!-- QUICK CONTACT -->
+    <div class="quick-contact">
+        <a class="qc-btn whatsapp" href="https://wa.me/919999999999?text=Hi%20Fantasy%20Adda%20Support" target="_blank">
+            <div class="qc-icon"><i class="fa-brands fa-whatsapp"></i></div>
+            <div class="qc-text">
+                <b>WhatsApp</b>
+                <small>Instant reply</small>
+            </div>
+        </a>
+        <a class="qc-btn email" href="mailto:support@fantasyadda.com">
+            <div class="qc-icon"><i class="fa fa-envelope"></i></div>
+            <div class="qc-text">
+                <b>Email</b>
+                <small>24-48 hrs reply</small>
+            </div>
+        </a>
+    </div>
+
+
+    <!-- NEW TICKET -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fa fa-plus-circle"></i>
+            Submit New Ticket
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+            <label>Category <span class="req">*</span></label>
+            <div class="category-grid" id="categoryGrid">
+                <div class="cat-chip" data-cat="Payment">
+                    <i class="fa fa-credit-card"></i>
+                    Payment
+                </div>
+                <div class="cat-chip" data-cat="Withdrawal">
+                    <i class="fa fa-money-bill-transfer"></i>
+                    Withdrawal
+                </div>
+                <div class="cat-chip" data-cat="Trade">
+                    <i class="fa fa-exchange-alt"></i>
+                    Trade
+                </div>
+                <div class="cat-chip" data-cat="Account">
+                    <i class="fa fa-user-circle"></i>
+                    Account
+                </div>
+                <div class="cat-chip" data-cat="Referral">
+                    <i class="fa fa-gift"></i>
+                    Referral
+                </div>
+                <div class="cat-chip" data-cat="Other">
+                    <i class="fa fa-ellipsis-h"></i>
+                    Other
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject -->
+        <div class="form-group">
+            <label>Subject <span class="req">*</span></label>
+            <input
+                type="text"
+                id="subject"
+                placeholder="Short title of your issue"
+                maxlength="80"
+            >
+        </div>
+
+        <!-- Message -->
+        <div class="form-group">
+            <label>Describe Your Problem <span class="req">*</span></label>
+            <textarea
+                id="message"
+                placeholder="Apni problem detail me likho (minimum 15 characters)..."
+                maxlength="1000"
+                oninput="updateCharCount()"
+            ></textarea>
+            <div class="char-count">
+                <span id="charCount">0</span>/1000
+            </div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitTicket()">
+            <i class="fa fa-paper-plane"></i>
+            Submit Ticket
+        </button>
+    </div>
+
+
+    <!-- MY TICKETS -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fa fa-ticket"></i>
+            My Tickets
+        </div>
+        <div id="ticketsList">
+            <div class="empty">
+                <i class="fa fa-spinner fa-spin"></i>
+                <b>Loading tickets...</b>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FAQ -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fa fa-question-circle"></i>
+            Frequently Asked
+        </div>
+
+        <details style="margin-bottom:10px;padding:12px;background:#f8f9fb;border-radius:11px;cursor:pointer">
+            <summary style="font-size:13px;font-weight:700;color:#16181d;list-style:none">
+                💰 Recharge kitni der me approve hota hai?
+            </summary>
+            <p style="font-size:12px;color:#666;margin-top:10px;line-height:1.6">
+                Admin verify karne ke baad 5 minute - 2 hours me approve ho jata hai. UTR sahi daalo taaki jaldi process ho.
+            </p>
+        </details>
+
+        <details style="margin-bottom:10px;padding:12px;background:#f8f9fb;border-radius:11px;cursor:pointer">
+            <summary style="font-size:13px;font-weight:700;color:#16181d;list-style:none">
+                🏦 Withdrawal kab tak aata hai?
+            </summary>
+            <p style="font-size:12px;color:#666;margin-top:10px;line-height:1.6">
+                Withdrawal admin approval ke baad <b>24-48 hours</b> me process hota hai. Bank me aane me 1-3 working days lag sakte hain.
+            </p>
+        </details>
+
+        <details style="margin-bottom:10px;padding:12px;background:#f8f9fb;border-radius:11px;cursor:pointer">
+            <summary style="font-size:13px;font-weight:700;color:#16181d;list-style:none">
+                💸 Winning amount me 15% commission kyun?
+            </summary>
+            <p style="font-size:12px;color:#666;margin-top:10px;line-height:1.6">
+                Platform maintenance aur services ke liye net winnings pe 15% commission charge hota hai. Ye industry standard hai.
+            </p>
+        </details>
+
+        <details style="padding:12px;background:#f8f9fb;border-radius:11px;cursor:pointer">
+            <summary style="font-size:13px;font-weight:700;color:#16181d;list-style:none">
+                🎁 Referral ka ₹100 kab milega?
+            </summary>
+            <p style="font-size:12px;color:#666;margin-top:10px;line-height:1.6">
+                Jab aapka friend signup karke pehla recharge ₹100+ karta hai, tab aapko ₹100 bonus 24 hours me mil jayega.
+            </p>
+        </details>
+    </div>
+
+</div>
+
+
+<!-- NAV -->
+<nav>
+    <a href="index.html">
+        <i class="fa fa-home"></i>
+        Home
+    </a>
+    <a href="matches.html">
+        <i class="fa fa-trophy"></i>
+        Matches
+    </a>
+    <a href="referral.html">
+        <i class="fa fa-gift"></i>
+        Refer
+    </a>
+    <a href="wallet.html">
+        <i class="fa fa-wallet"></i>
+        Wallet
+    </a>
+    <a href="profile.html">
+        <i class="fa fa-user"></i>
+        Profile
+    </a>
+</nav>
+
+
+<div class="toast" id="toast"></div>
+
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
+    authDomain: "fantasy-adda-e3b72.firebaseapp.com",
+    databaseURL: "https://fantasy-adda-e3b72-default-rtdb.firebaseio.com",
+    projectId: "fantasy-adda-e3b72",
+    storageBucket: "fantasy-adda-e3b72.firebasestorage.app",
+    messagingSenderId: "882657286194",
+    appId: "1:882657286194:web:284e818359de2363f0442b",
+    measurementId: "G-8HJX9NRL1B"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.database();
+
+let currentUser = null;
+let selectedCategory = '';
+let toastTimer = null;
+let ticketsRef = null;
+
+
+function showToast(msg, type="success"){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + type;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{
+        t.className = 'toast';
+    }, 2800);
+}
+
+
+function updateCharCount(){
+    const val = document.getElementById('message').value;
+    document.getElementById('charCount').textContent = val.length;
+}
+
+
+/* Category chip click */
+document.querySelectorAll('.cat-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+        document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('selected'));
+        chip.classList.add('selected');
+        selectedCategory = chip.dataset.cat;
+    });
+});
+
+
+/* AUTH */
+auth.onAuthStateChanged(user=>{
+    if(!user){
+        window.location.href = 'login.html';
+        return;
+    }
+    currentUser = user;
+    loadTickets();
+});
+
+
+/* Submit ticket */
+async function submitTicket(){
+    const subject = document.getElementById('subject').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    if(!selectedCategory){
+        showToast('Category select karo','error');
+        return;
+    }
+    if(subject.length < 5){
+        showToast('Subject minimum 5 characters likho','error');
+        return;
+    }
+    if(message.length < 15){
+        showToast('Problem minimum 15 characters me likho','error');
+        return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Submitting...';
+
+    try{
+        const ticketRef = db.ref('supportTickets').push();
+        const ticketId = ticketRef.key;
+
+        await ticketRef.set({
+            ticketId: ticketId,
+            userId: currentUser.uid,
+            userEmail: currentUser.email || '',
+            userName: currentUser.displayName || 'User',
+            category: selectedCategory,
+            subject: subject,
+            message: message,
+            status: 'pending',
+            adminReply: '',
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            updatedAt: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        /* Reset form */
+        document.getElementById('subject').value = '';
+        document.getElementById('message').value = '';
+        document.getElementById('charCount').textContent = '0';
+        document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('selected'));
+        selectedCategory = '';
+
+        showToast('✓ Ticket submit ho gaya! 24 hrs me reply milega','success');
+
+        loadTickets();
+
+        /* Scroll to tickets */
+        setTimeout(()=>{
+            document.getElementById('ticketsList').scrollIntoView({behavior:'smooth', block:'start'});
+        }, 400);
+
+    }catch(e){
+        console.error(e);
+        showToast('Ticket submit failed: ' + e.message, 'error');
+    }finally{
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-paper-plane"></i> Submit Ticket';
+    }
+}
+
+
+/* Load tickets */
+function loadTickets(){
+    if(!currentUser) return;
+
+    if(ticketsRef) ticketsRef.off();
+    ticketsRef = db.ref('supportTickets').orderByChild('userId').equalTo(currentUser.uid);
+
+    ticketsRef.on('value', snap=>{
+        const box = document.getElementById('ticketsList');
+
+        if(!snap.exists()){
+            box.innerHTML = `
+                <div class="empty">
+                    <i class="fa fa-ticket"></i>
+                    <b>No tickets yet</b>
+                    Koi problem ho to upar ticket submit karo
+                </div>`;
+            return;
+        }
+
+        const arr = [];
+        snap.forEach(c=>{
+            arr.push({ id: c.key, ...c.val() });
+        });
+
+        arr.sort((a,b)=> (b.createdAt || 0) - (a.createdAt || 0));
+
+        box.innerHTML = arr.map(t=>{
+            const statusClass = getStatusClass(t.status);
+            const statusLabel = getStatusLabel(t.status);
+            const date = formatDate(t.createdAt);
+            const hasReply = t.adminReply && t.adminReply.trim();
+
+            return `
+                <div class="ticket-item">
+                    <div class="ticket-head">
+                        <div class="t-left">
+                            <b>${escapeHtml(t.subject || 'No subject')}</b>
+                            <small>
+                                <i class="fa fa-tag"></i>
+                                ${escapeHtml(t.category || 'Other')}
+                                &nbsp;•&nbsp;
+                                ${date}
+                            </small>
+                        </div>
+                        <span class="ticket-status ${statusClass}">${statusLabel}</span>
+                    </div>
+
+                    <div class="ticket-body">
+                        ${escapeHtml(t.message || '').substring(0, 160)}${(t.message||'').length > 160 ? '...' : ''}
+                    </div>
+
+                    ${hasReply ? `
+                        <div style="background:#e8f5e9;border:1px solid #66bb6a;border-radius:9px;padding:10px 12px;margin-bottom:9px">
+                            <div style="font-size:10.5px;font-weight:800;color:#0a7d38;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">
+                                <i class="fa fa-headset"></i> Admin Reply
+                            </div>
+                            <div style="font-size:12px;color:#1b5e20;line-height:1.55">
+                                ${escapeHtml(t.adminReply)}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div class="ticket-foot">
+                        <span style="font-family:monospace">
+                            #${String(t.ticketId || t.id).slice(-6).toUpperCase()}
+                        </span>
+                        ${hasReply ? `
+                            <span class="admin-reply">
+                                <i class="fa fa-check-circle"></i> Replied
+                            </span>
+                        ` : `
+                            <span>Awaiting response</span>
+                        `}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    });
+}
+
+
+function getStatusClass(status){
+    const s = String(status || 'pending').toLowerCase();
+    if(s === 'in-progress' || s === 'in_progress') return 'ts-in-progress';
+    if(s === 'resolved') return 'ts-resolved';
+    if(s === 'closed') return 'ts-closed';
+    return 'ts-pending';
+}
+
+function getStatusLabel(status){
+    const s = String(status || 'pending').toLowerCase();
+    if(s === 'in-progress' || s === 'in_progress') return 'In Progress';
+    if(s === 'resolved') return 'Resolved';
+    if(s === 'closed') return 'Closed';
+    return 'Pending';
+}
+
+
+function formatDate(ts){
+    if(!ts) return '—';
+    return new Date(ts).toLocaleString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+
+function escapeHtml(v){
+    return String(v||'')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+}
+
+</script>
+
+</body>
+</html>
