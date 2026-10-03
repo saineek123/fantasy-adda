@@ -62,9 +62,7 @@ header h2{
     box-shadow:0 5px 18px rgba(184,0,0,.25);
 }
 
-.balance-card small{
-    opacity:.9;
-}
+.balance-card small{opacity:.9}
 
 .balance-card h1{
     margin-top:5px;
@@ -114,6 +112,7 @@ header h2{
     font-size:16px;
     font-weight:700;
     cursor:pointer;
+    transition:.2s;
 }
 
 .amount-options button.selected{
@@ -132,9 +131,7 @@ input{
     margin-top:10px;
 }
 
-input:focus{
-    border-color:#B80000;
-}
+input:focus{border-color:#B80000}
 
 .upi-box{
     background:#fff4f4;
@@ -225,30 +222,6 @@ input:focus{
 .pay-app.paytm .icon{background:#00b9f1}
 .pay-app.bhim .icon{background:#0e4c92}
 
-.pay-now-btn{
-    width:100%;
-    padding:16px;
-    border:0;
-    border-radius:13px;
-    background:linear-gradient(135deg,#0aa84f,#08b85a);
-    color:white;
-    font-size:17px;
-    font-weight:800;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    box-shadow:0 6px 18px rgba(10,168,79,.3);
-    transition:.2s;
-}
-.pay-now-btn:active{transform:scale(.98)}
-.pay-now-btn:disabled{
-    background:#999;
-    box-shadow:none;
-    cursor:not-allowed;
-}
-
 .pay-note{
     background:#fff8e1;
     color:#795600;
@@ -293,20 +266,9 @@ input:focus{
     font-weight:700;
 }
 
-.pending{
-    background:#fff3cd;
-    color:#856404;
-}
-
-.approved{
-    background:#d4edda;
-    color:#155724;
-}
-
-.rejected{
-    background:#f8d7da;
-    color:#721c24;
-}
+.pending{background:#fff3cd;color:#856404}
+.approved{background:#d4edda;color:#155724}
+.rejected{background:#f8d7da;color:#721c24}
 
 .hidden-step{display:none;}
 
@@ -321,6 +283,78 @@ input:focus{
     padding:5px 10px;
     border-radius:20px;
     margin-bottom:8px;
+}
+
+/* Amount Summary card (jab step 1 hide ho) */
+.amount-summary{
+    background:linear-gradient(135deg,#fff8f8,#ffe8e8);
+    border:2px solid #ffcccc;
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+.amount-summary .as-left small{
+    display:block;
+    font-size:11px;
+    color:#888;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+    margin-bottom:3px;
+}
+.amount-summary .as-left b{
+    font-size:22px;
+    color:#B80000;
+    font-weight:800;
+}
+.amount-summary .change-btn{
+    background:#fff;
+    border:1.5px solid #B80000;
+    color:#B80000;
+    font-size:11px;
+    font-weight:800;
+    padding:8px 12px;
+    border-radius:9px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    transition:.2s;
+}
+.amount-summary .change-btn:hover{
+    background:#B80000;
+    color:#fff;
+}
+
+/* Primary continue button */
+.continue-btn{
+    width:100%;
+    padding:16px;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#B80000,#d92d20);
+    color:white;
+    font-size:17px;
+    font-weight:800;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-top:14px;
+    box-shadow:0 6px 18px rgba(184,0,0,.3);
+    transition:.2s;
+}
+.continue-btn:active{transform:scale(.98)}
+.continue-btn:disabled{
+    background:#ccc;
+    box-shadow:none;
+    cursor:not-allowed;
+    color:#666;
 }
 
 .toast{
@@ -396,8 +430,8 @@ nav i{
     </div>
 
 
-    <!-- STEP 1: AMOUNT -->
-    <div class="card">
+    <!-- STEP 1: AMOUNT (hides after Continue) -->
+    <div class="card" id="amountCard">
         <div class="card-title">
             <span class="step">1</span>
             Select Recharge Amount
@@ -419,100 +453,113 @@ nav i{
             max="100000"
             placeholder="Or enter custom amount"
         >
+
+        <button class="continue-btn" id="continueBtn" disabled>
+            <i class="fa fa-arrow-right"></i>
+            Continue to Pay
+        </button>
     </div>
 
 
-    <!-- STEP 2: PAYMENT -->
-    <div class="card" id="paymentCard">
-        <div class="card-title">
-            <span class="step">2</span>
-            Make Payment
-        </div>
+    <!-- STEP 2: PAYMENT (hidden until Continue) -->
+    <div id="paymentWrap" class="hidden-step">
 
-        <!-- QR -->
-        <div class="qr-wrap">
-            <img id="qrImg" alt="UPI QR" src="">
-            <div style="font-size:11px;color:#888;margin-top:8px">
-                Scan & Pay with any UPI app
+        <!-- Amount summary -->
+        <div class="amount-summary">
+            <div class="as-left">
+                <small>Paying Amount</small>
+                <b>₹<span id="paymentAmount">0</span></b>
             </div>
-        </div>
-
-        <!-- UPI ID -->
-        <div class="upi-box">
-            <div style="font-size:12px;color:#666;margin-bottom:4px">
-                Or pay to UPI ID
-            </div>
-            <div class="upi-id" id="upiId">dailylgrow@axl</div>
-            <button class="copy-btn" id="copyBtn">
-                <i class="fa fa-copy"></i>
-                Copy UPI ID
+            <button class="change-btn" onclick="changeAmount()">
+                <i class="fa fa-pen"></i> Change
             </button>
         </div>
 
-        <!-- Payment Apps -->
-        <div class="apps-title">
-            <i class="fa fa-bolt"></i> Quick Pay with
+        <!-- Payment card -->
+        <div class="card" id="paymentCard">
+            <div class="card-title">
+                <span class="step">2</span>
+                Complete Payment
+            </div>
+
+            <!-- QR -->
+            <div class="qr-wrap">
+                <img id="qrImg" alt="UPI QR" src="">
+                <div style="font-size:11px;color:#888;margin-top:8px">
+                    Scan & Pay with any UPI app
+                </div>
+            </div>
+
+            <!-- UPI ID -->
+            <div class="upi-box">
+                <div style="font-size:12px;color:#666;margin-bottom:4px">
+                    Or pay to UPI ID
+                </div>
+                <div class="upi-id" id="upiId">dailylgrow@axl</div>
+                <button class="copy-btn" id="copyBtn">
+                    <i class="fa fa-copy"></i>
+                    Copy UPI ID
+                </button>
+            </div>
+
+            <!-- Payment Apps -->
+            <div class="apps-title">
+                <i class="fa fa-bolt"></i> Quick Pay with
+            </div>
+            <div class="pay-apps" id="payApps">
+                <a class="pay-app phonepe" id="payPhonePe">
+                    <div class="icon">P</div>
+                    PhonePe
+                </a>
+                <a class="pay-app gpay" id="payGPay">
+                    <div class="icon">G</div>
+                    GPay
+                </a>
+                <a class="pay-app paytm" id="payPaytm">
+                    <div class="icon">₹</div>
+                    Paytm
+                </a>
+                <a class="pay-app bhim" id="payBhim">
+                    <div class="icon">B</div>
+                    BHIM
+                </a>
+            </div>
+
+            <div class="pay-note">
+                <b>Note:</b> Payment ke baad niche UTR daal ke submit karo.
+            </div>
         </div>
-        <div class="pay-apps" id="payApps">
-            <a class="pay-app phonepe" id="payPhonePe">
-                <div class="icon">P</div>
-                PhonePe
-            </a>
-            <a class="pay-app gpay" id="payGPay">
-                <div class="icon">G</div>
-                GPay
-            </a>
-            <a class="pay-app paytm" id="payPaytm">
-                <div class="icon">₹</div>
-                Paytm
-            </a>
-            <a class="pay-app bhim" id="payBhim">
-                <div class="icon">B</div>
-                BHIM
-            </a>
+
+        <!-- STEP 3: UTR -->
+        <div class="card hidden-step" id="utrCard">
+            <div class="card-title">
+                <span class="step">3</span>
+                Enter Payment UTR
+            </div>
+
+            <div class="tick-badge">
+                <i class="fa fa-check-circle"></i>
+                Payment Done? Enter details below
+            </div>
+
+            <label style="font-size:13px;font-weight:700;color:#555">
+                UTR / Transaction ID
+            </label>
+
+            <input
+                type="text"
+                id="utr"
+                maxlength="50"
+                placeholder="Enter 12-digit UTR number"
+                autocomplete="off"
+            >
+
+            <button class="submit-btn" id="submitBtn">
+                <i class="fa fa-paper-plane"></i>
+                Submit Recharge Request
+            </button>
         </div>
 
-        <!-- Pay Now Button -->
-        <button class="pay-now-btn" id="payNowBtn">
-            <i class="fa fa-indian-rupee-sign"></i>
-            Pay ₹<span id="payAmt">0</span> Now
-        </button>
-
-        <div class="pay-note">
-            <b>Note:</b> Select amount first, then click Pay Now.
-            After payment, UTR step will unlock.
-        </div>
-    </div>
-
-
-    <!-- STEP 3: UTR (hidden initially) -->
-    <div class="card hidden-step" id="utrCard">
-        <div class="card-title">
-            <span class="step">3</span>
-            Enter Payment UTR
-        </div>
-
-        <div class="tick-badge">
-            <i class="fa fa-check-circle"></i>
-            Payment Done? Enter details below
-        </div>
-
-        <label style="font-size:13px;font-weight:700;color:#555">
-            UTR / Transaction ID
-        </label>
-
-        <input
-            type="text"
-            id="utr"
-            maxlength="50"
-            placeholder="Enter 12-digit UTR number"
-            autocomplete="off"
-        >
-
-        <button class="submit-btn" id="submitBtn">
-            <i class="fa fa-paper-plane"></i>
-            Submit Recharge Request
-        </button>
     </div>
 
 
@@ -579,13 +626,13 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-/* ✅ FIXED UPI ID — ye kabhi change nahi hoga */
+/* ✅ FIXED UPI ID */
 const FIXED_UPI = "dailylgrow@axl";
 
 let currentUser = null;
 let selectedAmount = 0;
 let toastTimer = null;
-let payOpened = false;
+let utrUnlocked = false;
 
 const balanceEl = document.getElementById("balance");
 const customAmount = document.getElementById("customAmount");
@@ -593,9 +640,11 @@ const utrInput = document.getElementById("utr");
 const submitBtn = document.getElementById("submitBtn");
 const requestList = document.getElementById("requestList");
 
+const amountCard = document.getElementById("amountCard");
+const paymentWrap = document.getElementById("paymentWrap");
 const utrCard = document.getElementById("utrCard");
-const payNowBtn = document.getElementById("payNowBtn");
-const payAmt = document.getElementById("payAmt");
+const continueBtn = document.getElementById("continueBtn");
+const paymentAmount = document.getElementById("paymentAmount");
 const upiIdEl = document.getElementById("upiId");
 const qrImg = document.getElementById("qrImg");
 
@@ -613,7 +662,7 @@ function showToast(message, type="success"){
 }
 
 
-/* UPI Link Builder — always uses FIXED_UPI */
+/* UPI Link Builder */
 function buildUpiLink(appName){
     const upi = FIXED_UPI;
     const name = "Fantasy Adda";
@@ -626,14 +675,10 @@ function buildUpiLink(appName){
         "&cu=INR" +
         "&tn=" + encodeURIComponent(note);
 
-    if(appName === "phonepe")
-        return "phonepe://pay?" + baseParams;
-    if(appName === "gpay")
-        return "tez://upi/pay?" + baseParams;
-    if(appName === "paytm")
-        return "paytmmp://pay?" + baseParams;
-    if(appName === "bhim")
-        return "upi://pay?" + baseParams;
+    if(appName === "phonepe")   return "phonepe://pay?" + baseParams;
+    if(appName === "gpay")      return "tez://upi/pay?" + baseParams;
+    if(appName === "paytm")     return "paytmmp://pay?" + baseParams;
+    if(appName === "bhim")      return "upi://pay?" + baseParams;
 
     return "upi://pay?" + baseParams;
 }
@@ -666,15 +711,14 @@ function setupPayApps(){
 
 
 function unlockUtr(){
-    if(payOpened) return;
-    payOpened = true;
+    if(utrUnlocked) return;
+    utrUnlocked = true;
     utrCard.classList.remove("hidden-step");
     utrCard.scrollIntoView({behavior:"smooth", block:"start"});
     showToast("Payment ke baad UTR enter karo", "success");
 }
 
 
-/* ✅ SET UPI ID + QR ON PAGE LOAD — koi Firebase check nahi */
 function setupFixedUpi(){
     upiIdEl.textContent = FIXED_UPI;
     qrImg.src =
@@ -724,7 +768,7 @@ document.querySelectorAll(".amount-options button").forEach(button=>{
         button.classList.add("selected");
         selectedAmount = Number(button.dataset.amount);
         customAmount.value = "";
-        updatePayButton();
+        updateContinueButton();
     });
 });
 
@@ -733,25 +777,59 @@ customAmount.addEventListener("input", ()=>{
     document.querySelectorAll(".amount-options button")
         .forEach(btn=> btn.classList.remove("selected"));
     selectedAmount = Number(customAmount.value || 0);
-    updatePayButton();
+    updateContinueButton();
 });
 
 
-function updatePayButton(){
-    payAmt.textContent = Number(selectedAmount||0).toLocaleString("en-IN");
-    payNowBtn.disabled = !(selectedAmount >= 1 && selectedAmount <= 100000);
+function updateContinueButton(){
+    const amt = Number(selectedAmount||0);
+    continueBtn.disabled = !(amt >= 1 && amt <= 100000);
 }
 
 
-payNowBtn.addEventListener("click", ()=>{
-    if(!selectedAmount || selectedAmount < 1){
-        showToast("Pehle amount select karo", "error");
-        return;
-    }
-    const link = buildUpiLink("generic");
-    window.location.href = link;
-    setTimeout(unlockUtr, 1500);
+/* ✅ Continue → hide Step 1, show Step 2 */
+continueBtn.addEventListener("click", ()=>{
+    if(continueBtn.disabled) return;
+
+    const amt = Number(selectedAmount||0);
+
+    /* Fill amount display */
+    paymentAmount.textContent = amt.toLocaleString("en-IN");
+
+    /* Hide Step 1 card */
+    amountCard.classList.add("hidden-step");
+
+    /* Show payment wrap (amount summary + payment card) */
+    paymentWrap.classList.remove("hidden-step");
+
+    /* Reset UTR state */
+    utrUnlocked = false;
+    utrCard.classList.add("hidden-step");
+
+    /* Scroll to top of payment section */
+    setTimeout(()=>{
+        paymentWrap.scrollIntoView({behavior:"smooth", block:"start"});
+    }, 100);
+
+    showToast("Ab payment karo — QR scan karo ya UPI ID use karo", "success");
 });
+
+
+/* Change amount → show Step 1 back */
+function changeAmount(){
+    /* Show Step 1 back */
+    amountCard.classList.remove("hidden-step");
+
+    /* Hide payment wrap */
+    paymentWrap.classList.add("hidden-step");
+
+    /* Reset UTR */
+    utrUnlocked = false;
+    utrCard.classList.add("hidden-step");
+
+    /* Scroll to top */
+    window.scrollTo({top:0, behavior:"smooth"});
+}
 
 
 function cleanUTR(value){
@@ -802,16 +880,20 @@ submitBtn.addEventListener("click", async ()=>{
             updatedAt: firebase.database.ServerValue.TIMESTAMP
         });
 
+        /* Reset all */
         utrInput.value = "";
         customAmount.value = "";
         selectedAmount = 0;
-        payOpened = false;
+        utrUnlocked = false;
 
         document.querySelectorAll(".amount-options button")
             .forEach(btn=> btn.classList.remove("selected"));
 
+        /* Show Step 1, hide payment */
+        amountCard.classList.remove("hidden-step");
+        paymentWrap.classList.add("hidden-step");
         utrCard.classList.add("hidden-step");
-        updatePayButton();
+        updateContinueButton();
 
         showToast(
             "Recharge request submit ho gayi. Admin approval pending.",
@@ -819,6 +901,7 @@ submitBtn.addEventListener("click", async ()=>{
         );
 
         loadRequests();
+        window.scrollTo({top:0, behavior:"smooth"});
 
     }catch(error){
         console.error(error);
@@ -900,7 +983,8 @@ function escapeHtml(value){
     .replace(/'/g,"&#039;");
 }
 
-updatePayButton();
+/* Init */
+updateContinueButton();
 
 </script>
 
