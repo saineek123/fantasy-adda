@@ -44,6 +44,10 @@
         .menu-card a.refer-item { background: #f0fdf4; }
         .menu-card a.refer-item i { color: #0aa84f; }
         .menu-card a.refer-item:hover { background: #dcfce7; }
+        .menu-card a.support-item i { color: #2563eb; }
+        .menu-card a.support-item:hover { background: #eff6ff; }
+        .menu-card a.faq-item i { color: #f59e0b; }
+        .menu-card a.faq-item:hover { background: #fffbeb; }
         .menu-card a .arrow { margin-left: auto; color: #ccc; font-size: 14px; }
         .menu-card a .badge-new { background: #0aa84f; color: #fff; font-size: 9px; font-weight: 800; padding: 3px 7px; border-radius: 20px; text-transform: uppercase; margin-left: 8px; }
         .menu-card a.logout { color: #d40000; }
@@ -242,6 +246,16 @@ function renderProfile(uid, userData){
             <a href="withdraw.html">
                 <i class="fa fa-money-bill-wave"></i>
                 Withdraw
+                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+            </a>
+            <a href="support.html" class="support-item">
+                <i class="fa fa-headset"></i>
+                Help & Support
+                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+            </a>
+            <a href="faq.html" class="faq-item">
+                <i class="fa fa-question-circle"></i>
+                FAQ
                 <span class="arrow"><i class="fa fa-chevron-right"></i></span>
             </a>
             <a href="#" class="logout" id="logoutBtn">
