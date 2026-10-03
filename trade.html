@@ -128,13 +128,23 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 }
 .tab.active{color:var(--red);font-weight:800;border-bottom:3px solid var(--red);}
 
-/* ================= CONTAINER ================= */
 .container{max-width:560px;margin:auto;padding:0 0 10px;}
 
 /* ================= MARKET CARD ================= */
 .market-card{
   background:#fff;border-radius:0;
   padding:16px 14px 18px;border-bottom:8px solid #eef0f3;
+  position:relative;
+}
+.market-card.resolved{
+  background:#f9fafb;
+}
+.market-card.resolved::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,.5);
+  pointer-events:none;
 }
 .trade-count{
   display:flex;align-items:center;gap:5px;
@@ -151,6 +161,26 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
   font-size:32px;flex-shrink:0;
 }
 
+/* Resolved banner */
+.resolved-banner{
+  background:linear-gradient(135deg,#e8f5e9,#c8e6c9);
+  border:1.5px solid #66bb6a;
+  border-radius:11px;
+  padding:10px 14px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:12px;
+  font-weight:800;
+  color:#1b5e20;
+  position:relative;
+  z-index:2;
+}
+.resolved-banner i{font-size:16px;color:#0aa84f}
+.resolved-banner .win-yes{color:#0aa84f}
+.resolved-banner .win-no{color:#d32f2f}
+
 .prob-bar{
   background:#e8f0fe;border-radius:12px;
   padding:11px 14px;text-align:center;margin-bottom:14px;
@@ -161,7 +191,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 }
 .prob-bar b{color:var(--blue);font-size:13px;font-weight:800;}
 
-.prediction{display:flex;gap:10px;}
+.prediction{display:flex;gap:10px;position:relative;z-index:2;}
 .pred-btn{
   flex:1;padding:14px 6px;border-radius:10px;
   font-size:14px;font-weight:800;text-align:center;
@@ -169,6 +199,10 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 }
 .pred-btn.yes{background:#e6f7ec;color:#0a9c46;border-color:#c7ebd5;}
 .pred-btn.no{background:#fdecec;color:var(--red);border-color:#f5cfcf;}
+.pred-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
 
 .pred-progress{display:flex;gap:10px;margin-bottom:12px;}
 .pp-box{
@@ -216,7 +250,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 .noc{color:var(--red);font-weight:700;}
 .book-row div:first-child{text-align:left;font-weight:700;}
 
-/* ================= STATS ================= */
 .stats{
   display:grid;grid-template-columns:repeat(3,1fr);
   gap:8px;margin:10px 12px;
@@ -459,7 +492,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
     </div>
 
     <div class="sb-center">
-      <div class="">
+      <div class="web11">
         <span class="w-icon">W</span> Web11
       </div>
       <div class="live-dot" id="liveDot">
@@ -503,7 +536,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
 <main class="container">
 
   <div id="loginBanner" class="login-banner" style="display:none">
-    <span>🔒</span>
+    <span>🔒 Login to place trades</span>
     <a href="login.html">Login</a>
   </div>
 
@@ -622,7 +655,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
       </button>
     </div>
 
-    <!-- FIXED PRICE -->
     <div class="price-line">
       <div>
         <div class="label">Price (Fixed)</div>
@@ -677,7 +709,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;}
       </button>
     </div>
 
-    <!-- SWIPE INSIDE SHEET -->
     <div class="sheet-swipe-wrap">
       <div class="swipe" id="swipe">
         <span>Swipe To Confirm</span>
@@ -721,7 +752,6 @@ const matchId = params.get('id');
 const FALLBACK =
 "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23eee'/%3E%3Cpath d='M40 15v50M15 40h50' stroke='%23aaa' stroke-width='4'/%3E%3C/svg%3E";
 
-/* RETURN URL */
 if(!sessionStorage.getItem('tradeReturnUrl')){
   if(document.referrer && !document.referrer.includes('trade.html')){
     sessionStorage.setItem('tradeReturnUrl', document.referrer);
@@ -730,7 +760,6 @@ if(!sessionStorage.getItem('tradeReturnUrl')){
   }
 }
 
-/* STATE */
 let state = {
   side:'YES',
   qty:5,
@@ -744,6 +773,7 @@ let state = {
   match:null,
   markets:[],
   activeMarket:null,
+  activeMarketId:null,   /* ✅ NEW */
   uid:null,
   loggedIn:false
 };
@@ -753,7 +783,6 @@ let myTradesRef=null;
 let allTradesRef=null;
 let marketRef=null;
 
-/* MONEY */
 function money(n){
   return '₹' + Number(n || 0).toLocaleString('en-IN',{
     minimumFractionDigits:2,
@@ -761,7 +790,6 @@ function money(n){
   });
 }
 
-/* TOAST */
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;
@@ -770,9 +798,7 @@ function toast(msg){
   window.tt=setTimeout(()=>{ t.classList.remove('show'); },2500);
 }
 
-/* =====================================================
-   ORDER BOOK TOGGLE
-   ===================================================== */
+/* ORDER BOOK TOGGLE */
 function toggleBook(){
   const body = document.getElementById('orderBookBody');
   const icon = document.getElementById('bookChevIcon');
@@ -844,7 +870,7 @@ function render(){
 }
 
 /* =====================================================
-   RENDER MARKETS
+   RENDER MARKETS — resolved markets disable karo
    ===================================================== */
 function renderMarkets(){
   const container = document.getElementById('marketsContainer');
@@ -868,6 +894,10 @@ function renderMarkets(){
     const tradesCount = Number(mk.tradesCount || 0);
     const probText = mk.probText || '';
 
+    /* ✅ Resolved market check */
+    const isResolved = mk.resultStatus === 'resolved';
+    const winner = mk.winner || null;
+
     let progressHtml = '';
     if(Array.isArray(mk.progress) && mk.progress.length){
       progressHtml = `
@@ -886,7 +916,7 @@ function renderMarkets(){
     }
 
     let probHtml = '';
-    if(probText){
+    if(probText && !isResolved){
       probHtml = `
         <div class="prob-bar">
           <small>The Market Predicts</small>
@@ -895,8 +925,21 @@ function renderMarkets(){
       `;
     }
 
+    /* ✅ Resolved banner */
+    let resolvedHtml = '';
+    if(isResolved){
+      const winCls = winner === 'YES' ? 'win-yes' : 'win-no';
+      const icon2 = winner === 'YES' ? 'fa-check-circle' : 'fa-times-circle';
+      resolvedHtml = `
+        <div class="resolved-banner">
+          <i class="fa ${icon2}"></i>
+          <span>Market Resolved — <span class="${winCls}">${winner} WON</span></span>
+        </div>
+      `;
+    }
+
     return `
-      <section class="market-card">
+      <section class="market-card ${isResolved ? 'resolved' : ''}">
         <div class="trade-count">
           <i class="fa fa-user"></i> ${tradesCount.toLocaleString('en-IN')} trades
         </div>
@@ -906,14 +949,15 @@ function renderMarkets(){
           <div class="q-img">${icon}</div>
         </div>
 
+        ${resolvedHtml}
         ${progressHtml}
         ${probHtml}
 
         <div class="prediction">
-          <button class="pred-btn yes" onclick="openTrade('YES', ${idx})">
+          <button class="pred-btn yes" onclick="openTrade('YES', ${idx})" ${isResolved ? 'disabled' : ''}>
             YES | ₹${yesP}
           </button>
-          <button class="pred-btn no" onclick="openTrade('NO', ${idx})">
+          <button class="pred-btn no" onclick="openTrade('NO', ${idx})" ${isResolved ? 'disabled' : ''}>
             NO | ₹${noP}
           </button>
         </div>
@@ -922,9 +966,7 @@ function renderMarkets(){
   }).join('');
 }
 
-/* =====================================================
-   ORDER BOOK
-   ===================================================== */
+/* ORDER BOOK */
 function renderBook(){
   const sourceTrades=state.allTrades || [];
   const yesOrders={};
@@ -971,7 +1013,7 @@ function renderBook(){
 }
 
 /* =====================================================
-   OPEN TRADE — Order Book + Stats auto-show
+   OPEN TRADE
    ===================================================== */
 function openTrade(side, marketIdx){
   if(!state.loggedIn){
@@ -995,7 +1037,16 @@ function openTrade(side, marketIdx){
     return;
   }
 
-  /* ✅ FIX: Order Book + Stats ko turant show karo */
+  /* ✅ Block resolved markets */
+  if(state.activeMarket.resultStatus === 'resolved'){
+    toast('This market is already resolved');
+    return;
+  }
+
+  /* ✅ Save market id */
+  state.activeMarketId = state.activeMarket.id || null;
+
+  /* Order Book + Stats show */
   const wrap = document.getElementById('extraInfoWrap');
   wrap.style.display = 'block';
 
@@ -1004,10 +1055,8 @@ function openTrade(side, marketIdx){
   if(bookBody) bookBody.style.display = 'block';
   if(bookIcon) bookIcon.className = 'fa fa-chevron-up';
 
-  /* ✅ Order Book fresh render karo */
   renderBook();
 
-  /* FIXED prices */
   state.yesPrice = Number(state.activeMarket.yesPrice ?? state.activeMarket.price ?? 0);
   state.noPrice = Number(state.activeMarket.noPrice ?? 0);
   state.yesAvailable = Number(state.activeMarket.yesAvailable ?? 0);
@@ -1028,7 +1077,6 @@ function openTrade(side, marketIdx){
   setTimeout(()=>{ swipeState.maxX=getSwipeMax(); }, 100);
 }
 
-/* CLOSE */
 function closeTrade(){
   document.getElementById('overlay').classList.remove('show');
   document.body.style.overflow='';
@@ -1050,7 +1098,6 @@ function exitPage(){
   location.href=returnUrl;
 }
 
-/* SIDE */
 function setSide(side){
   state.side=side;
   document.getElementById('pillYes').classList.toggle('active',side==='YES');
@@ -1065,7 +1112,6 @@ function available(){
   return state.side==='YES' ? state.yesAvailable : state.noAvailable;
 }
 
-/* QUANTITY */
 function setQty(q){
   state.qty=Math.max(1,Math.floor(Number(q) || 1));
   document.getElementById('qtyInput').value=state.qty;
@@ -1075,7 +1121,6 @@ function setQty(q){
 function changeQty(d){ setQty(state.qty+d); }
 function syncQty(){ setQty(document.getElementById('qtyInput').value); }
 
-/* SHEET */
 function updateSheet(){
   const p = price();
   const q = state.qty;
@@ -1096,16 +1141,13 @@ function updateSheet(){
     inv>state.balance || q>available());
 }
 
-/* BALANCE ALERT */
 function updateBalanceAlert(){
   const alertBox = document.getElementById('balanceAlert');
   const inv = price() * state.qty;
   alertBox.style.display = (inv > state.balance) ? 'flex' : 'none';
 }
 
-/* =====================================================
-   MOBILE SWIPE SYSTEM
-   ===================================================== */
+/* SWIPE SYSTEM */
 const swipeState={active:false,startX:0,currentX:0,maxX:0,pointerId:null};
 const swipeEl=document.getElementById('swipe');
 const knobEl=document.getElementById('knob');
@@ -1182,7 +1224,7 @@ window.addEventListener('resize', ()=>{
 });
 
 /* =====================================================
-   CONFIRM TRADE — My Trades tab pe jaye
+   CONFIRM TRADE
    ===================================================== */
 async function confirmTrade(){
   const inv = price() * state.qty;
@@ -1190,6 +1232,13 @@ async function confirmTrade(){
   if(inv>state.balance){ toast('Insufficient balance'); resetSwipe(); return; }
   if(state.qty>available()){ toast('Not enough quantity available'); resetSwipe(); return; }
   if(!state.loggedIn || !matchId){ toast('Login required'); resetSwipe(); return; }
+
+  /* ✅ Recheck market not resolved */
+  if(state.activeMarket?.resultStatus === 'resolved'){
+    toast('This market is already resolved');
+    resetSwipe();
+    return;
+  }
 
   try{
     const w=db.ref('users/' + state.uid + '/wallet/balance');
@@ -1205,6 +1254,8 @@ async function confirmTrade(){
     const trade={
       userId:state.uid,
       matchId:matchId,
+      marketId: state.activeMarketId || null,
+      marketType: state.activeMarket?.type || 'custom',
       marketQuestion:activeQ,
       teamA:state.match?.teamA || 'Team A',
       teamB:state.match?.teamB || 'Team B',
@@ -1226,7 +1277,9 @@ async function confirmTrade(){
       type:'debit',
       amount:Number(inv.toFixed(2)),
       description:`Trade ${state.side} x${state.qty} @ ${trade.odds} on ${state.match?.teamA} vs ${state.match?.teamB}`,
-      date:firebase.database.ServerValue.TIMESTAMP
+      date:firebase.database.ServerValue.TIMESTAMP,
+      marketId: state.activeMarketId || null,
+      matchId: matchId
     };
 
     /* PRICE MOVEMENT */
@@ -1244,7 +1297,7 @@ async function confirmTrade(){
     newYes=Number(newYes.toFixed(2));
     newNo=Number(newNo.toFixed(2));
 
-    const marketId = state.activeMarket?.id;
+    const marketId = state.activeMarketId;
     const path = marketId ? `matches/${matchId}/markets/${marketId}` : null;
 
     if(path){
@@ -1252,6 +1305,7 @@ async function confirmTrade(){
       updates[`${path}/noPrice`]=newNo;
       updates[`${path}/yesAvailable`]=Math.max(0, state.yesAvailable-state.qty);
       updates[`${path}/noAvailable`]=Math.max(0, state.noAvailable-state.qty);
+      updates[`${path}/tradesCount`]=firebase.database.ServerValue.increment(1);
     }
 
     await db.ref().update(updates);
@@ -1259,7 +1313,6 @@ async function confirmTrade(){
     closeTrade();
     toast('✅ Trade placed!');
 
-    /* ✅ FIX: trade ke baad My Trades tab pe switch karo */
     setTimeout(()=>{
       switchToMyTrades();
     },400);
@@ -1271,23 +1324,18 @@ async function confirmTrade(){
   }
 }
 
-/* ✅ My Trades tab pe switch karo */
 function switchToMyTrades(){
-  /* Tab active karo */
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(x=>{
     if(x.textContent.trim() === 'My Trades') x.classList.add('active');
   });
 
-  /* Views switch */
   document.getElementById('marketView').style.display = 'none';
   document.getElementById('activityView').style.display = 'block';
 
-  /* Scroll top */
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* MY TRADES */
 function renderTrades(){
   const box=document.getElementById('tradeList');
 
@@ -1312,7 +1360,10 @@ function renderTrades(){
 
   document.getElementById('tradeCount').textContent=state.myTrades.length + ' trades';
 
-  box.innerHTML=state.myTrades.map(t=>`
+  box.innerHTML=state.myTrades.map(t=>{
+    const stColor = t.status==='win'?'#159b4c':t.status==='loss'?'#d92d20':'#f39c12';
+    const stBg = t.status==='win'?'#e6f7ec':t.status==='loss'?'#fdecec':'#fff7e6';
+    return `
     <div class="book-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
       <div>
         <b>${t.side || '—'}</b>
@@ -1320,13 +1371,13 @@ function renderTrades(){
       </div>
       <div>${money(t.odds)}</div>
       <div>${money(t.amount)}</div>
-      <div style="color:${t.status==='win'?'#159b4c':t.status==='loss'?'#d92d20':'#f39c12'};text-transform:uppercase;font-size:10px;font-weight:700">
+      <div style="text-transform:uppercase;font-size:10px;font-weight:800;padding:3px 6px;border-radius:5px;display:inline-block;background:${stBg};color:${stColor}">
         ${t.status || 'pending'}
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
-/* TABS */
 function switchTab(tab,btn){
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   btn.classList.add('active');
@@ -1434,69 +1485,7 @@ if(matchId){
     '<i class="fa fa-exclamation-circle"></i> No match ID in URL';
 }
 
-/* INITIAL */
 render();
-
-/* =====================================================
-   WINNING COMMISSION SETTLEMENT — 15% TAX
-   ---------------------------------------------------
-   Ye function admin panel me call karna hai jab admin
-   kisi trade ko "win" mark kare. User ke wallet me
-   winning amount me se 15% commission kat ke balance
-   add hoga.
-
-   Admin panel me settleTradeWin(tradeId) call karo.
-   ===================================================== */
-window.settleTradeWin = async function(tradeId){
-  try{
-    const tradeSnap = await db.ref('trades/'+tradeId).once('value');
-    const trade = tradeSnap.val();
-    if(!trade) return;
-
-    if(trade.status === 'win') return; // already settled
-
-    const winAmount = Number(trade.winAmount || 0);
-    const commission = Number((winAmount * 0.15).toFixed(2)); // 15%
-    const netAmount = Number((winAmount - commission).toFixed(2));
-
-    /* 1. trade mark win */
-    await db.ref('trades/'+tradeId).update({
-      status: 'win',
-      commission: commission,
-      netWinAmount: netAmount,
-      settledAt: Date.now()
-    });
-
-    /* 2. user wallet me winning add + balance add */
-    const userWalletRef = db.ref('users/'+trade.userId+'/wallet');
-    const walletSnap = await userWalletRef.once('value');
-    const wallet = walletSnap.val() || {};
-
-    const currWinning = Number(wallet.winning || 0);
-    const currBalance = Number(wallet.balance || 0);
-
-    await userWalletRef.update({
-      winning: Number((currWinning + netAmount).toFixed(2)),
-      balance: Number((currBalance + netAmount).toFixed(2))
-    });
-
-    /* 3. transactions me record */
-    await db.ref('transactions').push({
-      userId: trade.userId,
-      type: 'credit',
-      amount: netAmount,
-      description: `Trade WIN — Win: ₹${winAmount} | Commission (15%): -₹${commission} | Net: ₹${netAmount}`,
-      date: Date.now(),
-      tradeId: tradeId,
-      source: 'winning',
-      commission: commission,
-      grossAmount: winAmount
-    });
-
-  }catch(e){
-    console.error('Settle win error:', e);
-  }
-};
 
 </script>
 
