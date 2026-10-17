@@ -501,11 +501,11 @@ nav a.refer-nav::before {
 <body>
 
 <!-- ================= SPLASH SCREEN ================= -->
-<div class="splash" id="splashScreen">
+<div class="splash" id="splashScreen" style="display:none;">
     <div class="glow"></div>
     <div class="logo-box">🏏</div>
     <div class="brand">Fantasy Adda</div>
-    <div class="tagline">Your Cricket. Your Trade.</div>
+    <div class="tagline">Your Cricket. Your Stats.</div>
     <div class="loader"></div>
     <div class="version">Version 1.0</div>
 </div>
@@ -650,33 +650,37 @@ const mainApp = document.getElementById("mainApp");
 const liveMatches = document.getElementById("liveMatches");
 
 /* =========================================
-   SPLASH FLAG - SIRF EK BAAR DIKHE
-   sessionStorage use kiya = ek tab/session me
-   sirf 1 baar. Naya tab = phir dikhega.
+   SPLASH FLAG - SIRF PEHLI INSTALL PE DIKHE
+   localStorage use kiya = permanent.
+   Ek baar dikh gaya, phir KABHI NAHI dikhega
+   (jab tak browser data clear na ho).
 ========================================= */
-const SPLASH_KEY = "fa_splash_shown";
-const shouldShowSplash = !sessionStorage.getItem(SPLASH_KEY);
+const SPLASH_KEY = "fa_splash_shown_v1";
+const shouldShowSplash = !localStorage.getItem(SPLASH_KEY);
 
 /* =========================================
    SPLASH CONTROL FUNCTIONS
 ========================================= */
 function hideSplashAndShowApp(){
-  // Splash ko hide karo
-  splashScreen.classList.add("hide");
+  splashScreen.style.display = "flex";
+
+  // Thoda delay taaki splash render ho
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      splashScreen.classList.add("hide");
+    });
+  });
+
   setTimeout(()=>{ splashScreen.style.display = "none"; }, 700);
 
-  // Main app dikhao
   mainApp.style.display = "block";
 
-  // Flag set karo - ab is session me splash nahi dikhega
-  sessionStorage.setItem(SPLASH_KEY, "1");
+  // Flag set karo - ab PERMANENTLY splash nahi dikhega
+  localStorage.setItem(SPLASH_KEY, "1");
 }
 
 function showAppWithoutSplash(){
-  // Splash ko turant hata do (bina animation ke)
   splashScreen.style.display = "none";
-
-  // Main app dikhao
   mainApp.style.display = "block";
 }
 
@@ -699,14 +703,14 @@ auth.onAuthStateChanged((user)=>{
   if(user){
     // ✅ User logged in hai
     if(shouldShowSplash){
-      // Pehli baar is session me - splash dikhao 1.8s
+      // Pehli baar EVER - splash dikhao 1.8s
       setTimeout(()=>{
         hideSplashAndShowApp();
         loadMatches();
         initBonusSlider();
       }, 1800);
     } else {
-      // Splash pehle hi dikh chuki hai - direct app dikhao
+      // Splash pehle hi dikh chuki hai - direct app
       showAppWithoutSplash();
       loadMatches();
       initBonusSlider();
@@ -716,12 +720,14 @@ auth.onAuthStateChanged((user)=>{
     // ❌ User logged in nahi hai
     if(shouldShowSplash){
       // Pehli baar - splash dikhao 1.8s phir login pe bhejo
+      // Flag SET KARO taaki login ke baad wapas aane pe splash na dikhe
+      splashScreen.style.display = "flex";
+      localStorage.setItem(SPLASH_KEY, "1");
       setTimeout(()=>{
-        sessionStorage.setItem(SPLASH_KEY, "1");
         window.location.replace("login.html");
       }, 1800);
     } else {
-      // Splash pehle hi dikh chuki hai - direct login pe bhejo
+      // Splash pehle hi dikh chuki hai - direct login
       window.location.replace("login.html");
     }
   }
