@@ -5,447 +5,109 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Withdraw - Fantasy Adda</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
+body{ background:#f5f6fa; padding-bottom:80px; }
 
-body{
-    background:#f5f6fa;
-    padding-bottom:80px;
-}
+header{ background:#B80000; color:white; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 3px 10px rgba(0,0,0,.15); }
+header h2{ font-size:20px; display:flex; gap:10px; align-items:center; }
+.back-btn{ color:white; text-decoration:none; font-size:22px; }
 
-header{
-    background:#B80000;
-    color:white;
-    padding:16px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 3px 10px rgba(0,0,0,.15);
-}
+.container{ max-width:520px; margin:20px auto; padding:0 15px; }
 
-header h2{
-    font-size:20px;
-    display:flex;
-    gap:10px;
-    align-items:center;
-}
+.balance-card{ background:linear-gradient(135deg,#B80000,#ff4d4d); color:white; padding:25px 20px; border-radius:16px; text-align:center; margin-bottom:18px; box-shadow:0 5px 20px rgba(184,0,0,.25); }
+.balance-card h3{ font-size:14px; font-weight:400; opacity:.9; }
+.balance-card h1{ font-size:34px; margin-top:5px; }
+.balance-card .sub{ font-size:11px; opacity:.85; margin-top:6px; }
 
-.back-btn{
-    color:white;
-    text-decoration:none;
-    font-size:22px;
-}
-
-.container{
-    max-width:520px;
-    margin:20px auto;
-    padding:0 15px;
-}
-
-.balance-card{
-    background:linear-gradient(135deg,#B80000,#ff4d4d);
-    color:white;
-    padding:25px 20px;
-    border-radius:16px;
-    text-align:center;
-    margin-bottom:18px;
-    box-shadow:0 5px 20px rgba(184,0,0,.25);
-}
-
-.balance-card h3{
-    font-size:14px;
-    font-weight:400;
-    opacity:.9;
-}
-
-.balance-card h1{
-    font-size:34px;
-    margin-top:5px;
-}
-
-.balance-card .sub{
-    font-size:11px;
-    opacity:.85;
-    margin-top:6px;
-}
-
-.pending-banner{
-    background:#fff8e1;
-    border:1px solid #ffd54f;
-    border-radius:14px;
-    padding:14px 16px;
-    margin-bottom:16px;
-    display:none;
-    align-items:center;
-    gap:12px;
-    box-shadow:0 3px 12px rgba(245,166,35,.15);
-}
+.pending-banner{ background:#fff8e1; border:1px solid #ffd54f; border-radius:14px; padding:14px 16px; margin-bottom:16px; display:none; align-items:center; gap:12px; box-shadow:0 3px 12px rgba(245,166,35,.15); }
 .pending-banner.show{display:flex;}
-.pending-banner .p-icon{
-    width:38px;height:38px;border-radius:50%;
-    background:#f5a623;
-    color:#fff;
-    display:flex;align-items:center;justify-content:center;
-    font-size:16px;
-    flex-shrink:0;
-}
+.pending-banner .p-icon{ width:38px;height:38px;border-radius:50%; background:#f5a623; color:#fff; display:flex;align-items:center;justify-content:center; font-size:16px; flex-shrink:0; }
 .pending-banner .p-text{flex:1;font-size:12px;color:#665100;line-height:1.5;}
 .pending-banner .p-text b{display:block;font-size:13px;color:#3a2c00;margin-bottom:2px;}
 
-.card{
-    background:white;
-    padding:20px;
-    border-radius:16px;
-    box-shadow:0 3px 15px rgba(0,0,0,.08);
-}
+.card{ background:white; padding:20px; border-radius:16px; box-shadow:0 3px 15px rgba(0,0,0,.08); }
 
-.card-title{
-    font-size:19px;
-    font-weight:bold;
-    margin-bottom:20px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
+.card-title{ font-size:19px; font-weight:bold; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.card-title i{ color:#B80000; }
 
-.card-title i{
-    color:#B80000;
-}
+/* Method Selection Boxes */
+.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;}
+.method-box { border: 2px solid #ddd; border-radius: 14px; padding: 15px 10px; text-align: center; cursor: pointer; transition: .2s; background: #fff; }
+.method-box i { font-size: 24px; margin-bottom: 8px; color: #666; }
+.method-box span { display: block; font-size: 13px; font-weight: 700; color: #333; }
+.method-box.active { border-color: #B80000; background: #fff0f0; }
+.method-box.active i, .method-box.active span { color: #B80000; }
 
-.form-group{
-    margin-bottom:16px;
-}
+.form-group{ margin-bottom:16px; }
+.form-group label{ display:block; font-size:14px; font-weight:bold; color:#333; margin-bottom:7px; }
+.form-group input{ width:100%; padding:14px; border:2px solid #ddd; border-radius:11px; font-size:16px; outline:none; }
+.form-group input:focus{ border-color:#B80000; }
 
-.form-group label{
-    display:block;
-    font-size:14px;
-    font-weight:bold;
-    color:#333;
-    margin-bottom:7px;
-}
+.withdraw-btn{ width:100%; padding:16px; border:none; border-radius:12px; background:#B80000; color:white; font-size:18px; font-weight:bold; cursor:pointer; margin-top:5px; }
+.withdraw-btn:disabled{ background:#999; }
 
-.form-group input{
-    width:100%;
-    padding:14px;
-    border:2px solid #ddd;
-    border-radius:11px;
-    font-size:16px;
-    outline:none;
-}
-
-.form-group input:focus{
-    border-color:#B80000;
-}
-
-.withdraw-btn{
-    width:100%;
-    padding:16px;
-    border:none;
-    border-radius:12px;
-    background:#B80000;
-    color:white;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-    margin-top:5px;
-}
-
-.withdraw-btn:disabled{
-    background:#999;
-}
+/* ================= USDT WARNING BOX ================= */
+.warning-box { background: #ffebee; border: 2px solid #d32f2f; border-radius: 10px; padding: 12px; margin-bottom: 15px; color: #b71c1c; font-size: 12px; line-height: 1.5; font-weight: 600; }
+.warning-box i { font-size: 16px; margin-right: 5px; }
 
 /* ================= IMPORTANT NOTICE ================= */
-.important-notice{
-    margin-top:18px;
-    background:linear-gradient(135deg,#fff4e5,#ffe0b2);
-    border:2px solid #ff9800;
-    border-radius:14px;
-    padding:16px 16px 14px;
-    box-shadow:0 4px 15px rgba(255,152,0,.15);
-}
-
-.important-notice .notice-head{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:12px;
-    padding-bottom:10px;
-    border-bottom:1px dashed #ffb74d;
-}
-
-.important-notice .notice-head .n-icon{
-    width:34px;height:34px;
-    border-radius:50%;
-    background:#ff9800;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:16px;
-    flex-shrink:0;
-    animation:warnPulse 1.8s infinite;
-}
-
-@keyframes warnPulse{
-    0%,100%{box-shadow:0 0 0 0 rgba(255,152,0,.6);}
-    50%{box-shadow:0 0 0 8px rgba(255,152,0,0);}
-}
-
-.important-notice .notice-head h4{
-    font-size:14px;
-    font-weight:800;
-    color:#bf360c;
-    letter-spacing:.3px;
-}
-
-.important-notice .notice-head small{
-    font-size:10px;
-    color:#e65100;
-    display:block;
-    font-weight:600;
-    margin-top:2px;
-}
-
-.important-notice ul{
-    list-style:none;
-    padding:0;
-    margin:0;
-}
-
-.important-notice ul li{
-    font-size:12.5px;
-    color:#4e342e;
-    line-height:1.6;
-    padding:6px 0 6px 22px;
-    position:relative;
-    font-weight:500;
-}
-
-.important-notice ul li::before{
-    content:"\f111";
-    font-family:"Font Awesome 6 Free";
-    font-weight:900;
-    font-size:6px;
-    color:#ff9800;
-    position:absolute;
-    left:6px;
-    top:12px;
-}
-
-.important-notice ul li strong{
-    color:#bf360c;
-    font-weight:800;
-}
-
-.important-notice .notice-footer{
-    margin-top:10px;
-    padding-top:10px;
-    border-top:1px dashed #ffb74d;
-    font-size:11px;
-    color:#e65100;
-    font-style:italic;
-    text-align:center;
-    font-weight:600;
-}
+.important-notice{ margin-top:18px; background:linear-gradient(135deg,#fff4e5,#ffe0b2); border:2px solid #ff9800; border-radius:14px; padding:16px 16px 14px; box-shadow:0 4px 15px rgba(255,152,0,.15); }
+.important-notice .notice-head{ display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed #ffb74d; }
+.important-notice .notice-head .n-icon{ width:34px;height:34px; border-radius:50%; background:#ff9800; color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; animation:warnPulse 1.8s infinite; }
+@keyframes warnPulse{ 0%,100%{box-shadow:0 0 0 0 rgba(255,152,0,.6);} 50%{box-shadow:0 0 0 8px rgba(255,152,0,0);} }
+.important-notice .notice-head h4{ font-size:14px; font-weight:800; color:#bf360c; letter-spacing:.3px; }
+.important-notice .notice-head small{ font-size:10px; color:#e65100; display:block; font-weight:600; margin-top:2px; }
+.important-notice ul{ list-style:none; padding:0; margin:0; }
+.important-notice ul li{ font-size:12.5px; color:#4e342e; line-height:1.6; padding:6px 0 6px 22px; position:relative; font-weight:500; }
+.important-notice ul li::before{ content:"\f111"; font-family:"Font Awesome 6 Free"; font-weight:900; font-size:6px; color:#ff9800; position:absolute; left:6px; top:12px; }
+.important-notice ul li strong{ color:#bf360c; font-weight:800; }
+.important-notice .notice-footer{ margin-top:10px; padding-top:10px; border-top:1px dashed #ffb74d; font-size:11px; color:#e65100; font-style:italic; text-align:center; font-weight:600; }
 
 /* ================= INFO BOX ================= */
-.info{
-    margin-top:15px;
-    background:#fff7f7;
-    border:1px solid #ffd0d0;
-    padding:12px;
-    border-radius:10px;
-    color:#666;
-    font-size:13px;
-    line-height:1.6;
-}
-
+.info{ margin-top:15px; background:#fff7f7; border:1px solid #ffd0d0; padding:12px; border-radius:10px; color:#666; font-size:13px; line-height:1.6; }
 .info i{color:#B80000;margin-right:6px;}
 
-.toast{
-    position:fixed;
-    top:20px;
-    right:20px;
-    max-width:330px;
-    padding:15px 20px;
-    border-radius:10px;
-    color:white;
-    display:none;
-    z-index:9999;
-}
-
+.toast{ position:fixed; top:20px; right:20px; max-width:330px; padding:15px 20px; border-radius:10px; color:white; display:none; z-index:9999; }
 .toast.success{background:#28a745;}
 .toast.error{background:#d40000;}
 
 /* =============== SUCCESS POPUP =============== */
-.popup-bg{
-    position:fixed;inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:9998;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    backdrop-filter:blur(3px);
-}
+.popup-bg{ position:fixed;inset:0; background:rgba(0,0,0,.55); z-index:9998; display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(3px); }
 .popup-bg.show{display:flex;animation:fadeIn .25s ease;}
-
-@keyframes fadeIn{
-    from{opacity:0;} to{opacity:1;}
-}
-
-.popup{
-    background:#fff;
-    border-radius:22px;
-    max-width:360px;
-    width:100%;
-    padding:28px 22px 22px;
-    text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,.3);
-    animation:popIn .35s cubic-bezier(.2,.9,.3,1.3);
-    position:relative;
-}
-@keyframes popIn{
-    0%{transform:scale(.7);opacity:0;}
-    100%{transform:scale(1);opacity:1;}
-}
-
-.popup .popup-icon{
-    width:80px;height:80px;
-    margin:0 auto 16px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#0aa84f,#28c76f);
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;font-size:38px;
-    box-shadow:0 8px 25px rgba(10,168,79,.35);
-    animation:pulse 1.5s infinite;
-}
-@keyframes pulse{
-    0%,100%{transform:scale(1);}
-    50%{transform:scale(1.05);}
-}
-
-.popup h2{
-    font-size:20px;
-    font-weight:800;
-    color:#1a1a1a;
-    margin-bottom:8px;
-}
-
-.popup p{
-    font-size:13px;
-    color:#666;
-    line-height:1.55;
-    margin-bottom:6px;
-}
-
-.popup .popup-amount{
-    display:inline-block;
-    background:#e8f5e9;
-    color:#0a7d38;
-    font-size:22px;
-    font-weight:800;
-    padding:8px 20px;
-    border-radius:12px;
-    margin:12px 0 14px;
-    letter-spacing:.5px;
-}
-
-.popup .popup-status{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    background:#fff8e1;
-    color:#a36b00;
-    font-size:12px;
-    font-weight:700;
-    padding:6px 14px;
-    border-radius:20px;
-    margin-bottom:16px;
-}
-.popup .popup-status i{
-    animation:spin 2s linear infinite;
-}
-@keyframes spin{
-    from{transform:rotate(0);} to{transform:rotate(360deg);}
-}
-
-.popup .popup-btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    background:#B80000;
-    color:#fff;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-    transition:.2s;
-}
+@keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+.popup{ background:#fff; border-radius:22px; max-width:360px; width:100%; padding:28px 22px 22px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.3); animation:popIn .35s cubic-bezier(.2,.9,.3,1.3); position:relative; }
+@keyframes popIn{ 0%{transform:scale(.7);opacity:0;} 100%{transform:scale(1);opacity:1;} }
+.popup .popup-icon{ width:80px;height:80px; margin:0 auto 16px; border-radius:50%; background:linear-gradient(135deg,#0aa84f,#28c76f); display:flex;align-items:center;justify-content:center; color:#fff;font-size:38px; box-shadow:0 8px 25px rgba(10,168,79,.35); animation:pulse 1.5s infinite; }
+@keyframes pulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+.popup h2{ font-size:20px; font-weight:800; color:#1a1a1a; margin-bottom:8px; }
+.popup p{ font-size:13px; color:#666; line-height:1.55; margin-bottom:6px; }
+.popup .popup-amount{ display:inline-block; background:#e8f5e9; color:#0a7d38; font-size:22px; font-weight:800; padding:8px 20px; border-radius:12px; margin:12px 0 14px; letter-spacing:.5px; }
+.popup .popup-status{ display:inline-flex; align-items:center; gap:6px; background:#fff8e1; color:#a36b00; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:16px; }
+.popup .popup-status i{ animation:spin 2s linear infinite; }
+@keyframes spin{ from{transform:rotate(0);} to{transform:rotate(360deg);} }
+.popup .popup-btn{ width:100%; padding:14px; border:none; border-radius:12px; background:#B80000; color:#fff; font-size:15px; font-weight:700; cursor:pointer; transition:.2s; }
 .popup .popup-btn:active{transform:scale(.97);}
+.popup .popup-ref{ font-size:10px; color:#999; margin-top:10px; font-family:monospace; }
 
-.popup .popup-ref{
-    font-size:10px;
-    color:#999;
-    margin-top:10px;
-    font-family:monospace;
-}
+nav{ position:fixed; bottom:0; left:0; width:100%; background:white; display:flex; justify-content:space-around; padding:11px 0; box-shadow:0 -3px 10px rgba(0,0,0,.12); z-index:100; }
+nav a{ text-decoration:none; color:#666; font-size:12px; text-align:center; }
+nav i{ display:block; font-size:20px; margin-bottom:5px; }
+nav a.active, nav a.active i{ color:#B80000; }
 
-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background:white;
-    display:flex;
-    justify-content:space-around;
-    padding:11px 0;
-    box-shadow:0 -3px 10px rgba(0,0,0,.12);
-    z-index:100;
-}
-
-nav a{
-    text-decoration:none;
-    color:#666;
-    font-size:12px;
-    text-align:center;
-}
-
-nav i{
-    display:block;
-    font-size:20px;
-    margin-bottom:5px;
-}
-
-nav a.active,
-nav a.active i{
-    color:#B80000;
-}
-
+.hidden-step { display: none !important; }
 </style>
 </head>
 
 <body>
 
 <header>
-    <h2>
-        <i class="fa fa-building-columns"></i>
-        Withdraw
-    </h2>
-    <a href="wallet.html" class="back-btn">
-        <i class="fa fa-times"></i>
-    </a>
+    <h2><i class="fa fa-building-columns"></i> Withdraw</h2>
+    <a href="wallet.html" class="back-btn"><i class="fa fa-times"></i></a>
 </header>
-
 
 <div class="container">
 
@@ -453,8 +115,7 @@ nav a.active i{
         <h3>Winning Balance (Withdrawable)</h3>
         <h1 id="balance">₹0</h1>
         <div class="sub">
-            <i class="fa fa-lock"></i>
-            Deposit balance is not withdrawable
+            <i class="fa fa-lock"></i> Deposit balance is not withdrawable
         </div>
     </div>
 
@@ -467,57 +128,86 @@ nav a.active i{
         </div>
     </div>
 
-
     <div class="card">
 
         <div class="card-title">
-            <i class="fa fa-university"></i>
-            Bank Account
+            <i class="fa fa-money-bill-transfer"></i>
+            Select Withdrawal Method
+        </div>
+
+        <!-- METHOD SELECTION -->
+        <div class="method-grid">
+            <div class="method-box active" id="boxBank" onclick="switchMethod('bank')">
+                <i class="fa fa-building-columns"></i>
+                <span>Bank Transfer</span>
+            </div>
+            <div class="method-box" id="boxUsdt" onclick="switchMethod('usdt')">
+                <i class="fa-brands fa-bitcoin"></i>
+                <span>USDT (Crypto)</span>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>Withdrawal Amount</label>
+            <label>Withdrawal Amount (INR)</label>
             <input type="number" id="amount" placeholder="Enter amount (min ₹300)" min="300" inputmode="numeric">
         </div>
 
-        <div class="form-group">
-            <label>Account Holder Name</label>
-            <input type="text" id="accountName" placeholder="Enter account holder name" maxlength="100">
+        <!-- ================= BANK SECTION ================= -->
+        <div id="bankSection">
+            <div class="form-group">
+                <label>Account Holder Name</label>
+                <input type="text" id="accountName" placeholder="Enter account holder name" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>Bank Name</label>
+                <input type="text" id="bankName" placeholder="Enter bank name" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>Account Number</label>
+                <input type="password" id="accountNumber" placeholder="Enter account number" inputmode="numeric" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Account Number</label>
+                <input type="password" id="confirmAccountNumber" placeholder="Confirm account number" inputmode="numeric" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label>IFSC Code</label>
+                <input type="text" id="ifsc" placeholder="Example: SBIN0001234" maxlength="11" style="text-transform:uppercase">
+            </div>
         </div>
 
-        <div class="form-group">
-            <label>Bank Name</label>
-            <input type="text" id="bankName" placeholder="Enter bank name" maxlength="100">
-        </div>
+        <!-- ================= USDT SECTION ================= -->
+        <div id="usdtSection" class="hidden-step">
+            <!-- BIG WARNING BOX -->
+            <div class="warning-box">
+                <i class="fa fa-triangle-exclamation"></i> <b>WARNING: Only TRC20 Network</b><br><br>
+                Please ensure you provide a valid <b>TRC20 (Tron)</b> wallet address. If you enter a wrong address or use a different network (like BEP20, ERC20), your funds will be permanently lost. The company will not be responsible.
+            </div>
 
-        <div class="form-group">
-            <label>Account Number</label>
-            <input type="password" id="accountNumber" placeholder="Enter account number" inputmode="numeric" maxlength="20">
-        </div>
-
-        <div class="form-group">
-            <label>Confirm Account Number</label>
-            <input type="password" id="confirmAccountNumber" placeholder="Confirm account number" inputmode="numeric" maxlength="20">
-        </div>
-
-        <div class="form-group">
-            <label>IFSC Code</label>
-            <input type="text" id="ifsc" placeholder="Example: SBIN0001234" maxlength="11" style="text-transform:uppercase">
+            <div class="form-group">
+                <label>USDT Wallet Address (TRC20)</label>
+                <input type="text" id="usdtAddress" placeholder="Enter your TRC20 address (starts with T)" maxlength="34" style="text-transform:uppercase">
+            </div>
+            
+            <div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:12px; border-radius:10px; text-align:center; margin-bottom:15px;">
+                <div style="font-size:12px; color:#2e7d32; margin-bottom:4px">Amount to receive (Estimated):</div>
+                <b style="font-size:20px; color:#0a7d38" id="usdtAmountToReceive">0 USDT</b>
+                <div style="font-size:11px; color:#555; margin-top:4px;">(1 USDT = ₹92)</div>
+            </div>
         </div>
 
         <button class="withdraw-btn" id="withdrawBtn">
-            <i class="fa fa-paper-plane"></i>
-            Submit Withdrawal
+            <i class="fa fa-paper-plane"></i> Submit Withdrawal
         </button>
-
 
         <!-- ============ IMPORTANT NOTICE ============ -->
         <div class="important-notice">
-
             <div class="notice-head">
-                <div class="n-icon">
-                    <i class="fa fa-triangle-exclamation"></i>
-                </div>
+                <div class="n-icon"><i class="fa fa-triangle-exclamation"></i></div>
                 <div>
                     <h4>⚠️ Important Notes</h4>
                     <small>Please read before submitting withdrawal</small>
@@ -526,10 +216,10 @@ nav a.active i{
 
             <ul>
                 <li>
-                    Please verify your <strong>Bank Account Number, IFSC Code, and Account Holder Name</strong> before submitting a withdrawal request.
+                    Please verify your <strong>Payment Details</strong> before submitting a withdrawal request.
                 </li>
                 <li>
-                    Wrong or incorrect bank details may result in <strong>payment failure or delay</strong>.
+                    Wrong or incorrect bank details / USDT address may result in <strong>payment failure or permanent loss</strong>.
                 </li>
                 <li>
                     Withdrawal requests <strong>cannot be edited</strong> after submission.
@@ -538,64 +228,41 @@ nav a.active i{
                     Processing may take <strong>24–48 hours</strong>.
                 </li>
                 <li>
-                    Please use a valid bank account held in <strong>your own name</strong>.
+                    Please use an account or wallet held in <strong>your own name</strong>.
                 </li>
                 <li>
-                    <strong>Fantasy Adda is not responsible for losses or delays</strong> caused by incorrect information provided by the user.
+                    <strong>Fantasy Adda is not responsible for losses</strong> caused by incorrect information provided by the user.
                 </li>
             </ul>
 
             <div class="notice-footer">
                 — Fantasy Adda Security Team —
             </div>
-
         </div>
-        <!-- ============ /IMPORTANT NOTICE ============ -->
-
 
         <div class="info">
             <i class="fa fa-circle-info"></i>
-            Minimum withdrawal ₹300. Only winning balance can be withdrawn. Deposit amount is locked for gameplay.
+            Minimum withdrawal is ₹300. Only winning balance can be withdrawn.
         </div>
 
     </div>
-
 </div>
-
 
 <nav>
-    <a href="index.html">
-        <i class="fa fa-home"></i>
-        Home
-    </a>
-    <a href="matches.html">
-        <i class="fa fa-trophy"></i>
-        Matches
-    </a>
-    <a href="wallet.html" class="active">
-        <i class="fa fa-wallet"></i>
-        Wallet
-    </a>
-    <a href="profile.html">
-        <i class="fa fa-user"></i>
-        Profile
-    </a>
+    <a href="index.html"><i class="fa fa-home"></i> Home</a>
+    <a href="matches.html"><i class="fa fa-trophy"></i> Matches</a>
+    <a href="wallet.html" class="active"><i class="fa fa-wallet"></i> Wallet</a>
+    <a href="profile.html"><i class="fa fa-user"></i> Profile</a>
 </nav>
 
-
-<div class="toast" id="toast">
-    <span id="toastMessage"></span>
-</div>
-
+<div class="toast" id="toast"><span id="toastMessage"></span></div>
 
 <!-- SUCCESS POPUP -->
 <div class="popup-bg" id="successPopup">
     <div class="popup">
-        <div class="popup-icon">
-            <i class="fa fa-check"></i>
-        </div>
+        <div class="popup-icon"><i class="fa fa-check"></i></div>
         <h2>Request Submitted!</h2>
-        <p>Aapki withdrawal request successfully bhej di gayi hai.</p>
+        <p>Your withdrawal request has been successfully submitted.</p>
 
         <div class="popup-amount" id="popupAmount">₹0</div>
 
@@ -612,13 +279,11 @@ nav a.active i{
     </div>
 </div>
 
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
 
 <script>
-
 const firebaseConfig = {
     apiKey:"AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
     authDomain:"fantasy-adda-e3b72.firebaseapp.com",
@@ -631,14 +296,19 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const auth=firebase.auth();
 const db=firebase.database();
+
+/* ================= SETTINGS ================= */
+const USDT_RATE = 92; // 1 USDT = 92 INR
+const MIN_WITHDRAW = 300;
 
 let currentUser=null;
 let userWinning=0;
 let pendingWithdrawal=null;
+let currentMethod = "bank"; // 'bank' or 'usdt'
 
+// Elements
 const balanceEl=document.getElementById("balance");
 const amount=document.getElementById("amount");
 const accountName=document.getElementById("accountName");
@@ -646,65 +316,72 @@ const bankName=document.getElementById("bankName");
 const accountNumber=document.getElementById("accountNumber");
 const confirmAccountNumber=document.getElementById("confirmAccountNumber");
 const ifsc=document.getElementById("ifsc");
+const usdtAddress=document.getElementById("usdtAddress");
 const withdrawBtn=document.getElementById("withdrawBtn");
 
 const toast=document.getElementById("toast");
 const toastMessage=document.getElementById("toastMessage");
-
 const pendingBanner=document.getElementById("pendingBanner");
 const pendingText=document.getElementById("pendingText");
-
 const successPopup=document.getElementById("successPopup");
 const popupAmount=document.getElementById("popupAmount");
 const popupRef=document.getElementById("popupRef");
 
 let toastTimer;
 
-
 function showToast(message,type="success"){
     toast.className="toast "+type;
     toastMessage.textContent=message;
     toast.style.display="block";
     clearTimeout(toastTimer);
-    toastTimer=setTimeout(()=>{
-        toast.style.display="none";
-    },3500);
+    toastTimer=setTimeout(()=>{ toast.style.display="none"; },3500);
 }
-
 
 function closePopup(){
     successPopup.classList.remove("show");
-    setTimeout(()=>{
-        window.location.href="wallet.html";
-    },300);
+    setTimeout(()=>{ window.location.href="wallet.html"; },300);
 }
 
+/* Switch Method (Bank / USDT) */
+function switchMethod(method) {
+    currentMethod = method;
+    document.getElementById("boxBank").classList.toggle("active", method === 'bank');
+    document.getElementById("boxUsdt").classList.toggle("active", method === 'usdt');
+
+    document.getElementById("bankSection").classList.toggle("hidden-step", method === 'usdt');
+    document.getElementById("usdtSection").classList.toggle("hidden-step", method === 'bank');
+    
+    updateUsdtReceive();
+}
+
+/* Calculate USDT Amount to Receive */
+function updateUsdtReceive() {
+    const amt = Number(amount.value) || 0;
+    const usdt = (amt / USDT_RATE).toFixed(2);
+    document.getElementById("usdtAmountToReceive").textContent = usdt + " USDT";
+}
+
+// Amount input listener to update USDT estimate
+amount.addEventListener("input", () => {
+    updateUsdtReceive();
+});
 
 auth.onAuthStateChanged(user=>{
-
     if(!user){
         window.location.href="login.html";
         return;
     }
-
     currentUser=user;
 
     /* Winning balance live */
-    db.ref("users/"+user.uid+"/wallet/winning")
-      .on("value",snap=>{
+    db.ref("users/"+user.uid+"/wallet/winning").on("value",snap=>{
         userWinning=Number(snap.val())||0;
-        balanceEl.textContent=
-            "₹"+userWinning.toLocaleString("en-IN");
+        balanceEl.textContent = "₹"+userWinning.toLocaleString("en-IN");
     });
 
     /* Check pending withdrawal */
-    db.ref("withdrawals")
-      .orderByChild("userId")
-      .equalTo(user.uid)
-      .on("value",snap=>{
-
+    db.ref("withdrawals").orderByChild("userId").equalTo(user.uid).on("value",snap=>{
         pendingWithdrawal=null;
-
         snap.forEach(c=>{
             const w = c.val();
             if(w.status === "pending"){
@@ -714,9 +391,7 @@ auth.onAuthStateChanged(user=>{
 
         if(pendingWithdrawal){
             pendingBanner.classList.add("show");
-            pendingText.textContent =
-                "₹" + Number(pendingWithdrawal.amount).toLocaleString("en-IN") +
-                " withdrawal is pending admin approval.";
+            pendingText.textContent = "₹" + Number(pendingWithdrawal.amount).toLocaleString("en-IN") + " withdrawal is pending admin approval.";
             withdrawBtn.disabled = true;
             withdrawBtn.innerHTML = '<i class="fa fa-clock"></i> Request Pending';
         }else{
@@ -724,142 +399,116 @@ auth.onAuthStateChanged(user=>{
             withdrawBtn.disabled = false;
             withdrawBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Submit Withdrawal';
         }
-
     });
-
 });
 
+/* Input formatters */
+accountNumber.addEventListener("input",function(){ this.value=this.value.replace(/\D/g,"").slice(0,20); });
+confirmAccountNumber.addEventListener("input",function(){ this.value=this.value.replace(/\D/g,"").slice(0,20); });
+ifsc.addEventListener("input",function(){ this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,11); });
+usdtAddress.addEventListener("input",function(){ this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,34); });
 
-accountNumber.addEventListener("input",function(){
-    this.value=this.value
-        .replace(/\D/g,"")
-        .slice(0,20);
-});
-
-
-confirmAccountNumber.addEventListener("input",function(){
-    this.value=this.value
-        .replace(/\D/g,"")
-        .slice(0,20);
-});
-
-
-ifsc.addEventListener("input",function(){
-    this.value=this.value
-        .toUpperCase()
-        .replace(/[^A-Z0-9]/g,"")
-        .slice(0,11);
-});
-
-
+/* Submit Withdrawal */
 withdrawBtn.addEventListener("click",async()=>{
-
     if(pendingWithdrawal){
-        showToast("Aapki ek withdrawal already pending hai","error");
+        showToast("You already have a pending withdrawal request.", "error");
         return;
     }
 
     const amt=Number(amount.value);
-    const holder=accountName.value.trim();
-    const bank=bankName.value.trim();
-    const acc=accountNumber.value.trim();
-    const confirmAcc=confirmAccountNumber.value.trim();
-    const ifscCode=ifsc.value.trim().toUpperCase();
 
-    /* ✅ Minimum ₹300 check */
-    if(!amt || amt<300){
-        showToast("Minimum withdrawal is ₹300","error");
+    /* Base Validation */
+    if(!amt || amt<MIN_WITHDRAW){
+        showToast(`Minimum withdrawal amount is ₹${MIN_WITHDRAW}`, "error");
         return;
     }
-
     if(amt>userWinning){
-        showToast(
-            "Insufficient winning balance. Available: ₹"+
-            userWinning.toLocaleString("en-IN"),
-            "error"
-        );
+        showToast(`Insufficient winning balance. Available: ₹${userWinning.toLocaleString("en-IN")}`, "error");
         return;
     }
 
-    if(!holder){
-        showToast("Enter account holder name","error");
-        return;
-    }
+    /* Method Specific Validation */
+    let paymentDetails = "";
+    let payload = {};
 
-    if(!bank){
-        showToast("Enter bank name","error");
-        return;
-    }
+    if(currentMethod === 'bank') {
+        const holder=accountName.value.trim();
+        const bank=bankName.value.trim();
+        const acc=accountNumber.value.trim();
+        const confirmAcc=confirmAccountNumber.value.trim();
+        const ifscCode=ifsc.value.trim().toUpperCase();
 
-    if(acc.length<9){
-        showToast("Enter valid account number","error");
-        return;
-    }
+        if(!holder){ showToast("Enter account holder name", "error"); return; }
+        if(!bank){ showToast("Enter bank name", "error"); return; }
+        if(acc.length<9){ showToast("Enter valid account number", "error"); return; }
+        if(acc!==confirmAcc){ showToast("Account numbers do not match", "error"); return; }
 
-    if(acc!==confirmAcc){
-        showToast("Account numbers do not match","error");
-        return;
-    }
+        const ifscRegex=/^[A-Z]{4}0[A-Z0-9]{6}$/;
+        if(!ifscRegex.test(ifscCode)){ showToast("Enter valid IFSC code", "error"); return; }
 
-    const ifscRegex=/^[A-Z]{4}0[A-Z0-9]{6}$/;
-    if(!ifscRegex.test(ifscCode)){
-        showToast("Enter valid IFSC code","error");
-        return;
-    }
-
-    withdrawBtn.disabled=true;
-    withdrawBtn.innerHTML=
-        '<i class="fa fa-spinner fa-spin"></i> Processing...';
-
-    try{
-
-        /* STEP 1: Recheck winning */
-        const winSnap = await db.ref(
-            "users/"+currentUser.uid+"/wallet/winning"
-        ).once("value");
-
-        const latestWinning = Number(winSnap.val())||0;
-
-        if(amt > latestWinning){
-            showToast("Insufficient winning balance","error");
+        paymentDetails = "Bank Account | Holder: "+ holder+ " | Bank: "+ bank+ " | Account: "+ acc+ " | IFSC: "+ ifscCode;
+        
+        payload = {
+            accountName: holder,
+            bankName: bank,
+            accountNumber: acc,
+            ifsc: ifscCode
+        };
+    } else {
+        const usdtAddr = usdtAddress.value.trim();
+        
+        // TRC20 Address Validation (Usually starts with T and is 34 chars long)
+        if(!usdtAddr || usdtAddr.length !== 34 || !usdtAddr.startsWith("T")) {
+            showToast("Enter a valid TRC20 USDT address (starts with T, 34 chars)", "error");
             return;
         }
 
-        /* STEP 2: Check pending */
-        const pendingSnap = await db.ref("withdrawals")
-            .orderByChild("userId")
-            .equalTo(currentUser.uid)
-            .once("value");
+        const usdtAmt = Number((amt / USDT_RATE).toFixed(2));
+        paymentDetails = "USDT (TRC20) | Address: " + usdtAddr;
+        
+        payload = {
+            usdtAddress: usdtAddr,
+            usdtAmount: usdtAmt,
+            rate: USDT_RATE
+        };
+    }
 
+    withdrawBtn.disabled=true;
+    withdrawBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
+
+    try{
+        /* STEP 1: Recheck winning */
+        const winSnap = await db.ref("users/"+currentUser.uid+"/wallet/winning").once("value");
+        const latestWinning = Number(winSnap.val())||0;
+
+        if(amt > latestWinning){
+            showToast("Insufficient winning balance", "error");
+            return;
+        }
+
+        /* STEP 2: Check pending (double check) */
+        const pendingSnap = await db.ref("withdrawals").orderByChild("userId").equalTo(currentUser.uid).once("value");
         let alreadyPending = false;
-        pendingSnap.forEach(c=>{
-            if(c.val().status === "pending") alreadyPending = true;
-        });
+        pendingSnap.forEach(c=>{ if(c.val().status === "pending") alreadyPending = true; });
 
         if(alreadyPending){
-            showToast("Aapki ek withdrawal already pending hai","error");
+            showToast("You already have a pending withdrawal request.", "error");
             return;
         }
 
         /* STEP 3: Deduct winning (escrow) */
-        const deductResult = await db.ref(
-            "users/"+currentUser.uid+"/wallet"
-        ).transaction(w=>{
+        const deductResult = await db.ref("users/"+currentUser.uid+"/wallet").transaction(w=>{
             if(!w) return w;
-
             const win = Number(w.winning||0);
             const bal = Number(w.balance||0);
-
-            if(win < amt) return;
-
+            if(win < amt) return; // Abort if not enough
             w.winning = Number((win - amt).toFixed(2));
             w.balance = Number((bal - amt).toFixed(2));
-
             return w;
         });
 
         if(!deductResult.committed){
-            showToast("Insufficient winning balance","error");
+            showToast("Insufficient winning balance", "error");
             return;
         }
 
@@ -867,32 +516,26 @@ withdrawBtn.addEventListener("click",async()=>{
         const reqRef = db.ref("withdrawals").push();
         const reqId = reqRef.key;
 
-        const paymentDetails =
-            "Bank Account | Holder: "+ holder+
-            " | Bank: "+ bank+
-            " | Account: "+ acc+
-            " | IFSC: "+ ifscCode;
-
-        await reqRef.set({
+        const finalPayload = {
             userId: currentUser.uid,
             amount: amt,
-            accountName: holder,
-            bankName: bank,
-            accountNumber: acc,
-            ifsc: ifscCode,
+            paymentMethod: currentMethod,
             paymentDetails: paymentDetails,
             source: "winning",
             status: "pending",
             createdAt: Date.now(),
-            locked: true
-        });
+            locked: true,
+            ...payload
+        };
+
+        await reqRef.set(finalPayload);
 
         /* STEP 5: Pending transaction record */
         await db.ref("transactions").push({
             userId: currentUser.uid,
             type: "debit",
             amount: amt,
-            description: "Withdrawal request placed (pending admin approval)",
+            description: `Withdrawal request placed via ${currentMethod.toUpperCase()} (pending admin approval)`,
             date: Date.now(),
             requestId: reqId,
             source: "winning",
@@ -911,24 +554,20 @@ withdrawBtn.addEventListener("click",async()=>{
         accountNumber.value="";
         confirmAccountNumber.value="";
         ifsc.value="";
+        usdtAddress.value="";
+        updateUsdtReceive();
 
         withdrawBtn.disabled = true;
         withdrawBtn.innerHTML = '<i class="fa fa-clock"></i> Request Pending';
 
     }catch(error){
-
         console.error(error);
-        showToast("Unable to submit withdrawal request.","error");
-
+        showToast("Unable to submit withdrawal request.", "error");
         withdrawBtn.disabled=false;
-        withdrawBtn.innerHTML=
-            '<i class="fa fa-paper-plane"></i> Submit Withdrawal';
-
+        withdrawBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Submit Withdrawal';
     }
-
 });
 
 </script>
-
 </body>
 </html>
