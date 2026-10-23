@@ -114,19 +114,20 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
     <!-- STEP 1: AMOUNT -->
     <div class="card" id="amountCard">
         <div class="card-title">
-            <span class="step">1</span> Select Amount (₹5k - ₹1L)
+            <span class="step">1</span> Select Amount
         </div>
 
+        <!-- Changed Options to include 100, 500 etc -->
         <div class="amount-options">
+            <button data-amount="100">₹100</button>
+            <button data-amount="500">₹500</button>
+            <button data-amount="1000">₹1,000</button>
             <button data-amount="5000">₹5,000</button>
             <button data-amount="10000">₹10,000</button>
-            <button data-amount="25000">₹25,000</button>
-            <button data-amount="50000">₹50,000</button>
-            <button data-amount="75000">₹75,000</button>
             <button data-amount="100000">₹1,00,000</button>
         </div>
 
-        <input type="number" id="customAmount" min="5000" max="100000" placeholder="Or enter custom amount">
+        <input type="number" id="customAmount" min="100" max="100000" placeholder="Enter amount (Min ₹100)">
 
         <button class="continue-btn" id="continueBtn" disabled>
             <i class="fa fa-arrow-right"></i> Continue to Pay
@@ -198,7 +199,8 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
                 <div class="usdt-box">
                     <div style="font-size:12px;color:#666;margin-bottom:4px">USDT Deposit Address (TRC20)</div>
                     <div class="usdt-address" id="usdtAddress">TBZ32iax3S8uHPg3VgFsTQ1wzpXj2PhLZN</div>
-                    <button class="copy-btn" onclick="copyText('TBZ32iax3S8uHPg3VgFsTQ1wzpXj2PhLZN')">
+                    <!-- Yaha click karne se hi TXID box aayega -->
+                    <button class="copy-btn" onclick="copyUsdtAddress()">
                         <i class="fa fa-copy"></i> Copy Address
                     </button>
                 </div>
@@ -282,7 +284,10 @@ const db = firebase.database();
 const FIXED_UPI = "dailylgrow@axl";
 const USDT_ADDRESS = "TBZ32iax3S8uHPg3VgFsTQ1wzpXj2PhLZN";
 const USDT_RATE = 92; // 1 USDT = 92 INR
-const MIN_AMOUNT = 5000;
+
+/* Updated Min Amounts */
+const MIN_AMOUNT_UPI = 100;
+const MIN_AMOUNT_USDT = 5000;
 const MAX_AMOUNT = 100000;
 
 let currentUser = null;
@@ -318,12 +323,24 @@ function copyText(text) {
     .catch(()=> showToast("Copy failed", "error"));
 }
 
+/* New function for USDT copy which unlocks TXID */
+function copyUsdtAddress() {
+    copyText(USDT_ADDRESS);
+    unlockUtr(); // This will reveal the TXID box
+}
+
 function setupQRCodes() {
     document.getElementById("qrImg").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent("upi://pay?pa=" + FIXED_UPI + "&pn=FantasyAdda&cu=INR");
     document.getElementById("usdtQrImg").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(USDT_ADDRESS);
 }
 
 function switchMethod(method) {
+    // Check if user is trying to switch to USDT but amount is less than 5000
+    if (method === 'usdt' && selectedAmount < MIN_AMOUNT_USDT) {
+        showToast(`USDT ke liye minimum ₹${MIN_AMOUNT_USDT} select karein`, "error");
+        return; // Don't switch
+    }
+
     currentMethod = method;
     document.getElementById("tabUpi").classList.toggle("active", method === 'upi');
     document.getElementById("tabUsdt").classList.toggle("active", method === 'usdt');
@@ -389,12 +406,12 @@ function setupPayApps(){
         el.href = "#";
         el.addEventListener("click", e=>{
             e.preventDefault();
-            if(!selectedAmount || selectedAmount < MIN_AMOUNT){
+            if(!selectedAmount || selectedAmount < MIN_AMOUNT_UPI){
                 showToast("Pehle valid amount select karo", "error");
                 return;
             }
             window.location.href = buildUpiLink(app.name);
-            setTimeout(unlockUtr, 1500);
+            setTimeout(unlockUtr, 1500); // Unlocks UTR for UPI
         });
     });
 }
@@ -425,7 +442,8 @@ customAmount.addEventListener("input", ()=>{
 
 function updateContinueButton(){
     const amt = Number(selectedAmount||0);
-    continueBtn.disabled = !(amt >= MIN_AMOUNT && amt <= MAX_AMOUNT);
+    // Allow anything above 100 initially, USDT tab will handle its own validation
+    continueBtn.disabled = !(amt >= MIN_AMOUNT_UPI && amt <= MAX_AMOUNT);
 }
 
 continueBtn.addEventListener("click", ()=>{
@@ -440,6 +458,9 @@ continueBtn.addEventListener("click", ()=>{
 
     utrUnlocked = false;
     utrCard.classList.add("hidden-step");
+    
+    // Reset to UPI tab every time user clicks continue
+    switchMethod('upi');
 
     setTimeout(()=>{ paymentWrap.scrollIntoView({behavior:"smooth", block:"start"}); }, 100);
 });
@@ -460,8 +481,16 @@ submitBtn.addEventListener("click", async ()=>{
     if(!currentUser) return showToast("Please login first", "error");
 
     selectedAmount = Number(selectedAmount);
-    if(!selectedAmount || selectedAmount < MIN_AMOUNT || selectedAmount > MAX_AMOUNT){
-        return showToast(`Amount ₹${MIN_AMOUNT} se ₹${MAX_AMOUNT} ke beech hona chahiye`, "error");
+    
+    // Validation based on Method
+    if(currentMethod === 'usdt' && selectedAmount < MIN_AMOUNT_USDT){
+        return showToast(`USDT ke liye minimum ₹${MIN_AMOUNT_USDT} ka recharge hona chahiye`, "error");
+    }
+    if(currentMethod === 'upi' && selectedAmount < MIN_AMOUNT_UPI){
+        return showToast(`UPI ke liye minimum ₹${MIN_AMOUNT_UPI} ka recharge hona chahiye`, "error");
+    }
+    if(selectedAmount > MAX_AMOUNT){
+        return showToast(`Maximum amount ₹${MAX_AMOUNT} hai`, "error");
     }
 
     const utr = cleanUTR(utrInput.value);
