@@ -5,406 +5,96 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Recharge - Fantasy Adda</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Poppins,Arial,sans-serif;
-}
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,Arial,sans-serif; }
 
-body{
-    background:#f5f6fa;
-    padding-bottom:85px;
-    color:#222;
-}
+body{ background:#f5f6fa; padding-bottom:85px; color:#222; }
 
-header{
-    background:#B80000;
-    color:#fff;
-    padding:16px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    box-shadow:0 3px 12px rgba(0,0,0,.18);
-}
+header{ background:#B80000; color:#fff; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 3px 12px rgba(0,0,0,.18); }
+header h2{ font-size:20px; display:flex; align-items:center; gap:10px; }
+.back-btn{ color:#fff; text-decoration:none; font-size:22px; }
 
-header h2{
-    font-size:20px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
+.container{ max-width:520px; margin:20px auto; padding:0 16px; }
 
-.back-btn{
-    color:#fff;
-    text-decoration:none;
-    font-size:22px;
-}
-
-.container{
-    max-width:520px;
-    margin:20px auto;
-    padding:0 16px;
-}
-
-.balance-card{
-    background:linear-gradient(135deg,#B80000,#ff4d4d);
-    color:white;
-    padding:22px;
-    border-radius:18px;
-    text-align:center;
-    margin-bottom:18px;
-    box-shadow:0 5px 18px rgba(184,0,0,.25);
-}
-
+.balance-card{ background:linear-gradient(135deg,#B80000,#ff4d4d); color:white; padding:22px; border-radius:18px; text-align:center; margin-bottom:18px; box-shadow:0 5px 18px rgba(184,0,0,.25); }
 .balance-card small{opacity:.9}
+.balance-card h1{ margin-top:5px; font-size:32px; }
 
-.balance-card h1{
-    margin-top:5px;
-    font-size:32px;
-}
+.card{ background:#fff; padding:18px; border-radius:18px; margin-bottom:15px; box-shadow:0 3px 14px rgba(0,0,0,.08); }
 
-.card{
-    background:#fff;
-    padding:18px;
-    border-radius:18px;
-    margin-bottom:15px;
-    box-shadow:0 3px 14px rgba(0,0,0,.08);
-}
+.card-title{ font-size:16px; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.card-title .step{ background:#B80000; color:#fff; width:24px;height:24px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
 
-.card-title{
-    font-size:16px;
-    font-weight:700;
-    margin-bottom:14px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-.card-title .step{
-    background:#B80000;
-    color:#fff;
-    width:24px;height:24px;
-    border-radius:50%;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    font-size:12px;
-    font-weight:800;
-    flex-shrink:0;
-}
+.amount-options{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.amount-options button{ padding:14px 5px; border:2px solid #ddd; background:#fff; border-radius:12px; font-size:16px; font-weight:700; cursor:pointer; transition:.2s; }
+.amount-options button.selected{ border-color:#B80000; background:#fff0f0; color:#B80000; }
 
-.amount-options{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-}
-
-.amount-options button{
-    padding:14px 5px;
-    border:2px solid #ddd;
-    background:#fff;
-    border-radius:12px;
-    font-size:16px;
-    font-weight:700;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.amount-options button.selected{
-    border-color:#B80000;
-    background:#fff0f0;
-    color:#B80000;
-}
-
-input{
-    width:100%;
-    padding:14px;
-    border:2px solid #ddd;
-    border-radius:12px;
-    outline:none;
-    font-size:16px;
-    margin-top:10px;
-}
-
+input{ width:100%; padding:14px; border:2px solid #ddd; border-radius:12px; outline:none; font-size:16px; margin-top:10px; }
 input:focus{border-color:#B80000}
 
-.upi-box{
-    background:#fff4f4;
-    border:1px dashed #B80000;
-    padding:15px;
-    border-radius:13px;
-    margin-bottom:12px;
-}
+/* Tabs for UPI / USDT */
+.method-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+.method-tabs button { flex: 1; padding: 12px; border: 2px solid #ddd; background: #fff; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: .2s; }
+.method-tabs button.active { border-color: #B80000; background: #fff0f0; color: #B80000; }
 
-.upi-id{
-    font-size:18px;
-    font-weight:700;
-    color:#B80000;
-    word-break:break-all;
-}
+.upi-box, .usdt-box{ background:#fff4f4; border:1px dashed #B80000; padding:15px; border-radius:13px; margin-bottom:12px; }
+.upi-id, .usdt-address{ font-size:16px; font-weight:700; color:#B80000; word-break:break-all; }
 
-.copy-btn{
-    margin-top:10px;
-    padding:9px 14px;
-    border:0;
-    border-radius:8px;
-    background:#B80000;
-    color:white;
-    cursor:pointer;
-    font-weight:700;
-    font-size:13px;
-}
+.copy-btn{ margin-top:10px; padding:9px 14px; border:0; border-radius:8px; background:#B80000; color:white; cursor:pointer; font-weight:700; font-size:13px; }
 
-.qr-wrap{
-    background:#fff;
-    border:2px solid #B80000;
-    border-radius:14px;
-    padding:12px;
-    text-align:center;
-    margin-bottom:12px;
-}
-.qr-wrap img{
-    width:180px;height:180px;
-    border-radius:10px;
-}
+.qr-wrap{ background:#fff; border:2px solid #B80000; border-radius:14px; padding:12px; text-align:center; margin-bottom:12px; }
+.qr-wrap img{ width:180px;height:180px; border-radius:10px; }
 
-.apps-title{
-    font-size:12px;
-    font-weight:700;
-    color:#555;
-    text-transform:uppercase;
-    letter-spacing:.3px;
-    margin-bottom:10px;
-    text-align:center;
-}
-.pay-apps{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    margin-bottom:14px;
-}
-.pay-app{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:5px;
-    background:#fff;
-    border:1px solid #e7e9ed;
-    border-radius:12px;
-    padding:10px 4px;
-    text-decoration:none;
-    color:#222;
-    font-size:10px;
-    font-weight:700;
-    transition:.15s;
-}
-.pay-app:hover,.pay-app:active{
-    transform:scale(.96);
-    background:#f8f9fb;
-}
-.pay-app .icon{
-    width:34px;height:34px;
-    border-radius:9px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:17px;
-    color:#fff;
-    font-weight:900;
-}
+.apps-title{ font-size:12px; font-weight:700; color:#555; text-transform:uppercase; letter-spacing:.3px; margin-bottom:10px; text-align:center; }
+.pay-apps{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
+.pay-app{ display:flex; flex-direction:column; align-items:center; gap:5px; background:#fff; border:1px solid #e7e9ed; border-radius:12px; padding:10px 4px; text-decoration:none; color:#222; font-size:10px; font-weight:700; transition:.15s; }
+.pay-app:hover,.pay-app:active{ transform:scale(.96); background:#f8f9fb; }
+.pay-app .icon{ width:34px;height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:17px; color:#fff; font-weight:900; }
 .pay-app.phonepe .icon{background:#5f259f}
 .pay-app.gpay .icon{background:#fff;border:2px solid #eee;color:#4285F4}
 .pay-app.paytm .icon{background:#00b9f1}
 .pay-app.bhim .icon{background:#0e4c92}
 
-.pay-note{
-    background:#fff8e1;
-    color:#795600;
-    padding:12px;
-    border-radius:10px;
-    font-size:13px;
-    line-height:1.5;
-    margin-top:12px;
-}
+.pay-note{ background:#fff8e1; color:#795600; padding:12px; border-radius:10px; font-size:13px; line-height:1.5; margin-top:12px; }
 
-.submit-btn{
-    width:100%;
-    padding:16px;
-    border:0;
-    border-radius:13px;
-    background:#B80000;
-    color:white;
-    font-size:18px;
-    font-weight:700;
-    cursor:pointer;
-    margin-top:10px;
-}
+.submit-btn{ width:100%; padding:16px; border:0; border-radius:13px; background:#B80000; color:white; font-size:18px; font-weight:700; cursor:pointer; margin-top:10px; }
+.submit-btn:disabled{ background:#999; cursor:not-allowed; }
 
-.submit-btn:disabled{
-    background:#999;
-    cursor:not-allowed;
-}
-
-.status-item{
-    border:1px solid #eee;
-    padding:13px;
-    border-radius:12px;
-    margin-bottom:10px;
-    background:#fafafa;
-}
-
-.badge{
-    display:inline-block;
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:700;
-}
-
+.status-item{ border:1px solid #eee; padding:13px; border-radius:12px; margin-bottom:10px; background:#fafafa; }
+.badge{ display:inline-block; padding:5px 9px; border-radius:20px; font-size:12px; font-weight:700; }
 .pending{background:#fff3cd;color:#856404}
 .approved{background:#d4edda;color:#155724}
 .rejected{background:#f8d7da;color:#721c24}
 
 .hidden-step{display:none;}
 
-.tick-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    background:#e8f5e9;
-    color:#0a7d38;
-    font-size:11px;
-    font-weight:800;
-    padding:5px 10px;
-    border-radius:20px;
-    margin-bottom:8px;
-}
+.tick-badge{ display:inline-flex; align-items:center; gap:6px; background:#e8f5e9; color:#0a7d38; font-size:11px; font-weight:800; padding:5px 10px; border-radius:20px; margin-bottom:8px; }
 
-/* Amount Summary card (jab step 1 hide ho) */
-.amount-summary{
-    background:linear-gradient(135deg,#fff8f8,#ffe8e8);
-    border:2px solid #ffcccc;
-    border-radius:14px;
-    padding:14px 16px;
-    margin-bottom:14px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-}
-.amount-summary .as-left small{
-    display:block;
-    font-size:11px;
-    color:#888;
-    font-weight:600;
-    text-transform:uppercase;
-    letter-spacing:.3px;
-    margin-bottom:3px;
-}
-.amount-summary .as-left b{
-    font-size:22px;
-    color:#B80000;
-    font-weight:800;
-}
-.amount-summary .change-btn{
-    background:#fff;
-    border:1.5px solid #B80000;
-    color:#B80000;
-    font-size:11px;
-    font-weight:800;
-    padding:8px 12px;
-    border-radius:9px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    gap:5px;
-    transition:.2s;
-}
-.amount-summary .change-btn:hover{
-    background:#B80000;
-    color:#fff;
-}
+.amount-summary{ background:linear-gradient(135deg,#fff8f8,#ffe8e8); border:2px solid #ffcccc; border-radius:14px; padding:14px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.amount-summary .as-left small{ display:block; font-size:11px; color:#888; font-weight:600; text-transform:uppercase; letter-spacing:.3px; margin-bottom:3px; }
+.amount-summary .as-left b{ font-size:22px; color:#B80000; font-weight:800; }
+.amount-summary .change-btn{ background:#fff; border:1.5px solid #B80000; color:#B80000; font-size:11px; font-weight:800; padding:8px 12px; border-radius:9px; cursor:pointer; display:flex; align-items:center; gap:5px; transition:.2s; }
 
-/* Primary continue button */
-.continue-btn{
-    width:100%;
-    padding:16px;
-    border:0;
-    border-radius:13px;
-    background:linear-gradient(135deg,#B80000,#d92d20);
-    color:white;
-    font-size:17px;
-    font-weight:800;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    margin-top:14px;
-    box-shadow:0 6px 18px rgba(184,0,0,.3);
-    transition:.2s;
-}
+.continue-btn{ width:100%; padding:16px; border:0; border-radius:13px; background:linear-gradient(135deg,#B80000,#d92d20); color:white; font-size:17px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-top:14px; box-shadow:0 6px 18px rgba(184,0,0,.3); transition:.2s; }
 .continue-btn:active{transform:scale(.98)}
-.continue-btn:disabled{
-    background:#ccc;
-    box-shadow:none;
-    cursor:not-allowed;
-    color:#666;
-}
+.continue-btn:disabled{ background:#ccc; box-shadow:none; cursor:not-allowed; color:#666; }
 
-.toast{
-    position:fixed;
-    top:20px;
-    right:20px;
-    max-width:330px;
-    padding:14px 18px;
-    border-radius:12px;
-    background:#333;
-    color:white;
-    display:none;
-    z-index:9999;
-}
-
+.toast{ position:fixed; top:20px; right:20px; max-width:330px; padding:14px 18px; border-radius:12px; background:#333; color:white; display:none; z-index:9999; }
 .toast.success{background:#198754}
 .toast.error{background:#dc3545}
 
-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background:#fff;
-    display:flex;
-    justify-content:space-around;
-    padding:11px 0;
-    box-shadow:0 -3px 12px rgba(0,0,0,.12);
-    z-index:100;
-}
-
-nav a{
-    text-decoration:none;
-    color:#666;
-    font-size:12px;
-    text-align:center;
-}
-
+nav{ position:fixed; bottom:0; left:0; width:100%; background:#fff; display:flex; justify-content:space-around; padding:11px 0; box-shadow:0 -3px 12px rgba(0,0,0,.12); z-index:100; }
+nav a{ text-decoration:none; color:#666; font-size:12px; text-align:center; }
 nav a.active{color:#B80000}
-nav i{
-    display:block;
-    font-size:20px;
-    margin-bottom:4px;
-}
+nav i{ display:block; font-size:20px; margin-bottom:4px; }
 
 @media(max-width:380px){
     .amount-options{grid-template-columns:repeat(2,1fr)}
     .pay-apps{grid-template-columns:repeat(3,1fr)}
 }
-
 </style>
 </head>
 
@@ -430,29 +120,23 @@ nav i{
     </div>
 
 
-    <!-- STEP 1: AMOUNT (hides after Continue) -->
+    <!-- STEP 1: AMOUNT -->
     <div class="card" id="amountCard">
         <div class="card-title">
             <span class="step">1</span>
-            Select Recharge Amount
+            Select Recharge Amount (Min ₹5,000)
         </div>
 
         <div class="amount-options">
-            <button data-amount="100">₹100</button>
-            <button data-amount="200">₹200</button>
-            <button data-amount="500">₹500</button>
-            <button data-amount="1000">₹1,000</button>
-            <button data-amount="2000">₹2,000</button>
             <button data-amount="5000">₹5,000</button>
+            <button data-amount="10000">₹10,000</button>
+            <button data-amount="25000">₹25,000</button>
+            <button data-amount="50000">₹50,000</button>
+            <button data-amount="75000">₹75,000</button>
+            <button data-amount="100000">₹1,00,000</button>
         </div>
 
-        <input
-            type="number"
-            id="customAmount"
-            min="1"
-            max="100000"
-            placeholder="Or enter custom amount"
-        >
+        <input type="number" id="customAmount" min="5000" max="100000" placeholder="Or enter custom amount (₹5k - ₹1L)">
 
         <button class="continue-btn" id="continueBtn" disabled>
             <i class="fa fa-arrow-right"></i>
@@ -461,10 +145,9 @@ nav i{
     </div>
 
 
-    <!-- STEP 2: PAYMENT (hidden until Continue) -->
+    <!-- STEP 2: PAYMENT -->
     <div id="paymentWrap" class="hidden-step">
 
-        <!-- Amount summary -->
         <div class="amount-summary">
             <div class="as-left">
                 <small>Paying Amount</small>
@@ -475,66 +158,82 @@ nav i{
             </button>
         </div>
 
-        <!-- Payment card -->
         <div class="card" id="paymentCard">
             <div class="card-title">
                 <span class="step">2</span>
                 Complete Payment
             </div>
 
-            <!-- QR -->
-            <div class="qr-wrap">
-                <img id="qrImg" alt="UPI QR" src="">
-                <div style="font-size:11px;color:#888;margin-top:8px">
-                    Scan & Pay with any UPI app
-                </div>
-            </div>
-
-            <!-- UPI ID -->
-            <div class="upi-box">
-                <div style="font-size:12px;color:#666;margin-bottom:4px">
-                    Or pay to UPI ID
-                </div>
-                <div class="upi-id" id="upiId">dailylgrow@axl</div>
-                <button class="copy-btn" id="copyBtn">
-                    <i class="fa fa-copy"></i>
-                    Copy UPI ID
+            <!-- Payment Method Tabs -->
+            <div class="method-tabs">
+                <button id="tabUpi" onclick="switchMethod('upi')" class="active">
+                    <i class="fa fa-mobile-screen"></i> UPI / INR
+                </button>
+                <button id="tabUsdt" onclick="switchMethod('usdt')">
+                    <i class="fa-brands fa-bitcoin"></i> USDT (Crypto)
                 </button>
             </div>
 
-            <!-- Payment Apps -->
-            <div class="apps-title">
-                <i class="fa fa-bolt"></i> Quick Pay with
+            <!-- UPI SECTION -->
+            <div id="upiSection">
+                <div class="qr-wrap">
+                    <img id="qrImg" alt="UPI QR" src="">
+                    <div style="font-size:11px;color:#888;margin-top:8px">Scan & Pay with any UPI app</div>
+                </div>
+
+                <div class="upi-box">
+                    <div style="font-size:12px;color:#666;margin-bottom:4px">Or pay to UPI ID</div>
+                    <div class="upi-id" id="upiId">dailylgrow@axl</div>
+                    <button class="copy-btn" onclick="copyText('dailylgrow@axl')">
+                        <i class="fa fa-copy"></i> Copy UPI ID
+                    </button>
+                </div>
+
+                <div class="apps-title"><i class="fa fa-bolt"></i> Quick Pay with</div>
+                <div class="pay-apps" id="payApps">
+                    <a class="pay-app phonepe" id="payPhonePe"><div class="icon">P</div>PhonePe</a>
+                    <a class="pay-app gpay" id="payGPay"><div class="icon">G</div>GPay</a>
+                    <a class="pay-app paytm" id="payPaytm"><div class="icon">₹</div>Paytm</a>
+                    <a class="pay-app bhim" id="payBhim"><div class="icon">B</div>BHIM</a>
+                </div>
             </div>
-            <div class="pay-apps" id="payApps">
-                <a class="pay-app phonepe" id="payPhonePe">
-                    <div class="icon">P</div>
-                    PhonePe
-                </a>
-                <a class="pay-app gpay" id="payGPay">
-                    <div class="icon">G</div>
-                    GPay
-                </a>
-                <a class="pay-app paytm" id="payPaytm">
-                    <div class="icon">₹</div>
-                    Paytm
-                </a>
-                <a class="pay-app bhim" id="payBhim">
-                    <div class="icon">B</div>
-                    BHIM
-                </a>
+
+            <!-- USDT SECTION -->
+            <div id="usdtSection" class="hidden-step">
+                <div style="background:#e8f5e9; color:#155724; padding:10px; border-radius:10px; font-size:12px; font-weight:700; margin-bottom:12px; text-align:center;">
+                    Network: <span style="color:#0a7d38">Tron (TRC20)</span> ONLY
+                </div>
+                
+                <div class="qr-wrap">
+                    <img id="usdtQrImg" alt="USDT QR" src="">
+                    <div style="font-size:11px;color:#888;margin-top:8px">Scan to pay with TrustWallet / Binance</div>
+                </div>
+
+                <div class="usdt-box">
+                    <div style="font-size:12px;color:#666;margin-bottom:4px">USDT Deposit Address (TRC20)</div>
+                    <div class="usdt-address" id="usdtAddress">TBZ32iax3S8uHPg3VgFsTQ1wzpXj2PhLZN</div>
+                    <button class="copy-btn" onclick="copyText('TBZ32iax3S8uHPg3VgFsTQ1wzpXj2PhLZN')">
+                        <i class="fa fa-copy"></i> Copy Address
+                    </button>
+                </div>
+
+                <div style="background:#fff; border:1px solid #eee; padding:12px; border-radius:12px; text-align:center;">
+                    <div style="font-size:12px; color:#666; margin-bottom:4px">Amount to send exactly:</div>
+                    <b style="font-size:20px; color:#B80000" id="usdtAmountToSend">0 USDT</b>
+                    <div style="font-size:11px; color:#888; margin-top:4px;">(1 USDT = ₹92)</div>
+                </div>
             </div>
 
             <div class="pay-note">
-                <b>Note:</b> Payment ke baad niche UTR daal ke submit karo.
+                <b>Note:</b> Payment ke baad niche details (UTR / TXID) daal ke submit karo.
             </div>
         </div>
 
-        <!-- STEP 3: UTR -->
+        <!-- STEP 3: UTR / TXID -->
         <div class="card hidden-step" id="utrCard">
             <div class="card-title">
                 <span class="step">3</span>
-                Enter Payment UTR
+                Enter Payment Details
             </div>
 
             <div class="tick-badge">
@@ -542,17 +241,11 @@ nav i{
                 Payment Done? Enter details below
             </div>
 
-            <label style="font-size:13px;font-weight:700;color:#555">
+            <label style="font-size:13px;font-weight:700;color:#555" id="utrLabel">
                 UTR / Transaction ID
             </label>
 
-            <input
-                type="text"
-                id="utr"
-                maxlength="50"
-                placeholder="Enter 12-digit UTR number"
-                autocomplete="off"
-            >
+            <input type="text" id="utr" maxlength="70" placeholder="Enter UTR number" autocomplete="off">
 
             <button class="submit-btn" id="submitBtn">
                 <i class="fa fa-paper-plane"></i>
@@ -562,46 +255,25 @@ nav i{
 
     </div>
 
-
     <!-- REQUEST HISTORY -->
     <div class="card" style="margin-top:15px;">
         <div class="card-title">
             <i class="fa fa-history" style="color:#B80000"></i>
             My Recharge Requests
         </div>
-        <div id="requestList">
-            Loading...
-        </div>
+        <div id="requestList">Loading...</div>
     </div>
 
 </div>
 
-
-<!-- NAV -->
 <nav>
-    <a href="index.html">
-        <i class="fa fa-home"></i>
-        Home
-    </a>
-    <a href="matches.html">
-        <i class="fa fa-trophy"></i>
-        Matches
-    </a>
-    <a href="wallet.html" class="active">
-        <i class="fa fa-wallet"></i>
-        Wallet
-    </a>
-    <a href="profile.html">
-        <i class="fa fa-user"></i>
-        Profile
-    </a>
+    <a href="index.html"><i class="fa fa-home"></i> Home</a>
+    <a href="matches.html"><i class="fa fa-trophy"></i> Matches</a>
+    <a href="wallet.html" class="active"><i class="fa fa-wallet"></i> Wallet</a>
+    <a href="profile.html"><i class="fa fa-user"></i> Profile</a>
 </nav>
 
-
-<div class="toast" id="toast">
-    <span id="toastMessage"></span>
-</div>
-
+<div class="toast" id="toast"><span id="toastMessage"></span></div>
 
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
@@ -609,7 +281,6 @@ nav i{
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
 
 <script>
-
 const firebaseConfig = {
     apiKey: "AIzaSyACztDFFn-xL75-32PYd1vsyjHKBod-UzA",
     authDomain: "fantasy-adda-e3b72.firebaseapp.com",
@@ -622,32 +293,32 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
 const db = firebase.database();
 
-/* ✅ FIXED UPI ID */
+/* ================= USDT SETTINGS ================= */
 const FIXED_UPI = "dailylgrow@axl";
+const USDT_ADDRESS = "TBZ32iax3S8uHPg3VgFsTQ1wzpXj2PhLZN";
+const USDT_RATE = 92; // 1 USDT = 92 INR
+const MIN_AMOUNT = 5000;
+const MAX_AMOUNT = 100000;
 
 let currentUser = null;
 let selectedAmount = 0;
-let toastTimer = null;
+let currentMethod = "upi"; // 'upi' or 'usdt'
 let utrUnlocked = false;
+let toastTimer = null;
 
 const balanceEl = document.getElementById("balance");
 const customAmount = document.getElementById("customAmount");
 const utrInput = document.getElementById("utr");
 const submitBtn = document.getElementById("submitBtn");
 const requestList = document.getElementById("requestList");
-
 const amountCard = document.getElementById("amountCard");
 const paymentWrap = document.getElementById("paymentWrap");
 const utrCard = document.getElementById("utrCard");
 const continueBtn = document.getElementById("continueBtn");
 const paymentAmount = document.getElementById("paymentAmount");
-const upiIdEl = document.getElementById("upiId");
-const qrImg = document.getElementById("qrImg");
-
 
 function showToast(message, type="success"){
     const toast = document.getElementById("toast");
@@ -656,33 +327,75 @@ function showToast(message, type="success"){
     text.textContent = message;
     toast.style.display = "block";
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(()=>{
-        toast.style.display = "none";
-    }, 3500);
+    toastTimer = setTimeout(()=>{ toast.style.display = "none"; }, 3500);
 }
 
+function copyText(text) {
+    navigator.clipboard.writeText(text)
+    .then(()=> showToast("Copied successfully!"))
+    .catch(()=> showToast("Copy failed", "error"));
+}
 
-/* UPI Link Builder */
+// Setup QR Codes
+function setupQRCodes() {
+    document.getElementById("qrImg").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent("upi://pay?pa=" + FIXED_UPI + "&pn=FantasyAdda&cu=INR");
+    document.getElementById("usdtQrImg").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(USDT_ADDRESS);
+}
+
+// Switch UPI / USDT
+function switchMethod(method) {
+    currentMethod = method;
+    document.getElementById("tabUpi").classList.toggle("active", method === 'upi');
+    document.getElementById("tabUsdt").classList.toggle("active", method === 'usdt');
+    
+    document.getElementById("upiSection").classList.toggle("hidden-step", method === 'usdt');
+    document.getElementById("usdtSection").classList.toggle("hidden-step", method === 'upi');
+
+    // Change Step 3 Label & Placeholder
+    if(method === 'usdt') {
+        document.getElementById("utrLabel").textContent = "Transaction Hash (TXID)";
+        utrInput.placeholder = "Enter 64-character TXID";
+        utrInput.maxLength = 70;
+    } else {
+        document.getElementById("utrLabel").textContent = "UTR / Transaction ID";
+        utrInput.placeholder = "Enter 12-digit UTR number";
+        utrInput.maxLength = 50;
+    }
+}
+
+// Calculate USDT Amount
+function updateUsdtAmount() {
+    const amt = Number(selectedAmount || 0);
+    const usdt = (amt / USDT_RATE).toFixed(2);
+    document.getElementById("usdtAmountToSend").textContent = usdt + " USDT";
+}
+
+auth.onAuthStateChanged(user=>{
+    if(!user){
+        window.location.href = "login.html";
+        return;
+    }
+    currentUser = user;
+    setupQRCodes();
+    loadBalance();
+    loadRequests();
+    setupPayApps();
+});
+
+function loadBalance(){
+    db.ref("users/" + currentUser.uid + "/wallet/balance").on("value", snapshot=>{
+        const value = Number(snapshot.val() || 0);
+        balanceEl.textContent = "₹" + value.toLocaleString("en-IN");
+    });
+}
+
 function buildUpiLink(appName){
-    const upi = FIXED_UPI;
-    const name = "Fantasy Adda";
-    const amt = selectedAmount || 0;
-    const note = "Recharge";
-    const baseParams =
-        "pa=" + encodeURIComponent(upi) +
-        "&pn=" + encodeURIComponent(name) +
-        "&am=" + amt +
-        "&cu=INR" +
-        "&tn=" + encodeURIComponent(note);
-
+    const baseParams = "pa=" + encodeURIComponent(FIXED_UPI) + "&pn=" + encodeURIComponent("Fantasy Adda") + "&am=" + selectedAmount + "&cu=INR&tn=" + encodeURIComponent("Recharge");
     if(appName === "phonepe")   return "phonepe://pay?" + baseParams;
     if(appName === "gpay")      return "tez://upi/pay?" + baseParams;
     if(appName === "paytm")     return "paytmmp://pay?" + baseParams;
-    if(appName === "bhim")      return "upi://pay?" + baseParams;
-
     return "upi://pay?" + baseParams;
 }
-
 
 function setupPayApps(){
     const apps = [
@@ -698,73 +411,27 @@ function setupPayApps(){
         el.href = "#";
         el.addEventListener("click", e=>{
             e.preventDefault();
-            if(!selectedAmount || selectedAmount < 1){
-                showToast("Pehle amount select karo", "error");
+            if(!selectedAmount || selectedAmount < MIN_AMOUNT){
+                showToast("Pehle valid amount select karo", "error");
                 return;
             }
-            const link = buildUpiLink(app.name);
-            window.location.href = link;
+            window.location.href = buildUpiLink(app.name);
             setTimeout(unlockUtr, 1500);
         });
     });
 }
-
 
 function unlockUtr(){
     if(utrUnlocked) return;
     utrUnlocked = true;
     utrCard.classList.remove("hidden-step");
     utrCard.scrollIntoView({behavior:"smooth", block:"start"});
-    showToast("Payment ke baad UTR enter karo", "success");
+    showToast("Payment ke baad details enter karo", "success");
 }
-
-
-function setupFixedUpi(){
-    upiIdEl.textContent = FIXED_UPI;
-    qrImg.src =
-        "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
-        encodeURIComponent(
-            "upi://pay?pa=" + FIXED_UPI +
-            "&pn=FantasyAdda&cu=INR"
-        );
-}
-
-
-auth.onAuthStateChanged(user=>{
-    if(!user){
-        window.location.href = "login.html";
-        return;
-    }
-    currentUser = user;
-    setupFixedUpi();
-    loadBalance();
-    loadRequests();
-    setupPayApps();
-});
-
-
-function loadBalance(){
-    db.ref("users/" + currentUser.uid + "/wallet/balance")
-    .on("value", snapshot=>{
-        const value = Number(snapshot.val() || 0);
-        balanceEl.textContent =
-            "₹" + value.toLocaleString("en-IN");
-    });
-}
-
-
-document.getElementById("copyBtn").addEventListener("click", ()=>{
-    const upi = FIXED_UPI;
-    navigator.clipboard.writeText(upi)
-    .then(()=> showToast("UPI ID copied: " + upi))
-    .catch(()=> showToast("UPI ID: " + upi));
-});
-
 
 document.querySelectorAll(".amount-options button").forEach(button=>{
     button.addEventListener("click", ()=>{
-        document.querySelectorAll(".amount-options button")
-            .forEach(btn=> btn.classList.remove("selected"));
+        document.querySelectorAll(".amount-options button").forEach(btn=> btn.classList.remove("selected"));
         button.classList.add("selected");
         selectedAmount = Number(button.dataset.amount);
         customAmount.value = "";
@@ -772,221 +439,156 @@ document.querySelectorAll(".amount-options button").forEach(button=>{
     });
 });
 
-
 customAmount.addEventListener("input", ()=>{
-    document.querySelectorAll(".amount-options button")
-        .forEach(btn=> btn.classList.remove("selected"));
+    document.querySelectorAll(".amount-options button").forEach(btn=> btn.classList.remove("selected"));
     selectedAmount = Number(customAmount.value || 0);
     updateContinueButton();
 });
 
-
 function updateContinueButton(){
     const amt = Number(selectedAmount||0);
-    continueBtn.disabled = !(amt >= 1 && amt <= 100000);
+    continueBtn.disabled = !(amt >= MIN_AMOUNT && amt <= MAX_AMOUNT);
 }
 
-
-/* ✅ Continue → hide Step 1, show Step 2 */
 continueBtn.addEventListener("click", ()=>{
     if(continueBtn.disabled) return;
 
     const amt = Number(selectedAmount||0);
-
-    /* Fill amount display */
     paymentAmount.textContent = amt.toLocaleString("en-IN");
+    updateUsdtAmount(); 
 
-    /* Hide Step 1 card */
     amountCard.classList.add("hidden-step");
-
-    /* Show payment wrap (amount summary + payment card) */
     paymentWrap.classList.remove("hidden-step");
 
-    /* Reset UTR state */
     utrUnlocked = false;
     utrCard.classList.add("hidden-step");
 
-    /* Scroll to top of payment section */
-    setTimeout(()=>{
-        paymentWrap.scrollIntoView({behavior:"smooth", block:"start"});
-    }, 100);
-
-    showToast("Ab payment karo — QR scan karo ya UPI ID use karo", "success");
+    setTimeout(()=>{ paymentWrap.scrollIntoView({behavior:"smooth", block:"start"}); }, 100);
 });
 
-
-/* Change amount → show Step 1 back */
 function changeAmount(){
-    /* Show Step 1 back */
     amountCard.classList.remove("hidden-step");
-
-    /* Hide payment wrap */
     paymentWrap.classList.add("hidden-step");
-
-    /* Reset UTR */
     utrUnlocked = false;
     utrCard.classList.add("hidden-step");
-
-    /* Scroll to top */
     window.scrollTo({top:0, behavior:"smooth"});
 }
 
-
 function cleanUTR(value){
-    return value
-        .trim()
-        .replace(/[.#$[\]/]/g, "")
-        .substring(0, 50);
+    return value.trim().replace(/[.#$[\]/]/g, "").substring(0, 70);
 }
 
-
 submitBtn.addEventListener("click", async ()=>{
-    if(!currentUser){
-        showToast("Please login first", "error");
-        return;
-    }
+    if(!currentUser) return showToast("Please login first", "error");
 
     selectedAmount = Number(selectedAmount);
-
-    if(!selectedAmount || selectedAmount < 1 || selectedAmount > 100000){
-        showToast("Valid recharge amount enter karein", "error");
-        return;
+    if(!selectedAmount || selectedAmount < MIN_AMOUNT || selectedAmount > MAX_AMOUNT){
+        return showToast(`Amount ₹${MIN_AMOUNT} se ₹${MAX_AMOUNT} ke beech hona chahiye`, "error");
     }
 
     const utr = cleanUTR(utrInput.value);
-
     if(utr.length < 6){
-        showToast("Valid UTR / Transaction ID enter karein", "error");
-        return;
+        return showToast("Valid UTR / TXID enter karein", "error");
     }
 
     submitBtn.disabled = true;
-    submitBtn.innerHTML =
-        '<i class="fa fa-spinner fa-spin"></i> Submitting...';
+    submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Submitting...';
 
     try{
-        const requestRef = db.ref("rechargeRequests").push();
-        const requestId = requestRef.key;
+        // Duplicate TXID check (only if it's not UPI dummy)
+        if(currentMethod === 'usdt') {
+            const existingSnap = await db.ref("rechargeRequests").orderByChild("txid").equalTo(utr).once("value");
+            if(existingSnap.exists()){
+                throw new Error("Ye TXID pehle submit ho chuka hai.");
+            }
+        }
 
-        await requestRef.set({
-            id: requestId,
+        const requestRef = db.ref("rechargeRequests").push();
+        const payload = {
+            id: requestRef.key,
             userId: currentUser.uid,
             userEmail: currentUser.email || "",
             amount: selectedAmount,
-            utr: utr,
-            upiId: FIXED_UPI,
+            paymentMethod: currentMethod,
             status: "pending",
             createdAt: firebase.database.ServerValue.TIMESTAMP,
             updatedAt: firebase.database.ServerValue.TIMESTAMP
-        });
+        };
 
-        /* Reset all */
+        if(currentMethod === 'usdt') {
+            payload.usdtAmount = Number((selectedAmount / USDT_RATE).toFixed(2));
+            payload.rate = USDT_RATE;
+            payload.network = "TRC20";
+            payload.txid = utr;
+            payload.depositAddress = USDT_ADDRESS;
+        } else {
+            payload.utr = utr;
+            payload.upiId = FIXED_UPI;
+        }
+
+        await requestRef.set(payload);
+
         utrInput.value = "";
         customAmount.value = "";
         selectedAmount = 0;
         utrUnlocked = false;
 
-        document.querySelectorAll(".amount-options button")
-            .forEach(btn=> btn.classList.remove("selected"));
-
-        /* Show Step 1, hide payment */
+        document.querySelectorAll(".amount-options button").forEach(btn=> btn.classList.remove("selected"));
         amountCard.classList.remove("hidden-step");
         paymentWrap.classList.add("hidden-step");
         utrCard.classList.add("hidden-step");
         updateContinueButton();
 
-        showToast(
-            "Recharge request submit ho gayi. Admin approval pending.",
-            "success"
-        );
-
+        showToast("Recharge request submit ho gayi. Admin approval pending.", "success");
         loadRequests();
         window.scrollTo({top:0, behavior:"smooth"});
 
     }catch(error){
-        console.error(error);
-        showToast("Request submit failed: " + error.message, "error");
+        showToast("Failed: " + error.message, "error");
     }finally{
         submitBtn.disabled = false;
-        submitBtn.innerHTML =
-            '<i class="fa fa-paper-plane"></i> Submit Recharge Request';
+        submitBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Submit Recharge Request';
     }
 });
 
-
 function loadRequests(){
-    db.ref("rechargeRequests")
-    .orderByChild("userId")
-    .equalTo(currentUser.uid)
-    .on("value", snapshot=>{
+    db.ref("rechargeRequests").orderByChild("userId").equalTo(currentUser.uid).on("value", snapshot=>{
         const data = snapshot.val();
-
         if(!data){
-            requestList.innerHTML = `
-                <div style="text-align:center;color:#777;padding:10px;">
-                    No recharge requests yet.
-                </div>`;
+            requestList.innerHTML = `<div style="text-align:center;color:#777;padding:10px;">No recharge requests yet.</div>`;
             return;
         }
 
-        const requests = Object.values(data)
-            .sort((a,b)=> (b.createdAt || 0) - (a.createdAt || 0));
+        const requests = Object.values(data).sort((a,b)=> (b.createdAt || 0) - (a.createdAt || 0));
 
         requestList.innerHTML = requests.map(item=>{
-            const date = item.createdAt
-                ? new Date(item.createdAt).toLocaleString("en-IN")
-                : "-";
-
-            let badgeClass = "pending";
-            if(item.status === "approved") badgeClass = "approved";
-            if(item.status === "rejected") badgeClass = "rejected";
+            const date = item.createdAt ? new Date(item.createdAt).toLocaleString("en-IN") : "-";
+            let badgeClass = item.status === "approved" ? "approved" : item.status === "rejected" ? "rejected" : "pending";
+            
+            let methodDetail = item.paymentMethod === 'usdt' 
+                ? `<div style="font-size:12px;color:#0a7d38;margin-top:4px;font-weight:700;">USDT: ${item.usdtAmount} (TXID: ${item.txid})</div>`
+                : `<div style="font-size:12px;color:#666;margin-top:4px;">UPI (UTR: ${escapeHtml(item.utr || "-")})</div>`;
 
             return `
                 <div class="status-item">
                     <div style="display:flex;justify-content:space-between;gap:10px;">
-                        <strong>
-                            ₹${Number(item.amount).toLocaleString("en-IN")}
-                        </strong>
-                        <span class="badge ${badgeClass}">
-                            ${String(item.status || "pending").toUpperCase()}
-                        </span>
+                        <strong>₹${Number(item.amount).toLocaleString("en-IN")}</strong>
+                        <span class="badge ${badgeClass}">${String(item.status || "pending").toUpperCase()}</span>
                     </div>
-
-                    <div style="font-size:13px;color:#666;margin-top:7px;">
-                        UTR: ${escapeHtml(item.utr || "-")}
-                    </div>
-
-                    <div style="font-size:12px;color:#888;margin-top:5px;">
-                        ${date}
-                    </div>
-
-                    ${
-                        item.status === "rejected" && item.adminNote
-                        ? `<div style="color:#b00000;font-size:13px;margin-top:7px;">
-                            Reason: ${escapeHtml(item.adminNote)}
-                           </div>`
-                        : ""
-                    }
+                    ${methodDetail}
+                    <div style="font-size:11px;color:#888;margin-top:5px;">${date}</div>
+                    ${item.status === "rejected" && item.adminNote ? `<div style="color:#b00000;font-size:12px;margin-top:5px;">Reason: ${escapeHtml(item.adminNote)}</div>` : ""}
                 </div>
             `;
         }).join("");
     });
 }
 
-
 function escapeHtml(value){
-    return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
 
-/* Init */
 updateContinueButton();
-
 </script>
-
 </body>
 </html>
