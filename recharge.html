@@ -218,10 +218,10 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
             <!-- USDT SECTION -->
             <div id="usdtSection" class="hidden-step">
                 
-                <!-- BIG WARNING BOX -->
+                <!-- BIG WARNING BOX (ENGLISH) -->
                 <div class="warning-box">
                     <i class="fa fa-triangle-exclamation"></i> <b>WARNING: Only TRC20 Network</b><br><br>
-                    Aapko sirf <b>TRC20 (Tron)</b> network par hi USDT bhejna hai. Agar aapne galti se kisi doosre network (jaise BEP20, ERC20) se payment kiya, toh aapka paisa permanently chala jayega aur wallet recharge nahi hoga. Company iski zimmedar nahi hogi.
+                    You must send USDT using the <b>TRC20 (Tron)</b> network only. If you accidentally send via any other network (like BEP20, ERC20), your funds will be permanently lost, and your wallet will not be credited. The company will not be responsible for this loss.
                 </div>
 
                 <div class="qr-wrap">
@@ -245,7 +245,7 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
             </div>
 
             <div class="pay-note">
-                <b>Note:</b> Payment ke baad niche details (UTR / TXID) daal ke submit karo.
+                <b>Note:</b> After payment, enter the details (UTR / TXID) below and submit.
             </div>
         </div>
 
@@ -358,9 +358,9 @@ function copyText(text) {
     .catch(()=> showToast("Copy failed", "error"));
 }
 
-/* UPDATED FUNCTION WITH WARNING POPUP */
+/* UPDATED FUNCTION WITH ENGLISH WARNING POPUP */
 function copyUsdtAddress() {
-    const confirmMsg = "⚠️ RUKO AUR PADHO! ⚠️\n\nKya aapne apne wallet (Binance, Trust Wallet) me network 'TRC20 (Tron)' select kiya hai?\n\nAgar aapne kisi doosre network se bheja, toh aapka paisa permanently lost ho jayega aur recharge nahi hoga. Company zimmedar nahi hogi.\n\nKya aap TRC20 network par hi bhej rahe hain?";
+    const confirmMsg = "⚠️ ATTENTION! ⚠️\n\nHave you selected the 'TRC20 (Tron)' network in your wallet (Binance, Trust Wallet, etc.)?\n\nIf you send via any other network, your funds will be permanently lost, and your recharge will not be processed. The company is not responsible.\n\nAre you sure you are sending via TRC20 network?";
     
     if (confirm(confirmMsg)) {
         copyText(USDT_ADDRESS);
@@ -401,7 +401,7 @@ function chooseMethod(method) {
         document.querySelectorAll(".btn-opt-upi").forEach(b => b.style.display = "none"); // Hide small amounts for USDT
         document.querySelectorAll(".btn-opt-usdt").forEach(b => b.style.display = "block");
         customAmount.setAttribute("min", MIN_AMOUNT_USDT);
-        customAmount.placeholder = "Or enter custom amount (Min ₹5000)";
+        customAmount.placeholder = "Or enter custom amount (Min ₹5,000)";
     }
     
     updateContinueButton();
@@ -485,7 +485,7 @@ function unlockUtr(){
     utrUnlocked = true;
     utrCard.classList.remove("hidden-step");
     utrCard.scrollIntoView({behavior:"smooth", block:"start"});
-    showToast("Payment ke baad details enter karo", "success");
+    showToast("Please enter the payment details after completing the transaction.", "success");
 }
 
 auth.onAuthStateChanged(user=>{
@@ -530,7 +530,7 @@ function setupPayApps(){
         el.addEventListener("click", e=>{
             e.preventDefault();
             if(!selectedAmount || selectedAmount < MIN_AMOUNT_UPI){
-                showToast(`Pehle minimum ₹${MIN_AMOUNT_UPI} ka amount select karo`, "error");
+                showToast(`Please select a minimum amount of ₹${MIN_AMOUNT_UPI}`, "error");
                 return;
             }
             window.location.href = buildUpiLink(app.name);
@@ -548,22 +548,22 @@ submitBtn.addEventListener("click", async ()=>{
 
     selectedAmount = Number(selectedAmount);
     if(!selectedAmount || selectedAmount > MAX_AMOUNT){
-        return showToast(`Valid amount enter karein (Max ₹${MAX_AMOUNT})`, "error");
+        return showToast(`Please enter a valid amount (Max ₹${MAX_AMOUNT})`, "error");
     }
     if(currentMethod === 'upi' && selectedAmount < MIN_AMOUNT_UPI){
-        return showToast(`UPI ke liye minimum ₹${MIN_AMOUNT_UPI} zaroori hai`, "error");
+        return showToast(`Minimum amount for UPI is ₹${MIN_AMOUNT_UPI}`, "error");
     }
     if(currentMethod === 'usdt' && selectedAmount < MIN_AMOUNT_USDT){
-        return showToast(`USDT ke liye minimum ₹${MIN_AMOUNT_USDT} zaroori hai`, "error");
+        return showToast(`Minimum amount for USDT is ₹${MIN_AMOUNT_USDT}`, "error");
     }
 
     const utr = cleanUTR(utrInput.value);
     if(utr.length < 6){
-        return showToast("Valid UTR / TXID enter karein", "error");
+        return showToast("Please enter a valid UTR / TXID", "error");
     }
     
     if(currentMethod === 'usdt' && utr.length !== 64) {
-        return showToast("USDT TXID 64 characters ka hona chahiye", "error");
+        return showToast("USDT TXID must be exactly 64 characters long", "error");
     }
 
     submitBtn.disabled = true;
@@ -573,7 +573,7 @@ submitBtn.addEventListener("click", async ()=>{
         if(currentMethod === 'usdt') {
             const existingSnap = await db.ref("rechargeRequests").orderByChild("txid").equalTo(utr).once("value");
             if(existingSnap.exists()){
-                throw new Error("Ye TXID pehle submit ho chuka hai.");
+                throw new Error("This TXID has already been submitted.");
             }
         }
 
@@ -620,7 +620,7 @@ submitBtn.addEventListener("click", async ()=>{
         
         updateContinueButton();
 
-        showToast("Recharge request submit ho gayi. Admin approval pending.", "success");
+        showToast("Recharge request submitted successfully. Pending admin approval.", "success");
         loadRequests();
         window.scrollTo({top:0, behavior:"smooth"});
 
