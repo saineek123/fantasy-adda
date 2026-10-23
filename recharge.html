@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
-
 *{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,Arial,sans-serif; }
 
 body{ background:#f5f6fa; padding-bottom:85px; color:#222; }
@@ -35,9 +34,8 @@ header h2{ font-size:20px; display:flex; align-items:center; gap:10px; }
 input{ width:100%; padding:14px; border:2px solid #ddd; border-radius:12px; outline:none; font-size:16px; margin-top:10px; }
 input:focus{border-color:#B80000}
 
-/* Tabs for UPI / USDT */
 .method-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-.method-tabs button { flex: 1; padding: 12px; border: 2px solid #ddd; background: #fff; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: .2s; }
+.method-tabs button { flex: 1; padding: 12px; border: 2px solid #ddd; background: #fff; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: .2s; color: #666;}
 .method-tabs button.active { border-color: #B80000; background: #fff0f0; color: #B80000; }
 
 .upi-box, .usdt-box{ background:#fff4f4; border:1px dashed #B80000; padding:15px; border-radius:13px; margin-bottom:12px; }
@@ -101,15 +99,9 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
 <body>
 
 <header>
-    <h2>
-        <i class="fa fa-plus-circle"></i>
-        Recharge
-    </h2>
-    <a href="wallet.html" class="back-btn">
-        <i class="fa fa-times"></i>
-    </a>
+    <h2><i class="fa fa-plus-circle"></i> Recharge</h2>
+    <a href="wallet.html" class="back-btn"><i class="fa fa-times"></i></a>
 </header>
-
 
 <div class="container">
 
@@ -119,12 +111,10 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
         <h1 id="balance">₹0</h1>
     </div>
 
-
     <!-- STEP 1: AMOUNT -->
     <div class="card" id="amountCard">
         <div class="card-title">
-            <span class="step">1</span>
-            Select Recharge Amount (Min ₹5,000)
+            <span class="step">1</span> Select Amount (₹5k - ₹1L)
         </div>
 
         <div class="amount-options">
@@ -136,14 +126,12 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
             <button data-amount="100000">₹1,00,000</button>
         </div>
 
-        <input type="number" id="customAmount" min="5000" max="100000" placeholder="Or enter custom amount (₹5k - ₹1L)">
+        <input type="number" id="customAmount" min="5000" max="100000" placeholder="Or enter custom amount">
 
         <button class="continue-btn" id="continueBtn" disabled>
-            <i class="fa fa-arrow-right"></i>
-            Continue to Pay
+            <i class="fa fa-arrow-right"></i> Continue to Pay
         </button>
     </div>
-
 
     <!-- STEP 2: PAYMENT -->
     <div id="paymentWrap" class="hidden-step">
@@ -160,11 +148,9 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
 
         <div class="card" id="paymentCard">
             <div class="card-title">
-                <span class="step">2</span>
-                Complete Payment
+                <span class="step">2</span> Complete Payment
             </div>
 
-            <!-- Payment Method Tabs -->
             <div class="method-tabs">
                 <button id="tabUpi" onclick="switchMethod('upi')" class="active">
                     <i class="fa fa-mobile-screen"></i> UPI / INR
@@ -206,7 +192,7 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
                 
                 <div class="qr-wrap">
                     <img id="usdtQrImg" alt="USDT QR" src="">
-                    <div style="font-size:11px;color:#888;margin-top:8px">Scan to pay with TrustWallet / Binance</div>
+                    <div style="font-size:11px;color:#888;margin-top:8px">Scan with TrustWallet / Binance / Any Crypto App</div>
                 </div>
 
                 <div class="usdt-box">
@@ -219,8 +205,8 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
 
                 <div style="background:#fff; border:1px solid #eee; padding:12px; border-radius:12px; text-align:center;">
                     <div style="font-size:12px; color:#666; margin-bottom:4px">Amount to send exactly:</div>
-                    <b style="font-size:20px; color:#B80000" id="usdtAmountToSend">0 USDT</b>
-                    <div style="font-size:11px; color:#888; margin-top:4px;">(1 USDT = ₹92)</div>
+                    <b style="font-size:22px; color:#B80000" id="usdtAmountToSend">0 USDT</b>
+                    <div style="font-size:12px; color:#888; margin-top:4px;">(1 USDT = ₹92)</div>
                 </div>
             </div>
 
@@ -232,13 +218,11 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
         <!-- STEP 3: UTR / TXID -->
         <div class="card hidden-step" id="utrCard">
             <div class="card-title">
-                <span class="step">3</span>
-                Enter Payment Details
+                <span class="step">3</span> Enter Payment Details
             </div>
 
             <div class="tick-badge">
-                <i class="fa fa-check-circle"></i>
-                Payment Done? Enter details below
+                <i class="fa fa-check-circle"></i> Payment Done? Enter details below
             </div>
 
             <label style="font-size:13px;font-weight:700;color:#555" id="utrLabel">
@@ -248,8 +232,7 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
             <input type="text" id="utr" maxlength="70" placeholder="Enter UTR number" autocomplete="off">
 
             <button class="submit-btn" id="submitBtn">
-                <i class="fa fa-paper-plane"></i>
-                Submit Recharge Request
+                <i class="fa fa-paper-plane"></i> Submit Recharge Request
             </button>
         </div>
 
@@ -258,8 +241,7 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
     <!-- REQUEST HISTORY -->
     <div class="card" style="margin-top:15px;">
         <div class="card-title">
-            <i class="fa fa-history" style="color:#B80000"></i>
-            My Recharge Requests
+            <i class="fa fa-history" style="color:#B80000"></i> My Recharge Requests
         </div>
         <div id="requestList">Loading...</div>
     </div>
@@ -296,7 +278,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-/* ================= USDT SETTINGS ================= */
+/* ================= SETTINGS ================= */
 const FIXED_UPI = "dailylgrow@axl";
 const USDT_ADDRESS = "TBZ32iax3S8uHPg3VgFsTQ1wzpXj2PhLZN";
 const USDT_RATE = 92; // 1 USDT = 92 INR
@@ -336,13 +318,11 @@ function copyText(text) {
     .catch(()=> showToast("Copy failed", "error"));
 }
 
-// Setup QR Codes
 function setupQRCodes() {
     document.getElementById("qrImg").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent("upi://pay?pa=" + FIXED_UPI + "&pn=FantasyAdda&cu=INR");
     document.getElementById("usdtQrImg").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(USDT_ADDRESS);
 }
 
-// Switch UPI / USDT
 function switchMethod(method) {
     currentMethod = method;
     document.getElementById("tabUpi").classList.toggle("active", method === 'upi');
@@ -351,7 +331,6 @@ function switchMethod(method) {
     document.getElementById("upiSection").classList.toggle("hidden-step", method === 'usdt');
     document.getElementById("usdtSection").classList.toggle("hidden-step", method === 'upi');
 
-    // Change Step 3 Label & Placeholder
     if(method === 'usdt') {
         document.getElementById("utrLabel").textContent = "Transaction Hash (TXID)";
         utrInput.placeholder = "Enter 64-character TXID";
@@ -363,7 +342,6 @@ function switchMethod(method) {
     }
 }
 
-// Calculate USDT Amount
 function updateUsdtAmount() {
     const amt = Number(selectedAmount || 0);
     const usdt = (amt / USDT_RATE).toFixed(2);
@@ -490,12 +468,16 @@ submitBtn.addEventListener("click", async ()=>{
     if(utr.length < 6){
         return showToast("Valid UTR / TXID enter karein", "error");
     }
+    
+    // USDT TXID validation
+    if(currentMethod === 'usdt' && utr.length !== 64) {
+        return showToast("USDT TXID 64 characters ka hona chahiye", "error");
+    }
 
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Submitting...';
 
     try{
-        // Duplicate TXID check (only if it's not UPI dummy)
         if(currentMethod === 'usdt') {
             const existingSnap = await db.ref("rechargeRequests").orderByChild("txid").equalTo(utr).once("value");
             if(existingSnap.exists()){
