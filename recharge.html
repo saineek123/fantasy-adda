@@ -97,6 +97,23 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
     .amount-options{grid-template-columns:repeat(2,1fr)}
     .pay-apps{grid-template-columns:repeat(3,1fr)}
 }
+
+/* WARNING BOX STYLES */
+.warning-box {
+    background: #ffebee;
+    border: 2px solid #d32f2f;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    color: #b71c1c;
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 600;
+}
+.warning-box i {
+    font-size: 16px;
+    margin-right: 5px;
+}
 </style>
 </head>
 
@@ -200,10 +217,13 @@ nav i{ display:block; font-size:20px; margin-bottom:4px; }
 
             <!-- USDT SECTION -->
             <div id="usdtSection" class="hidden-step">
-                <div style="background:#e8f5e9; color:#155724; padding:10px; border-radius:10px; font-size:12px; font-weight:700; margin-bottom:12px; text-align:center;">
-                    Network: <span style="color:#0a7d38">Tron (TRC20)</span> ONLY
-                </div>
                 
+                <!-- BIG WARNING BOX -->
+                <div class="warning-box">
+                    <i class="fa fa-triangle-exclamation"></i> <b>WARNING: Only TRC20 Network</b><br><br>
+                    Aapko sirf <b>TRC20 (Tron)</b> network par hi USDT bhejna hai. Agar aapne galti se kisi doosre network (jaise BEP20, ERC20) se payment kiya, toh aapka paisa permanently chala jayega aur wallet recharge nahi hoga. Company iski zimmedar nahi hogi.
+                </div>
+
                 <div class="qr-wrap">
                     <img id="usdtQrImg" alt="USDT QR" src="">
                     <div style="font-size:11px;color:#888;margin-top:8px">Scan with TrustWallet / Binance / Any Crypto App</div>
@@ -338,9 +358,14 @@ function copyText(text) {
     .catch(()=> showToast("Copy failed", "error"));
 }
 
+/* UPDATED FUNCTION WITH WARNING POPUP */
 function copyUsdtAddress() {
-    copyText(USDT_ADDRESS);
-    unlockUtr();
+    const confirmMsg = "⚠️ RUKO AUR PADHO! ⚠️\n\nKya aapne apne wallet (Binance, Trust Wallet) me network 'TRC20 (Tron)' select kiya hai?\n\nAgar aapne kisi doosre network se bheja, toh aapka paisa permanently lost ho jayega aur recharge nahi hoga. Company zimmedar nahi hogi.\n\nKya aap TRC20 network par hi bhej rahe hain?";
+    
+    if (confirm(confirmMsg)) {
+        copyText(USDT_ADDRESS);
+        unlockUtr();
+    }
 }
 
 function setupQRCodes() {
